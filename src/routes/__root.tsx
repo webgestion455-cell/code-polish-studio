@@ -1,4 +1,9 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { AuthProvider } from "@/lib/auth-context";
+import { ThemeProvider } from "@/lib/theme-context";
+import { Toaster } from "@/components/ui/sonner";
+import { AppHeader } from "@/components/AppHeader";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 import appCss from "../styles.css?url";
 
@@ -7,16 +12,16 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold">Page introuvable</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          La page que vous cherchez n'existe pas ou a été déplacée.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Retour à l'accueil
           </Link>
         </div>
       </div>
@@ -24,26 +29,39 @@ function NotFoundComponent() {
   );
 }
 
+// Inline script to set theme class BEFORE first paint (no FOUC)
+const themeInitScript = `(function(){try{var k='lendly-theme';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.toggle('dark',t==='dark');document.documentElement.style.colorScheme=t;}catch(e){}})();`;
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { title: "HSC Bank — Prêts en ligne instantanés" },
+      { name: "description", content: "Demandez votre prêt en ligne en 3 minutes. Décision rapide, fonds disponibles sous 72h." },
+      { name: "author", content: "HSC Bank" },
+      { name: "theme-color", content: "#0a0a0a" },
+      // PWA / iOS standalone
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "HSC Bank" },
+      { name: "application-name", content: "HSC Bank" },
+      { property: "og:title", content: "HSC Bank — Prêts en ligne instantanés" },
+      { property: "og:description", content: "Demandez votre prêt en ligne en 3 minutes. Décision rapide, fonds disponibles sous 72h." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "icon", type: "image/png", href: "/icon-512.png" },
+      { rel: "apple-touch-icon", href: "/icon-512.png" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700;800&display=swap" },
     ],
+    scripts: [{ children: themeInitScript }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -52,7 +70,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>
@@ -65,5 +83,18 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <div className="min-h-screen flex flex-col">
+          <AppHeader />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <MobileBottomNav />
+        </div>
+        <Toaster richColors closeButton />
+      </AuthProvider>
+    </ThemeProvider>
+  );
 }

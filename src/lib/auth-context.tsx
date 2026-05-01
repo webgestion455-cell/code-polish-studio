@@ -1,0 +1,124 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { Session, User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
+
+type Role = "admin" | "user";
+
+interface AuthContextValue {
+  user: User | null;
+  session: Session | null;
+  role: Role | null;
+  loading: boolean;
+  signUp: (email: string, password: string, fullName: string, phone: string) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signOut: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    const failSafe = window.setTimeout(() => {
+      if (active) setLoading(false);
+    }, 2500);
+
+    // Set up listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      if (!active) return;
+      setSession(newSession);
+      setUser(newSession?.user ?? null);
+      if (newSession?.user) {
+        setRole(null);
+        // defer role fetch to avoid deadlock
+        setTimeout(() => {
+          void fetchRole(newSession.user.id);
+        }, 0);
+      } else {
+        setRole(null);
+      }
+      setLoading(false);
+    });
+
+    // Then check existing session
+    supabase.auth.getSession().then(({ data: { session: existing } }) => {
+      if (!active) return;
+      setSession(existing);
+      setUser(existing?.user ?? null);
+      if (existing?.user) {
+        setRole(null);
+        void fetchRole(existing.user.id);
+      } else {
+        setRole(null);
+      }
+    }).catch(() => {
+      if (!active) return;
+      setSession(null);
+      setUser(null);
+      setRole(null);
+    }).finally(() => {
+      if (!active) return;
+      window.clearTimeout(failSafe);
+      setLoading(false);
+    });
+
+    return () => {
+      active = false;
+      window.clearTimeout(failSafe);
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  async function fetchRole(userId: string) {
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId);
+    if (data && data.length > 0) {
+      // admin wins if both
+      const isAdmin = data.some((r) => r.role === "admin");
+      setRole(isAdmin ? "admin" : "user");
+    } else {
+      setRole("user");
+    }
+  }
+
+  async function signUp(email: string, password: string, fullName: string, phone: string) {
+    const redirectUrl = `${window.location.origin}/dashboard`;
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: { full_name: fullName, phone },
+      },
+    });
+    return { error };
+  }
+
+  async function signIn(email: string, password: string) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    return { error };
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+  }
+
+  return (
+    <AuthContext.Provider value={{ user, session, role, loading, signUp, signIn, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
+}
