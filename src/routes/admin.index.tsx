@@ -259,11 +259,11 @@ function AdminDashboard() {
   const totalDisbursed = loans.reduce((s, l) => s + Number(l.disbursed_amount ?? 0), 0);
   const contractSignedCount = loans.filter((l) => l.status === "contrat_signe").length;
 
-  const kpis = [
-    { title: "Total des demandes", value: stats.total, icon: FileText, color: "text-info", border: "border-t-info" },
-    { title: "En attente", value: stats.pending, icon: Clock, color: "text-warning", border: "border-t-warning" },
-    { title: "Acceptées", value: stats.accepted, icon: CheckCircle2, color: "text-success", border: "border-t-success" },
-    { title: "Refusées", value: stats.refused, icon: XCircle, color: "text-destructive", border: "border-t-destructive" },
+  const kpis: Array<{ title: string; value: number; icon: typeof FileText; color: string; border: string; status: LoanStatus | "all" | "accepted_group" }> = [
+    { title: "Total des demandes", value: stats.total, icon: FileText, color: "text-info", border: "border-t-info", status: "all" },
+    { title: "En attente", value: stats.pending, icon: Clock, color: "text-warning", border: "border-t-warning", status: "en_attente" },
+    { title: "Acceptées", value: stats.accepted, icon: CheckCircle2, color: "text-success", border: "border-t-success", status: "accepte" },
+    { title: "Refusées", value: stats.refused, icon: XCircle, color: "text-destructive", border: "border-t-destructive", status: "refuse" },
   ];
 
   const amounts = [

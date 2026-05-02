@@ -19,6 +19,7 @@ import { Route as LoansLoanIdRouteImport } from './routes/loans.$loanId'
 import { Route as AdminVerifyRouteImport } from './routes/admin.verify'
 import { Route as AdminLoansRouteImport } from './routes/admin.loans'
 import { Route as AdminClientsIndexRouteImport } from './routes/admin.clients.index'
+import { Route as AdminTransfersNewRouteImport } from './routes/admin.transfers.new'
 import { Route as AdminClientsUserIdRouteImport } from './routes/admin.clients.$userId'
 
 const SettingsRoute = SettingsRouteImport.update({
@@ -71,6 +72,11 @@ const AdminClientsIndexRoute = AdminClientsIndexRouteImport.update({
   path: '/admin/clients/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTransfersNewRoute = AdminTransfersNewRouteImport.update({
+  id: '/admin/transfers/new',
+  path: '/admin/transfers/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminClientsUserIdRoute = AdminClientsUserIdRouteImport.update({
   id: '/admin/clients/$userId',
   path: '/admin/clients/$userId',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/loans/new': typeof LoansNewRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/clients/$userId': typeof AdminClientsUserIdRoute
+  '/admin/transfers/new': typeof AdminTransfersNewRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/loans/new': typeof LoansNewRoute
   '/admin': typeof AdminIndexRoute
   '/admin/clients/$userId': typeof AdminClientsUserIdRoute
+  '/admin/transfers/new': typeof AdminTransfersNewRoute
   '/admin/clients': typeof AdminClientsIndexRoute
 }
 export interface FileRoutesById {
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/loans/new': typeof LoansNewRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/clients/$userId': typeof AdminClientsUserIdRoute
+  '/admin/transfers/new': typeof AdminTransfersNewRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
 }
 export interface FileRouteTypes {
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/loans/new'
     | '/admin/'
     | '/admin/clients/$userId'
+    | '/admin/transfers/new'
     | '/admin/clients/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/loans/new'
     | '/admin'
     | '/admin/clients/$userId'
+    | '/admin/transfers/new'
     | '/admin/clients'
   id:
     | '__root__'
@@ -156,6 +167,7 @@ export interface FileRouteTypes {
     | '/loans/new'
     | '/admin/'
     | '/admin/clients/$userId'
+    | '/admin/transfers/new'
     | '/admin/clients/'
   fileRoutesById: FileRoutesById
 }
@@ -170,6 +182,7 @@ export interface RootRouteChildren {
   LoansNewRoute: typeof LoansNewRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminClientsUserIdRoute: typeof AdminClientsUserIdRoute
+  AdminTransfersNewRoute: typeof AdminTransfersNewRoute
   AdminClientsIndexRoute: typeof AdminClientsIndexRoute
 }
 
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminClientsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/transfers/new': {
+      id: '/admin/transfers/new'
+      path: '/admin/transfers/new'
+      fullPath: '/admin/transfers/new'
+      preLoaderRoute: typeof AdminTransfersNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/clients/$userId': {
       id: '/admin/clients/$userId'
       path: '/admin/clients/$userId'
@@ -266,6 +286,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoansNewRoute: LoansNewRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminClientsUserIdRoute: AdminClientsUserIdRoute,
+  AdminTransfersNewRoute: AdminTransfersNewRoute,
   AdminClientsIndexRoute: AdminClientsIndexRoute,
 }
 export const routeTree = rootRouteImport
