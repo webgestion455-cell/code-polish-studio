@@ -6,9 +6,9 @@ export const Route = createFileRoute("/")({
   component: Landing,
   head: () => ({
     meta: [
-      { title: "HSC Bank — Prêts en ligne instantanés" },
+      { title: "HSBC BANK — Prêts en ligne instantanés" },
       { name: "description", content: "Financez vos projets avec confiance. Prêts personnels rapides de 1 000 € à 50 000 €. Décision en 24h, fonds sous 72h." },
-      { property: "og:title", content: "HSC Bank — Prêts en ligne instantanés" },
+      { property: "og:title", content: "HSBC BANK — Prêts en ligne instantanés" },
       { property: "og:description", content: "Décision en 24h. Fonds sous 72h. 100% en ligne." },
     ],
   }),
@@ -29,7 +29,7 @@ function Landing() {
             <span className="text-gradient">avec confiance.</span>
           </h1>
           <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-            HSC Bank est la nouvelle génération de banque européenne offrant des prêts personnels rapides, transparents et sécurisés.
+            HSBC BANK est la nouvelle génération de banque européenne offrant des prêts personnels rapides, transparents et sécurisés.
           </p>
           <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg" className="h-14 rounded-full px-8 text-base shadow-glow">
@@ -82,7 +82,7 @@ function Landing() {
               { Icon: FileSignature, title: "Simulez votre prêt", desc: "Choisissez le montant et la durée qui vous conviennent. Nous calculons immédiatement votre mensualité estimée." },
               { Icon: CheckCircle2, title: "Complétez votre dossier", desc: "Remplissez le formulaire en 5 minutes et téléchargez vos justificatifs (pièce d'identité, justificatif de domicile, fiches de paie)." },
               { Icon: ShieldCheck, title: "Signez votre contrat", desc: "Dès acceptation par notre équipe, signez votre contrat électroniquement en toute sécurité." },
-              { Icon: Wallet, title: "Recevez vos fonds", desc: "Une fois le délai légal passé, les fonds sont disponibles dans votre portefeuille HSC Bank, prêts à être retirés." },
+              { Icon: Wallet, title: "Recevez vos fonds", desc: "Une fois le délai légal passé, les fonds sont disponibles dans votre portefeuille HSBC BANK, prêts à être retirés." },
             ].map((step, i) => (
               <div key={i} className="group relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse">
                 <div className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-4 border-background bg-primary font-bold text-primary-foreground shadow-md md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
@@ -144,7 +144,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border bg-card py-10 text-center text-sm text-muted-foreground">
-        <p>© {new Date().getFullYear()} HSC Bank. Tous droits réservés.</p>
+        <p>© {new Date().getFullYear()} HSBC BANK. Tous droits réservés.</p>
         <p className="mt-2 text-xs">Un crédit vous engage et doit être remboursé. Vérifiez vos capacités de remboursement avant de vous engager.</p>
       </footer>
     </div>
