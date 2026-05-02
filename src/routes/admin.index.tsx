@@ -259,11 +259,11 @@ function AdminDashboard() {
   const totalDisbursed = loans.reduce((s, l) => s + Number(l.disbursed_amount ?? 0), 0);
   const contractSignedCount = loans.filter((l) => l.status === "contrat_signe").length;
 
-  const kpis = [
-    { title: "Total des demandes", value: stats.total, icon: FileText, color: "text-info", border: "border-t-info" },
-    { title: "En attente", value: stats.pending, icon: Clock, color: "text-warning", border: "border-t-warning" },
-    { title: "Acceptées", value: stats.accepted, icon: CheckCircle2, color: "text-success", border: "border-t-success" },
-    { title: "Refusées", value: stats.refused, icon: XCircle, color: "text-destructive", border: "border-t-destructive" },
+  const kpis: Array<{ title: string; value: number; icon: typeof FileText; color: string; border: string; status: LoanStatus | "all" | "accepted_group" }> = [
+    { title: "Total des demandes", value: stats.total, icon: FileText, color: "text-info", border: "border-t-info", status: "all" },
+    { title: "En attente", value: stats.pending, icon: Clock, color: "text-warning", border: "border-t-warning", status: "en_attente" },
+    { title: "Acceptées", value: stats.accepted, icon: CheckCircle2, color: "text-success", border: "border-t-success", status: "accepte" },
+    { title: "Refusées", value: stats.refused, icon: XCircle, color: "text-destructive", border: "border-t-destructive", status: "refuse" },
   ];
 
   const amounts = [
@@ -289,17 +289,24 @@ function AdminDashboard() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {kpis.map((kpi) => (
-          <Card key={kpi.title} className={cn("border-t-4 hover-elevate transition-all cursor-pointer", kpi.border)} onClick={() => setFilter(kpi.title === "En attente" ? "en_attente" : "all")}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">{kpi.title}</p>
-                  <p className="text-3xl font-bold">{kpi.value}</p>
+          <Link
+            key={kpi.title}
+            to="/admin/loans"
+            search={kpi.status === "all" ? {} : { status: kpi.status as string }}
+            className="block"
+          >
+            <Card className={cn("border-t-4 hover-elevate transition-all cursor-pointer", kpi.border)}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-1">{kpi.title}</p>
+                    <p className="text-3xl font-bold">{kpi.value}</p>
+                  </div>
+                  <kpi.icon className={cn("h-8 w-8 opacity-30", kpi.color)} />
                 </div>
-                <kpi.icon className={cn("h-8 w-8 opacity-30", kpi.color)} />
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
 
@@ -353,8 +360,10 @@ function AdminDashboard() {
                       </div>
                       <div className="text-right shrink-0">
                         <p className="text-xs text-muted-foreground">{formatDate(l.created_at)}</p>
-                        <Button variant="link" size="sm" className="h-auto p-0 text-xs mt-1" onClick={() => setSelectedId(l.id)}>
-                          Ouvrir <ArrowRight className="h-3 w-3 ml-1" />
+                        <Button asChild variant="link" size="sm" className="h-auto p-0 text-xs mt-1">
+                          <Link to="/admin/clients/$userId" params={{ userId: l.user_id }}>
+                            Ouvrir <ArrowRight className="h-3 w-3 ml-1" />
+                          </Link>
                         </Button>
                       </div>
                     </div>
@@ -371,13 +380,29 @@ function AdminDashboard() {
               <h3 className="font-serif text-xl mb-2">Actions rapides</h3>
               <p className="text-sm opacity-80 mb-6">Gérez les dossiers en attente en priorité pour maintenir notre engagement de réponse en 24h.</p>
               <div className="space-y-3">
-                <Button variant="secondary" className="w-full justify-between" onClick={() => setFilter("en_attente")}>
-                  Dossiers à étudier
-                  <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary">{stats.pending}</Badge>
+                <Button asChild variant="secondary" className="w-full justify-between">
+                  <Link to="/admin/loans" search={{ status: "en_attente" }}>
+                    Dossiers à étudier
+                    <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary">{stats.pending}</Badge>
+                  </Link>
                 </Button>
-                <Button variant="secondary" className="w-full justify-between" onClick={() => setFilter("contrat_signe")}>
-                  Contrats signés à traiter
-                  <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary">{contractSignedCount}</Badge>
+                <Button asChild variant="secondary" className="w-full justify-between">
+                  <Link to="/admin/loans" search={{ status: "contrat_signe" }}>
+                    Contrats signés à traiter
+                    <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary">{contractSignedCount}</Badge>
+                  </Link>
+                </Button>
+                <Button asChild variant="secondary" className="w-full justify-between">
+                  <Link to="/admin/clients">
+                    Gérer les clients
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild className="w-full justify-between shadow-glow">
+                  <Link to="/admin/transfers/new">
+                    Nouveau virement
+                    <Send className="h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
             </CardContent>

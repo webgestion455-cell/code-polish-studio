@@ -4,6 +4,8 @@ import { ThemeProvider } from "@/lib/theme-context";
 import { Toaster } from "@/components/ui/sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { BlockedAccountGuard } from "@/components/BlockedAccountGuard";
+import "@/i18n";
 
 import appCss from "../styles.css?url";
 
@@ -89,7 +91,9 @@ function RootComponent() {
         <div className="min-h-screen flex flex-col">
           <AppHeader />
           <main className="flex-1">
-            <Outlet />
+            <BlockedAccountGuard>
+              <Outlet />
+            </BlockedAccountGuard>
           </main>
           <MobileBottomNav />
         </div>

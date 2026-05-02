@@ -1,11 +1,14 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { LogOut, ShieldCheck, LayoutDashboard, Settings as SettingsIcon } from "lucide-react";
 
 export function AppHeader() {
+  const { t } = useTranslation();
   const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
   const { location } = useRouterState();
@@ -43,10 +46,10 @@ export function AppHeader() {
         {user && !isAdminArea && (
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             <Link to="/dashboard" className={`transition-colors hover:text-foreground ${location.pathname === "/dashboard" ? "text-foreground" : "text-muted-foreground"}`}>
-              Mes prêts
+              {t("header.myLoans")}
             </Link>
             <Link to="/loans/new" className={`transition-colors hover:text-foreground ${location.pathname === "/loans/new" ? "text-foreground" : "text-muted-foreground"}`}>
-              Demander un prêt
+              {t("header.newLoan")}
             </Link>
           </nav>
         )}
@@ -58,7 +61,7 @@ export function AppHeader() {
                 <Button asChild variant="secondary" size="sm" className="hidden sm:inline-flex">
                   <Link to="/admin">
                     <ShieldCheck className="mr-1.5 h-4 w-4" />
-                    Admin
+                    {t("header.admin")}
                   </Link>
                 </Button>
               )}
@@ -71,31 +74,33 @@ export function AppHeader() {
                 >
                   <Link to="/dashboard">
                     <LayoutDashboard className="mr-1.5 h-4 w-4" />
-                    Dashboard
+                    {t("header.dashboard")}
                   </Link>
                 </Button>
               )}
               <NotificationBell />
-              <Button asChild variant="ghost" size="icon" aria-label="Paramètres" className="h-9 w-9">
+              <Button asChild variant="ghost" size="icon" aria-label={t("header.settings")} className="h-9 w-9">
                 <Link to="/settings">
                   <SettingsIcon className="h-4 w-4" />
                 </Link>
               </Button>
+              <LanguageSwitcher />
               <ThemeToggle />
-              <Button variant="ghost" size="icon" onClick={handleSignOut} aria-label="Se déconnecter" className="h-9 w-9">
+              <Button variant="ghost" size="icon" onClick={handleSignOut} aria-label={t("header.signOut")} className="h-9 w-9">
                 <LogOut className="h-4 w-4" />
               </Button>
             </>
           ) : (
             <>
+              <LanguageSwitcher />
               <ThemeToggle />
               {!onApp && (
                 <>
                   <Button asChild variant="ghost" size="sm">
-                    <Link to="/auth">Connexion</Link>
+                    <Link to="/auth">{t("header.signIn")}</Link>
                   </Button>
                   <Button asChild size="sm" className="shadow-glow">
-                    <Link to="/auth">Demander un prêt</Link>
+                    <Link to="/auth">{t("header.newLoan")}</Link>
                   </Button>
                 </>
               )}

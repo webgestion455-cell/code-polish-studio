@@ -1,0 +1,18 @@
+{
+  "common": { "loading": "Nalaganje…", "save": "Shrani", "cancel": "Prekliči", "close": "Zapri", "back": "Nazaj", "open": "Odpri", "search": "Iskanje", "actions": "Dejanja", "yes": "Da", "no": "Ne", "all": "Vse", "none": "Brez", "language": "Jezik" },
+  "header": { "myLoans": "Moja posojila", "newLoan": "Zaprosi za posojilo", "dashboard": "Nadzorna plošča", "admin": "Skrbnik", "settings": "Nastavitve", "signOut": "Odjava", "signIn": "Prijava" },
+  "admin": {
+    "title": "Skrbniška nadzorna plošča",
+    "subtitle": "Pregled bančne dejavnosti.",
+    "kpis": { "total": "Skupaj vlog", "pending": "V čakanju", "accepted": "Sprejete", "refused": "Zavrnjene" },
+    "amounts": { "requested": "Skupaj zaprošeno", "accepted": "Skupaj sprejeto", "disbursed": "Izplačana sredstva" },
+    "recent": { "title": "Nedavna dejavnost", "empty": "Ni nedavne dejavnosti", "open": "Odpri" },
+    "quickActions": { "title": "Hitra dejanja", "subtitle": "Najprej obravnavajte čakajoče vloge.", "toStudy": "Vloge za pregled", "signedContracts": "Podpisane pogodbe", "manageClients": "Upravljaj stranke", "newTransfer": "Novo nakazilo" },
+    "loansPage": { "title": "Vse vloge za posojilo", "subtitle": "Podroben in filtriran pregled.", "client": "Stranka", "amount": "Znesek", "status": "Status", "date": "Datum", "documents": "Dok.", "duration": "Trajanje" },
+    "clientsPage": { "title": "Stranke", "subtitle": "Računi strank in stanje dostopa.", "client": "Stranka", "phone": "Telefon", "loans": "Posojila", "totalBorrowed": "Skupaj izposojeno", "joined": "Pridruženo", "status": "Status", "active": "Aktivno", "blocked": "Blokirano" },
+    "clientDetail": { "title": "Profil stranke", "personalInfo": "Osebni podatki", "summary": "Povzetek", "loans": "Posojila stranke", "withdrawals": "Nakazila", "noLoans": "Ta stranka še nima vlog.", "noWithdrawals": "Ni nakazil.", "blockBtn": "Blokiraj račun", "unblockBtn": "Odblokiraj račun", "blockTitle": "Blokiraj račun stranke", "blockReason": "Razlog blokade", "blockReasonPlaceholder": "Npr.: sum prevare, KYC neskladen…", "blockedSince": "Blokirano od", "blockedReason": "Razlog", "confirm": "Potrdi" },
+    "transfer": { "title": "Novo nakazilo", "subtitle": "Začnite bančno nakazilo stranki.", "kind": "Vrsta nakazila", "instant": "Takojšnje (SEPA Instant)", "instantHint": "Nakazano takoj (provizija 1€)", "classic": "Klasično (SEPA standard)", "classicHint": "Nakazano v 1 delovnem dnevu", "client": "Stranka", "selectClient": "Izberite stranko", "loan": "Vloga za posojilo", "selectLoan": "Izberite vlogo", "amount": "Znesek (€)", "beneficiary": "Prejemnik", "iban": "IBAN", "bic": "BIC", "bankName": "Ime banke", "reference": "Sklic", "submit": "Izvedi nakazilo", "success": "Nakazilo uspešno izvedeno", "error": "Nakazilo ni uspelo" }
+  },
+  "blocked": { "title": "Račun je začasno blokiran", "message": "Vaš račun je bil začasno blokiran s strani naše skladnostne ekipe.", "reasonLabel": "Razlog", "contact": "Za več informacij se obrnite na podporo.", "signOut": "Odjava" },
+  "status": { "en_attente": "V čakanju", "accepte": "Sprejeto", "refuse": "Zavrnjeno", "contrat_envoye": "Pogodba poslana", "contrat_signe": "Pogodba podpisana", "en_traitement": "V obdelavi", "fonds_disponibles": "Sredstva na voljo" }
+}

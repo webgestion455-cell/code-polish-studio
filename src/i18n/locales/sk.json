@@ -1,0 +1,18 @@
+{
+  "common": { "loading": "Načítava sa…", "save": "Uložiť", "cancel": "Zrušiť", "close": "Zavrieť", "back": "Späť", "open": "Otvoriť", "search": "Hľadať", "actions": "Akcie", "yes": "Áno", "no": "Nie", "all": "Všetky", "none": "Žiadne", "language": "Jazyk" },
+  "header": { "myLoans": "Moje úvery", "newLoan": "Požiadať o úver", "dashboard": "Prehľad", "admin": "Admin", "settings": "Nastavenia", "signOut": "Odhlásiť sa", "signIn": "Prihlásiť sa" },
+  "admin": {
+    "title": "Admin prehľad",
+    "subtitle": "Prehľad bankovej aktivity.",
+    "kpis": { "total": "Celkový počet žiadostí", "pending": "Čakajúce", "accepted": "Schválené", "refused": "Zamietnuté" },
+    "amounts": { "requested": "Celková žiadaná suma", "accepted": "Celková schválená suma", "disbursed": "Vyplatené prostriedky" },
+    "recent": { "title": "Nedávna aktivita", "empty": "Žiadna nedávna aktivita", "open": "Otvoriť" },
+    "quickActions": { "title": "Rýchle akcie", "subtitle": "Najprv spracujte čakajúce spisy.", "toStudy": "Spisy na preskúmanie", "signedContracts": "Podpísané zmluvy", "manageClients": "Spravovať klientov", "newTransfer": "Nový prevod" },
+    "loansPage": { "title": "Všetky úverové spisy", "subtitle": "Podrobný a filtrovateľný prehľad.", "client": "Klient", "amount": "Suma", "status": "Stav", "date": "Dátum", "documents": "Dok.", "duration": "Trvanie" },
+    "clientsPage": { "title": "Klienti", "subtitle": "Klientske účty a stav prístupu.", "client": "Klient", "phone": "Telefón", "loans": "Úvery", "totalBorrowed": "Celkom požičané", "joined": "Registrovaný", "status": "Stav", "active": "Aktívny", "blocked": "Zablokovaný" },
+    "clientDetail": { "title": "Profil klienta", "personalInfo": "Osobné údaje", "summary": "Zhrnutie", "loans": "Úvery klienta", "withdrawals": "Prevody", "noLoans": "Tento klient zatiaľ nemá žiadne spisy.", "noWithdrawals": "Žiadne prevody.", "blockBtn": "Zablokovať účet", "unblockBtn": "Odblokovať účet", "blockTitle": "Zablokovať účet klienta", "blockReason": "Dôvod zablokovania", "blockReasonPlaceholder": "Napr.: podozrenie z podvodu, KYC nezhoda…", "blockedSince": "Zablokované od", "blockedReason": "Dôvod", "confirm": "Potvrdiť" },
+    "transfer": { "title": "Nový prevod", "subtitle": "Iniciovať bankový prevod klientovi.", "kind": "Typ prevodu", "instant": "Okamžitý (SEPA Instant)", "instantHint": "Pripísané ihneď (poplatok 1€)", "classic": "Klasický (SEPA štandard)", "classicHint": "Pripísané do 1 pracovného dňa", "client": "Klient", "selectClient": "Vybrať klienta", "loan": "Úverový spis", "selectLoan": "Vybrať spis", "amount": "Suma (€)", "beneficiary": "Príjemca", "iban": "IBAN", "bic": "BIC", "bankName": "Názov banky", "reference": "Referencia", "submit": "Vykonať prevod", "success": "Prevod úspešne vykonaný", "error": "Prevod zlyhal" }
+  },
+  "blocked": { "title": "Účet pozastavený", "message": "Váš účet bol dočasne pozastavený naším tímom pre súlad.", "reasonLabel": "Dôvod", "contact": "Pre viac informácií kontaktujte podporu.", "signOut": "Odhlásiť sa" },
+  "status": { "en_attente": "Čakajúce", "accepte": "Schválené", "refuse": "Zamietnuté", "contrat_envoye": "Zmluva odoslaná", "contrat_signe": "Zmluva podpísaná", "en_traitement": "Spracováva sa", "fonds_disponibles": "Prostriedky dostupné" }
+}
