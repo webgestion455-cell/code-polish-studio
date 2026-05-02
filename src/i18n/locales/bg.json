@@ -1,0 +1,18 @@
+{
+  "common": { "loading": "Зареждане…", "save": "Запази", "cancel": "Отказ", "close": "Затвори", "back": "Назад", "open": "Отвори", "search": "Търсене", "actions": "Действия", "yes": "Да", "no": "Не", "all": "Всички", "none": "Няма", "language": "Език" },
+  "header": { "myLoans": "Моите кредити", "newLoan": "Заявка за кредит", "dashboard": "Табло", "admin": "Админ", "settings": "Настройки", "signOut": "Изход", "signIn": "Вход" },
+  "admin": {
+    "title": "Админ табло",
+    "subtitle": "Преглед на банковата дейност.",
+    "kpis": { "total": "Общо заявки", "pending": "В изчакване", "accepted": "Приети", "refused": "Отказани" },
+    "amounts": { "requested": "Общо заявена сума", "accepted": "Общо приета сума", "disbursed": "Изплатени средства" },
+    "recent": { "title": "Скорошна активност", "empty": "Няма скорошна активност", "open": "Отвори" },
+    "quickActions": { "title": "Бързи действия", "subtitle": "Първо обработете чакащите досиета.", "toStudy": "Досиета за преглед", "signedContracts": "Подписани договори", "manageClients": "Управление на клиенти", "newTransfer": "Нов превод" },
+    "loansPage": { "title": "Всички кредитни досиета", "subtitle": "Подробен и филтриран изглед.", "client": "Клиент", "amount": "Сума", "status": "Статус", "date": "Дата", "documents": "Док.", "duration": "Срок" },
+    "clientsPage": { "title": "Клиенти", "subtitle": "Клиентски акаунти и статус на достъп.", "client": "Клиент", "phone": "Телефон", "loans": "Кредити", "totalBorrowed": "Общо заето", "joined": "Регистриран", "status": "Статус", "active": "Активен", "blocked": "Блокиран" },
+    "clientDetail": { "title": "Клиентски профил", "personalInfo": "Лични данни", "summary": "Обобщение", "loans": "Кредити на клиента", "withdrawals": "Преводи", "noLoans": "Този клиент все още няма досиета.", "noWithdrawals": "Няма преводи.", "blockBtn": "Блокирай акаунт", "unblockBtn": "Отблокирай акаунт", "blockTitle": "Блокиране на клиентски акаунт", "blockReason": "Причина за блокиране", "blockReasonPlaceholder": "Напр.: подозрение за измама, несъответствие с KYC…", "blockedSince": "Блокиран от", "blockedReason": "Причина", "confirm": "Потвърди" },
+    "transfer": { "title": "Нов превод", "subtitle": "Иницииране на банков превод към клиент.", "kind": "Тип на превода", "instant": "Незабавен (SEPA Instant)", "instantHint": "Кредитиран веднага (такса 1€)", "classic": "Класически (SEPA стандарт)", "classicHint": "Кредитиран в рамките на 1 работен ден", "client": "Клиент", "selectClient": "Избери клиент", "loan": "Кредитно досие", "selectLoan": "Избери досие", "amount": "Сума (€)", "beneficiary": "Получател", "iban": "IBAN", "bic": "BIC", "bankName": "Име на банката", "reference": "Референция", "submit": "Изпълни превода", "success": "Преводът е изпълнен успешно", "error": "Грешка при изпълнението на превода" }
+  },
+  "blocked": { "title": "Акаунтът е временно блокиран", "message": "Вашият акаунт е временно блокиран от нашия отдел за съответствие.", "reasonLabel": "Причина", "contact": "Моля свържете се с поддръжката за повече информация.", "signOut": "Изход" },
+  "status": { "en_attente": "В изчакване", "accepte": "Прието", "refuse": "Отказано", "contrat_envoye": "Договорът е изпратен", "contrat_signe": "Договорът е подписан", "en_traitement": "В обработка", "fonds_disponibles": "Средствата са налични" }
+}

@@ -1,0 +1,131 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "open": "Open",
+    "search": "Search",
+    "actions": "Actions",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "language": "Language"
+  },
+  "header": {
+    "myLoans": "My loans",
+    "newLoan": "Apply for a loan",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "signIn": "Sign in"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Overview of banking activity.",
+    "kpis": {
+      "total": "Total applications",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "refused": "Refused"
+    },
+    "amounts": {
+      "requested": "Total requested",
+      "accepted": "Total accepted",
+      "disbursed": "Funds disbursed"
+    },
+    "recent": {
+      "title": "Recent activity",
+      "empty": "No recent activity",
+      "open": "Open"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "subtitle": "Handle pending files first.",
+      "toStudy": "Files to review",
+      "signedContracts": "Signed contracts to process",
+      "manageClients": "Manage clients",
+      "newTransfer": "New transfer"
+    },
+    "loansPage": {
+      "title": "All loan files",
+      "subtitle": "Detailed and filterable view of applications.",
+      "client": "Client",
+      "amount": "Amount",
+      "status": "Status",
+      "date": "Date",
+      "documents": "Docs",
+      "duration": "Duration"
+    },
+    "clientsPage": {
+      "title": "Clients",
+      "subtitle": "Client accounts and access status.",
+      "client": "Client",
+      "phone": "Phone",
+      "loans": "Loans",
+      "totalBorrowed": "Total borrowed",
+      "joined": "Joined",
+      "status": "Status",
+      "active": "Active",
+      "blocked": "Blocked"
+    },
+    "clientDetail": {
+      "title": "Client profile",
+      "personalInfo": "Personal information",
+      "summary": "Summary",
+      "loans": "Client's loans",
+      "withdrawals": "Transfers",
+      "noLoans": "This client has no files yet.",
+      "noWithdrawals": "No transfers.",
+      "blockBtn": "Block account",
+      "unblockBtn": "Unblock account",
+      "blockTitle": "Block client account",
+      "blockReason": "Block reason",
+      "blockReasonPlaceholder": "e.g. fraud suspicion, KYC non-compliant…",
+      "blockedSince": "Blocked since",
+      "blockedReason": "Reason",
+      "confirm": "Confirm"
+    },
+    "transfer": {
+      "title": "New transfer",
+      "subtitle": "Initiate a bank transfer to a client.",
+      "kind": "Transfer type",
+      "instant": "Instant (SEPA Instant)",
+      "instantHint": "Credited immediately (€1 fee)",
+      "classic": "Classic (SEPA standard)",
+      "classicHint": "Credited within 1 business day",
+      "client": "Client",
+      "selectClient": "Select a client",
+      "loan": "Loan file",
+      "selectLoan": "Select a file",
+      "amount": "Amount (€)",
+      "beneficiary": "Beneficiary",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bankName": "Bank name",
+      "reference": "Reference",
+      "submit": "Issue transfer",
+      "success": "Transfer issued successfully",
+      "error": "Failed to issue transfer"
+    }
+  },
+  "blocked": {
+    "title": "Account suspended",
+    "message": "Your account has been temporarily suspended by our compliance team.",
+    "reasonLabel": "Reason",
+    "contact": "Please contact support for more information.",
+    "signOut": "Sign out"
+  },
+  "status": {
+    "en_attente": "Pending",
+    "accepte": "Accepted",
+    "refuse": "Refused",
+    "contrat_envoye": "Contract sent",
+    "contrat_signe": "Contract signed",
+    "en_traitement": "Processing",
+    "fonds_disponibles": "Funds available"
+  }
+}

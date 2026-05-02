@@ -1,0 +1,131 @@
+{
+  "common": {
+    "loading": "Chargement…",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "back": "Retour",
+    "open": "Ouvrir",
+    "search": "Rechercher",
+    "actions": "Actions",
+    "yes": "Oui",
+    "no": "Non",
+    "all": "Tous",
+    "none": "Aucun",
+    "language": "Langue"
+  },
+  "header": {
+    "myLoans": "Mes prêts",
+    "newLoan": "Demander un prêt",
+    "dashboard": "Tableau de bord",
+    "admin": "Admin",
+    "settings": "Paramètres",
+    "signOut": "Se déconnecter",
+    "signIn": "Connexion"
+  },
+  "admin": {
+    "title": "Tableau de bord Admin",
+    "subtitle": "Vue d'ensemble de l'activité bancaire.",
+    "kpis": {
+      "total": "Total des demandes",
+      "pending": "En attente",
+      "accepted": "Acceptées",
+      "refused": "Refusées"
+    },
+    "amounts": {
+      "requested": "Montant total demandé",
+      "accepted": "Montant total accepté",
+      "disbursed": "Fonds débloqués"
+    },
+    "recent": {
+      "title": "Activité récente",
+      "empty": "Aucune activité récente",
+      "open": "Ouvrir"
+    },
+    "quickActions": {
+      "title": "Actions rapides",
+      "subtitle": "Gérez les dossiers en attente en priorité.",
+      "toStudy": "Dossiers à étudier",
+      "signedContracts": "Contrats signés à traiter",
+      "manageClients": "Gérer les clients",
+      "newTransfer": "Nouveau virement"
+    },
+    "loansPage": {
+      "title": "Tous les dossiers de prêt",
+      "subtitle": "Vue détaillée et filtrable des demandes.",
+      "client": "Client",
+      "amount": "Montant",
+      "status": "Statut",
+      "date": "Date",
+      "documents": "Docs",
+      "duration": "Durée"
+    },
+    "clientsPage": {
+      "title": "Clients",
+      "subtitle": "Comptes clients et état des accès.",
+      "client": "Client",
+      "phone": "Téléphone",
+      "loans": "Prêts",
+      "totalBorrowed": "Total emprunté",
+      "joined": "Inscrit",
+      "status": "Statut",
+      "active": "Actif",
+      "blocked": "Bloqué"
+    },
+    "clientDetail": {
+      "title": "Fiche client",
+      "personalInfo": "Informations personnelles",
+      "summary": "Récapitulatif",
+      "loans": "Prêts du client",
+      "withdrawals": "Virements",
+      "noLoans": "Ce client n'a encore aucun dossier.",
+      "noWithdrawals": "Aucun virement.",
+      "blockBtn": "Bloquer le compte",
+      "unblockBtn": "Débloquer le compte",
+      "blockTitle": "Bloquer le compte client",
+      "blockReason": "Motif du blocage",
+      "blockReasonPlaceholder": "Ex : suspicion de fraude, KYC non conforme…",
+      "blockedSince": "Bloqué depuis",
+      "blockedReason": "Motif",
+      "confirm": "Confirmer"
+    },
+    "transfer": {
+      "title": "Nouveau virement",
+      "subtitle": "Initier un virement bancaire vers un client.",
+      "kind": "Type de virement",
+      "instant": "Instantané (SEPA Instant)",
+      "instantHint": "Crédité immédiatement (frais 1€)",
+      "classic": "Classique (SEPA standard)",
+      "classicHint": "Crédité sous 1 jour ouvré",
+      "client": "Client",
+      "selectClient": "Sélectionner un client",
+      "loan": "Dossier de prêt",
+      "selectLoan": "Sélectionner un dossier",
+      "amount": "Montant (€)",
+      "beneficiary": "Bénéficiaire",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bankName": "Nom de la banque",
+      "reference": "Référence",
+      "submit": "Émettre le virement",
+      "success": "Virement émis avec succès",
+      "error": "Échec de l'émission du virement"
+    }
+  },
+  "blocked": {
+    "title": "Compte suspendu",
+    "message": "Votre compte a été temporairement suspendu par notre service de conformité.",
+    "reasonLabel": "Motif",
+    "contact": "Contactez le support pour plus d'informations.",
+    "signOut": "Se déconnecter"
+  },
+  "status": {
+    "en_attente": "En attente",
+    "accepte": "Accepté",
+    "refuse": "Refusé",
+    "contrat_envoye": "Contrat envoyé",
+    "contrat_signe": "Contrat signé",
+    "en_traitement": "En traitement",
+    "fonds_disponibles": "Fonds disponibles"
+  }
+}

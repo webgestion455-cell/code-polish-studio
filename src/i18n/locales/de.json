@@ -1,0 +1,18 @@
+{
+  "common": { "loading": "Laden…", "save": "Speichern", "cancel": "Abbrechen", "close": "Schließen", "back": "Zurück", "open": "Öffnen", "search": "Suchen", "actions": "Aktionen", "yes": "Ja", "no": "Nein", "all": "Alle", "none": "Keine", "language": "Sprache" },
+  "header": { "myLoans": "Meine Kredite", "newLoan": "Kredit beantragen", "dashboard": "Dashboard", "admin": "Admin", "settings": "Einstellungen", "signOut": "Abmelden", "signIn": "Anmelden" },
+  "admin": {
+    "title": "Admin-Dashboard",
+    "subtitle": "Übersicht der Bankaktivität.",
+    "kpis": { "total": "Anfragen gesamt", "pending": "Ausstehend", "accepted": "Angenommen", "refused": "Abgelehnt" },
+    "amounts": { "requested": "Beantragte Summe", "accepted": "Angenommene Summe", "disbursed": "Ausgezahlte Mittel" },
+    "recent": { "title": "Letzte Aktivität", "empty": "Keine aktuelle Aktivität", "open": "Öffnen" },
+    "quickActions": { "title": "Schnellaktionen", "subtitle": "Bearbeiten Sie zuerst ausstehende Akten.", "toStudy": "Zu prüfende Akten", "signedContracts": "Unterzeichnete Verträge", "manageClients": "Kunden verwalten", "newTransfer": "Neue Überweisung" },
+    "loansPage": { "title": "Alle Kreditakten", "subtitle": "Detaillierte und filterbare Ansicht.", "client": "Kunde", "amount": "Betrag", "status": "Status", "date": "Datum", "documents": "Dok.", "duration": "Dauer" },
+    "clientsPage": { "title": "Kunden", "subtitle": "Kundenkonten und Zugriffsstatus.", "client": "Kunde", "phone": "Telefon", "loans": "Kredite", "totalBorrowed": "Gesamtbetrag", "joined": "Beigetreten", "status": "Status", "active": "Aktiv", "blocked": "Gesperrt" },
+    "clientDetail": { "title": "Kundenprofil", "personalInfo": "Persönliche Daten", "summary": "Zusammenfassung", "loans": "Kredite des Kunden", "withdrawals": "Überweisungen", "noLoans": "Dieser Kunde hat noch keine Akten.", "noWithdrawals": "Keine Überweisungen.", "blockBtn": "Konto sperren", "unblockBtn": "Konto entsperren", "blockTitle": "Kundenkonto sperren", "blockReason": "Grund der Sperrung", "blockReasonPlaceholder": "z.B. Betrugsverdacht, KYC nicht konform…", "blockedSince": "Gesperrt seit", "blockedReason": "Grund", "confirm": "Bestätigen" },
+    "transfer": { "title": "Neue Überweisung", "subtitle": "Banküberweisung an einen Kunden initiieren.", "kind": "Überweisungsart", "instant": "Sofort (SEPA Instant)", "instantHint": "Sofort gutgeschrieben (1€ Gebühr)", "classic": "Klassisch (SEPA Standard)", "classicHint": "Innerhalb von 1 Werktag gutgeschrieben", "client": "Kunde", "selectClient": "Kunde auswählen", "loan": "Kreditakte", "selectLoan": "Akte auswählen", "amount": "Betrag (€)", "beneficiary": "Empfänger", "iban": "IBAN", "bic": "BIC", "bankName": "Bankname", "reference": "Referenz", "submit": "Überweisung ausführen", "success": "Überweisung erfolgreich ausgeführt", "error": "Überweisung fehlgeschlagen" }
+  },
+  "blocked": { "title": "Konto gesperrt", "message": "Ihr Konto wurde vorübergehend von unserem Compliance-Team gesperrt.", "reasonLabel": "Grund", "contact": "Bitte kontaktieren Sie den Support.", "signOut": "Abmelden" },
+  "status": { "en_attente": "Ausstehend", "accepte": "Angenommen", "refuse": "Abgelehnt", "contrat_envoye": "Vertrag gesendet", "contrat_signe": "Vertrag unterzeichnet", "en_traitement": "In Bearbeitung", "fonds_disponibles": "Mittel verfügbar" }
+}
