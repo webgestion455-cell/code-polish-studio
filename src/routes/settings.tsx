@@ -10,7 +10,7 @@ import { ArrowLeft, KeyRound, User as UserIcon, Mail, Phone, ShieldCheck, Loader
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
-  head: () => ({ meta: [{ title: "Paramètres — HSC Bank" }] }),
+  head: () => ({ meta: [{ title: "Paramètres — HSBC BANK" }] }),
 });
 
 function SettingsPage() {

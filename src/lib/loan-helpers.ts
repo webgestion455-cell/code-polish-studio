@@ -15,7 +15,7 @@ export const STATUS_LABELS: Record<LoanStatus, string> = {
 export const STATUS_DESCRIPTIONS: Record<LoanStatus, string> = {
   en_attente: "Votre demande est en cours d'examen par notre équipe.",
   accepte: "Bonne nouvelle ! Votre demande a été acceptée.",
-  refuse: "Votre demande n'a pas pu être acceptée.",
+  refuse: "Votre demande n'a pas pu être acceptée cette fois-ci.",
   contrat_envoye: "Votre contrat est prêt. Téléchargez, signez et renvoyez-le.",
   contrat_signe: "Contrat signé reçu. Traitement en cours sous 24-72h.",
   en_traitement: "Vos fonds sont en cours de transfert (24-72h).",

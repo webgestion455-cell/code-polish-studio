@@ -36,7 +36,7 @@ export function clearAdmin2FASession() {
 
 export const Route = createFileRoute("/admin/verify")({
   component: AdminVerify,
-  head: () => ({ meta: [{ title: "Vérification admin — HSC Bank" }] }),
+  head: () => ({ meta: [{ title: "Vérification admin — HSBC BANK" }] }),
 });
 
 function AdminVerify() {

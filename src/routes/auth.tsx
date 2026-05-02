@@ -12,7 +12,7 @@ import { ShieldCheck, Lock, Sparkles } from "lucide-react";
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
   head: () => ({
-    meta: [{ title: "Connexion — HSC Bank" }],
+    meta: [{ title: "Connexion — HSBC BANK" }],
   }),
 });
 
@@ -93,7 +93,7 @@ function AuthPage() {
             <Sparkles className="h-3 w-3 text-accent" /> Banque nouvelle génération
           </div>
           <h1 className="mt-6 font-serif text-5xl font-medium leading-[1.05] tracking-tight">
-            Bienvenue sur<br /><span className="text-gradient">HSC Bank</span>
+            Bienvenue sur<br /><span className="text-gradient">HSBC BANK</span>
           </h1>
           <p className="mt-6 max-w-md text-lg text-muted-foreground">
             Connectez-vous pour suivre vos demandes de prêt, signer vos contrats et gérer vos virements en quelques secondes.
@@ -114,7 +114,7 @@ function AuthPage() {
                 <path d="M15 7H21V13" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <h1 className="font-serif text-3xl font-medium">HSC Bank</h1>
+            <h1 className="font-serif text-3xl font-medium">HSBC BANK</h1>
             <p className="mt-1 text-sm text-muted-foreground">Connectez-vous ou créez votre compte.</p>
           </div>
 

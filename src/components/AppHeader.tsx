@@ -33,7 +33,7 @@ export function AppHeader() {
             </svg>
           </span>
           <div className="flex flex-col leading-tight">
-            <span className="font-serif text-lg font-medium tracking-tight">HSC Bank</span>
+            <span className="font-serif text-lg font-medium tracking-tight">HSBC BANK</span>
             {isAdminArea && role === "admin" && (
               <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">Espace sécurisé · Admin</span>
             )}

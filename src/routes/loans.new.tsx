@@ -1,314 +1,223 @@
-import { useState, useCallback } from "react";
-import { useLocation } from "wouter";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { z } from "zod";
-import { useGetMe, useCreateLoan, getListMyLoansQueryKey } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Slider } from "@/components/ui/slider";
-import { useToast } from "@/hooks/use-toast";
-import { formatCurrency } from "@/lib/utils";
-import { Upload, X, File, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { ArrowLeft, Upload, X, FileCheck2, ShieldCheck } from "lucide-react";
 
-const loanFormSchema = z.object({
-  applicantName: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
-  amount: z.coerce.number().min(100, "Le montant minimum est de 100€"),
-  durationMonths: z.coerce.number().min(3, "La durée minimale est de 3 mois").max(120, "La durée maximale est de 120 mois"),
-  monthlyIncome: z.coerce.number().min(0, "Le revenu doit être positif"),
-  purpose: z.string().optional(),
+export const Route = createFileRoute("/loans/new")({
+  component: NewLoan,
+  head: () => ({ meta: [{ title: "Nouvelle demande — HSBC BANK" }] }),
 });
 
-type LoanFormValues = z.infer<typeof loanFormSchema>;
+const schema = z.object({
+  fullName: z.string().trim().min(2).max(100),
+  email: z.string().trim().email().max(255),
+  amount: z.number().min(500, "Minimum 500 €").max(100000, "Maximum 100 000 €"),
+  duration_months: z.number().int().min(3).max(120),
+  monthly_income: z.number().min(0).max(1000000),
+  purpose: z.string().trim().max(500).optional(),
+});
 
-export function NewLoan() {
-  const [, setLocation] = useLocation();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const { data: user } = useGetMe();
-  const createLoan = useCreateLoan();
-  
-  const [documents, setDocuments] = useState<{ filename: string; contentType: string; dataBase64: string }[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
-  const form = useForm<LoanFormValues>({
-    resolver: zodResolver(loanFormSchema),
-    defaultValues: {
-      applicantName: user?.fullName || "",
-      amount: 5000,
-      durationMonths: 24,
-      monthlyIncome: 2000,
-      purpose: "",
-    },
-  });
+function NewLoan() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [files, setFiles] = useState<File[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
-  const watchAmount = form.watch("amount");
-  const watchDuration = form.watch("durationMonths");
-  
-  const monthlyPayment = (watchAmount || 0) / (watchDuration || 1);
+  useEffect(() => {
+    if (!authLoading && !user) navigate({ to: "/auth" });
+  }, [user, authLoading, navigate]);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files?.length) return;
-
-    setIsUploading(true);
-    const newDocs: { filename: string; contentType: string; dataBase64: string }[] = [];
-    
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64String = event.target?.result?.toString().split(',')[1];
-        if (base64String) {
-          newDocs.push({
-            filename: file.name,
-            contentType: file.type,
-            dataBase64: base64String
-          });
-        }
-        if (newDocs.length === files.length) {
-          setDocuments((prev) => [...prev, ...newDocs]);
-          setIsUploading(false);
-        }
-      };
-      reader.readAsDataURL(file);
+  function onFilesChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const list = Array.from(e.target.files ?? []);
+    const valid = list.filter((f) => {
+      if (f.size > MAX_FILE_SIZE) {
+        toast.error(`${f.name} dépasse 5 Mo`);
+        return false;
+      }
+      return true;
     });
-  };
+    setFiles((prev) => [...prev, ...valid].slice(0, 5));
+    e.target.value = "";
+  }
 
-  const removeDocument = (index: number) => {
-    setDocuments(docs => docs.filter((_, i) => i !== index));
-  };
+  function removeFile(idx: number) {
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
+  }
 
-  const onSubmit = (data: LoanFormValues) => {
-    if (documents.length === 0) {
-      toast({
-        title: "Documents manquants",
-        description: "Veuillez fournir au moins un justificatif (pièce d'identité, etc.)",
-        variant: "destructive",
-      });
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!user) return;
+    const fd = new FormData(e.currentTarget);
+    const parsed = schema.safeParse({
+      fullName: fd.get("fullName"),
+      email: fd.get("email"),
+      amount: Number(fd.get("amount")),
+      duration_months: Number(fd.get("duration_months")),
+      monthly_income: Number(fd.get("monthly_income")),
+      purpose: (fd.get("purpose") as string) || undefined,
+    });
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0].message);
       return;
     }
 
-    createLoan.mutate({
-      data: {
-        ...data,
-        applicantEmail: user?.email || "",
-        documents,
+    setSubmitting(true);
+
+    // 1. Insert loan
+    const { data: loan, error: loanErr } = await supabase
+      .from("loans")
+      .insert({
+        user_id: user.id,
+        full_name: parsed.data.fullName,
+        email: parsed.data.email,
+        amount: parsed.data.amount,
+        duration_months: parsed.data.duration_months,
+        monthly_income: parsed.data.monthly_income,
+        purpose: parsed.data.purpose ?? null,
+      })
+      .select()
+      .single();
+
+    if (loanErr || !loan) {
+      setSubmitting(false);
+      toast.error("Erreur lors de la création de la demande");
+      return;
+    }
+
+    // 2. Upload documents
+    for (const file of files) {
+      const safe = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+      const path = `${user.id}/${loan.id}/${Date.now()}-${safe}`;
+      const { error: upErr } = await supabase.storage.from("loan-documents").upload(path, file);
+      if (upErr) {
+        toast.error(`Upload échoué: ${file.name}`);
+        continue;
       }
-    }, {
-      onSuccess: (res: any) => {
-        queryClient.invalidateQueries({ queryKey: getListMyLoansQueryKey() });
-        toast({
-          title: "Demande envoyée",
-          description: "Votre demande a été enregistrée avec succès.",
-        });
-        setLocation(`/loans/${res.id}`);
-      },
-      onError: (err) => {
-        toast({
-          title: "Erreur",
-          description: "Une erreur est survenue lors de l'envoi de la demande.",
-          variant: "destructive",
-        });
-      }
+      await supabase.from("loan_documents").insert({
+        loan_id: loan.id,
+        user_id: user.id,
+        file_path: path,
+        file_name: file.name,
+        file_size: file.size,
+      });
+    }
+
+    const { notifyAllAdmins } = await import("@/lib/notifications");
+    await notifyAllAdmins({
+      title: "Nouvelle demande de prêt",
+      message: `${parsed.data.fullName} demande ${parsed.data.amount} € sur ${parsed.data.duration_months} mois`,
+      link: "/admin",
+      category: "info",
     });
-  };
+
+    setSubmitting(false);
+    toast.success("Demande envoyée !");
+    navigate({ to: "/loans/$loanId", params: { loanId: loan.id } });
+  }
+
+  if (authLoading || !user) return <div className="flex items-center justify-center h-96 text-muted-foreground">Chargement...</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif text-primary">Demander un prêt</h1>
-        <p className="text-muted-foreground mt-1">Complétez ce formulaire pour obtenir une réponse rapide.</p>
-      </div>
+    <div className="mx-auto max-w-3xl px-4 pb-28 pt-8 sm:px-6 lg:px-8 lg:pb-10">
+      <Button asChild variant="ghost" size="sm" className="mb-6">
+        <Link to="/dashboard"><ArrowLeft className="mr-1.5 h-4 w-4" /> Retour</Link>
+      </Button>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="grid md:grid-cols-[1fr_300px] gap-8 items-start">
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Votre projet</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="amount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Montant souhaité (€)</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="durationMonths"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between">
-                          <span>Durée de remboursement</span>
-                          <span className="font-bold text-primary">{field.value} mois</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Slider 
-                            min={3} 
-                            max={120} 
-                            step={1} 
-                            value={[field.value]} 
-                            onValueChange={(val) => field.onChange(val[0])}
-                            className="py-4"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+      <h1 className="text-3xl font-bold">Nouvelle demande de prêt</h1>
+      <p className="mt-2 text-muted-foreground">Remplissez le formulaire et joignez vos justificatifs.</p>
 
-                  <FormField
-                    control={form.control}
-                    name="purpose"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Motif du prêt (optionnel)</FormLabel>
-                        <FormControl>
-                          <Textarea placeholder="Ex: Achat d'un véhicule, travaux..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Vos informations</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="applicantName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nom complet</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="space-y-2">
-                    <Label>Email</Label>
-                    <Input value={user?.email || ""} disabled className="bg-muted" />
-                    <p className="text-sm text-muted-foreground">Lié à votre compte sécurisé.</p>
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="monthlyIncome"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Revenus mensuels nets (€)</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Justificatifs</CardTitle>
-                  <CardDescription>Fournissez une pièce d'identité et un justificatif de domicile ou de revenus.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:bg-muted/50 transition-colors">
-                    <input
-                      type="file"
-                      id="documents"
-                      multiple
-                      accept=".pdf,.png,.jpg,.jpeg"
-                      className="hidden"
-                      onChange={handleFileUpload}
-                      disabled={isUploading}
-                    />
-                    <label htmlFor="documents" className="cursor-pointer flex flex-col items-center">
-                      {isUploading ? (
-                        <Loader2 className="h-8 w-8 text-muted-foreground animate-spin mb-4" />
-                      ) : (
-                        <Upload className="h-8 w-8 text-muted-foreground mb-4" />
-                      )}
-                      <span className="text-sm font-medium text-foreground">Cliquez pour ajouter des fichiers</span>
-                      <span className="text-xs text-muted-foreground mt-1">PDF, JPG, PNG acceptés</span>
-                    </label>
-                  </div>
-
-                  {documents.length > 0 && (
-                    <div className="space-y-2 mt-4">
-                      {documents.map((doc, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-3 border rounded-lg bg-white">
-                          <div className="flex items-center gap-3 overflow-hidden">
-                            <File className="h-4 w-4 text-primary shrink-0" />
-                            <span className="text-sm truncate">{doc.filename}</span>
-                          </div>
-                          <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive shrink-0" onClick={() => removeDocument(idx)}>
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Summary Sticky Sidebar */}
-            <div className="sticky top-24">
-              <Card className="border-primary/20 shadow-md">
-                <CardHeader className="bg-primary/5 border-b border-primary/10 pb-4">
-                  <CardTitle className="text-lg">Simulation</CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6 space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">Montant emprunté</span>
-                    <span className="font-bold">{formatCurrency(watchAmount || 0)}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground text-sm">Durée</span>
-                    <span className="font-bold">{watchDuration || 0} mois</span>
-                  </div>
-                  <div className="h-px bg-border my-4" />
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-baseline">
-                      <span className="text-sm font-medium">Mensualité estimée</span>
-                      <span className="text-2xl font-bold text-primary">{formatCurrency(monthlyPayment || 0)}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground text-right">* hors assurance facultative</p>
-                  </div>
-                  
-                  <Button type="submit" className="w-full mt-6 h-12 text-base" disabled={createLoan.isPending || isUploading}>
-                    {createLoan.isPending ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
-                    Valider ma demande
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+      <section className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-card">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <FileCheck2 className="h-5 w-5" />
           </div>
-        </form>
-      </Form>
+          <div>
+            <h2 className="font-semibold">Pièces requises pour l'étude</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Déposez des fichiers lisibles au format PDF, JPG ou PNG afin d'accélérer la validation.</p>
+          </div>
+        </div>
+        <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+          {[
+            "Pièce d'identité valide recto-verso",
+            "Justificatif de domicile récent",
+            "Trois derniers bulletins de salaire ou justificatifs de revenus",
+            "Dernier relevé bancaire ou RIB au nom du demandeur",
+          ].map((item) => (
+            <div key={item} className="flex gap-2 rounded-xl bg-secondary px-3 py-2">
+              <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-2xl border border-border bg-card p-6 shadow-card">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="fullName">Nom complet</Label>
+            <Input id="fullName" name="fullName" required defaultValue="" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" name="email" type="email" required defaultValue={user.email ?? ""} />
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="amount">Montant souhaité (€)</Label>
+            <Input id="amount" name="amount" type="number" min={500} max={100000} step={100} required placeholder="5000" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="duration_months">Durée (mois)</Label>
+            <Input id="duration_months" name="duration_months" type="number" min={3} max={120} required placeholder="24" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="monthly_income">Revenus mensuels nets (€)</Label>
+          <Input id="monthly_income" name="monthly_income" type="number" min={0} step={50} required placeholder="2500" />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="purpose">Objet du prêt (optionnel)</Label>
+          <Textarea id="purpose" name="purpose" rows={3} maxLength={500} placeholder="Travaux, voiture, projet personnel..." />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Justificatifs requis (max 5, 5 Mo chacun)</Label>
+          <label className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-input/30 px-4 py-6 text-sm text-muted-foreground cursor-pointer hover:bg-input/50 transition">
+            <Upload className="h-4 w-4" />
+            <span>Cliquez pour ajouter (PDF, JPG, PNG)</span>
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple onChange={onFilesChange} className="hidden" />
+          </label>
+          {files.length > 0 && (
+            <ul className="mt-2 space-y-1.5">
+              {files.map((f, i) => (
+                <li key={i} className="flex items-center justify-between rounded-md bg-secondary px-3 py-2 text-sm">
+                  <span className="truncate">{f.name}</span>
+                  <button type="button" onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground">
+                    <X className="h-4 w-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <Button type="submit" className="w-full shadow-glow" size="lg" disabled={submitting}>
+          {submitting ? "Envoi..." : "Soumettre la demande"}
+        </Button>
+      </form>
     </div>
   );
 }

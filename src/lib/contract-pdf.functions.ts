@@ -70,10 +70,10 @@ export const generateContractPdf = createServerFn({ method: "POST" })
 
     // Build PDF
     const pdf = await PDFDocument.create();
-    pdf.setTitle(`Contrat de prêt — HSC Bank — ${loan.id.slice(0, 8)}`);
-    pdf.setAuthor("HSC Bank");
-    pdf.setCreator("HSC Bank");
-    pdf.setProducer("HSC Bank Contract Generator");
+    pdf.setTitle(`Contrat de prêt — HSBC BANK — ${loan.id.slice(0, 8)}`);
+    pdf.setAuthor("HSBC BANK");
+    pdf.setCreator("HSBC BANK");
+    pdf.setProducer("HSBC BANK Contract Generator");
     pdf.setCreationDate(new Date());
 
     const helv = await pdf.embedFont(StandardFonts.Helvetica);
@@ -100,7 +100,7 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     // Logo square
     page.drawRectangle({ x: margin, y: height - 56, width: 28, height: 28, color: ink });
     page.drawText("L", { x: margin + 9, y: height - 49, size: 18, font: helvBold, color: rgb(1, 1, 1) });
-    page.drawText("HSC Bank", { x: margin + 38, y: height - 47, size: 14, font: helvBold, color: ink });
+    page.drawText("HSBC BANK", { x: margin + 38, y: height - 47, size: 14, font: helvBold, color: ink });
     page.drawText("Crédit en ligne — MVP de démonstration", {
       x: margin + 38, y: height - 62, size: 8, font: helv, color: muted,
     });
@@ -125,7 +125,7 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     // === Parties ===
     drawSectionTitle(page, helvBold, "1. Parties", margin, y, ink, accent);
     y -= 22;
-    drawKV(page, helv, helvBold, "Preteur", sanitize("HSC Bank SAS - 12 rue de la Finance, 75002 Paris"), margin, y, ink, muted);
+    drawKV(page, helv, helvBold, "Preteur", sanitize("HSBC BANK SAS - 12 rue de la Finance, 75002 Paris"), margin, y, ink, muted);
     y -= 16;
     drawKV(page, helv, helvBold, "Emprunteur", sanitize(`${loan.full_name} - ${loan.email}`), margin, y, ink, muted);
     y -= 28;
@@ -190,7 +190,7 @@ export const generateContractPdf = createServerFn({ method: "POST" })
 
     page.drawRectangle({ x: margin, y: y - sigH, width: sigW, height: sigH, borderColor: line, borderWidth: 1, color: rgb(1, 1, 1) });
     page.drawText("Signature du prêteur", { x: margin + 10, y: y - 16, size: 9, font: helvBold, color: muted });
-    page.drawText("HSC Bank SAS", { x: margin + 10, y: y - 30, size: 9, font: helv, color: ink });
+    page.drawText("HSBC BANK SAS", { x: margin + 10, y: y - 30, size: 9, font: helv, color: ink });
     page.drawText("Signé électroniquement", { x: margin + 10, y: y - sigH + 12, size: 8, font: helv, color: muted });
 
     page.drawRectangle({ x: margin + sigW + 24, y: y - sigH, width: sigW, height: sigH, borderColor: line, borderWidth: 1, color: rgb(1, 1, 1) });
@@ -205,7 +205,7 @@ export const generateContractPdf = createServerFn({ method: "POST" })
       start: { x: margin, y: 60 }, end: { x: width - margin, y: 60 },
       thickness: 0.5, color: line,
     });
-    page.drawText("HSC Bank SAS · contact@lendly.app · MVP de démonstration", {
+    page.drawText("HSBC BANK SAS · contact@lendly.app · MVP de démonstration", {
       x: margin, y: 46, size: 8, font: helv, color: muted,
     });
     page.drawText(`Page 1 / 1 · Réf. ${loan.id.slice(0, 8).toUpperCase()}`, {
