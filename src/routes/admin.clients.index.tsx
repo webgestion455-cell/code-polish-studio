@@ -53,8 +53,9 @@ function AdminClientsPage() {
   async function load() {
     setLoading(true);
     const [profilesRes, loansRes] = await Promise.all([
-      supabase
-        .from("profiles")
+      // Cast: blocked column added by migration not yet reflected in generated types
+      (supabase
+        .from("profiles") as any)
         .select("user_id, full_name, email, phone, created_at, blocked")
         .order("created_at", { ascending: false }),
       supabase.from("loans").select("user_id, amount"),
@@ -65,14 +66,15 @@ function AdminClientsPage() {
       aggregates[l.user_id].count += 1;
       aggregates[l.user_id].sum += Number(l.amount);
     });
-    const merged: ClientRow[] = ((profilesRes.data ?? []) as Array<{
+    const profilesData = (profilesRes.data ?? []) as Array<{
       user_id: string;
       full_name: string | null;
       email: string | null;
       phone: string | null;
       created_at: string;
       blocked?: boolean | null;
-    }>).map((p) => ({
+    }>;
+    const merged: ClientRow[] = profilesData.map((p) => ({
       user_id: p.user_id,
       full_name: p.full_name,
       email: p.email,
