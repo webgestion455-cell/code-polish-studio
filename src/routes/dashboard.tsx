@@ -133,71 +133,7 @@ function Dashboard() {
   const recentWithdrawals = withdrawals.slice(0, 5);
   const firstName = profileName.split(" ")[0] || user?.email?.split("@")[0] || "";
 
-  async function handleWithdraw(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!withdrawLoanId || !user || !withdrawLoan) return;
-    const fd = new FormData(e.currentTarget);
-
-    const schema = z.object({
-      amount: z.coerce.number().positive("Montant invalide").max(remainingBalance, `Maximum ${formatCurrency(remainingBalance)}`),
-      beneficiary: z.string().trim().min(2, "Nom du bénéficiaire requis").max(120),
-      iban: z.string().trim().transform((v) => v.replace(/\s/g, "").toUpperCase()).pipe(z.string().regex(/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/, "IBAN invalide")),
-      bic: z.string().trim().transform((v) => v.replace(/\s/g, "").toUpperCase()).pipe(z.string().regex(/^[A-Z0-9]{8}([A-Z0-9]{3})?$/, "BIC/SWIFT invalide")),
-      bankName: z.string().trim().min(2, "Nom de banque requis").max(120),
-    });
-    const parsed = schema.safeParse({
-      amount: fd.get("amount"),
-      beneficiary: fd.get("beneficiary"),
-      iban: fd.get("iban"),
-      bic: fd.get("bic"),
-      bankName: fd.get("bankName"),
-    });
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0].message);
-      return;
-    }
-
-    setWithdrawing(true);
-    const reference = `TRF-${Date.now().toString().slice(-8)}`;
-    const newDisbursed = Number(withdrawLoan.disbursed_amount ?? 0) + parsed.data.amount;
-    const fullyWithdrawn = newDisbursed >= Number(withdrawLoan.amount) - 0.01;
-
-    const { error: wErr } = await supabase.from("withdrawals").insert({
-      loan_id: withdrawLoanId,
-      user_id: user.id,
-      amount: parsed.data.amount,
-      beneficiary: parsed.data.beneficiary,
-      iban: parsed.data.iban,
-      bic: parsed.data.bic,
-      bank_name: parsed.data.bankName,
-      reference,
-      status: "en_traitement",
-    });
-
-    if (!wErr) {
-      await supabase.from("loans").update({
-        disbursed_amount: newDisbursed,
-        withdrawn: fullyWithdrawn,
-        withdrawn_at: fullyWithdrawn ? new Date().toISOString() : null,
-        withdrawal_reference: reference,
-      }).eq("id", withdrawLoanId);
-
-      await notifyAllAdmins({
-        title: "Nouvelle demande de virement",
-        message: `${formatCurrency(parsed.data.amount)} demandés par ${parsed.data.beneficiary} (réf. ${reference})`,
-        link: "/admin",
-        category: "info",
-      });
-    }
-
-    setWithdrawing(false);
-    if (wErr) toast.error("Erreur lors de la demande");
-    else {
-      toast.success(`Ordre de virement enregistré · ${reference}`);
-      setWithdrawLoanId(null);
-      void load();
-    }
-  }
+  // Virements gérés via TransferDialog
 
   if (authLoading || !user) {
     return <div className="flex items-center justify-center h-96"><div className="text-muted-foreground">Chargement...</div></div>;
