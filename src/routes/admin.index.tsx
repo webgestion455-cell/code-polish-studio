@@ -398,12 +398,6 @@ function AdminDashboard() {
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild className="w-full justify-between shadow-glow">
-                  <Link to="/admin/transfers/new">
-                    Nouveau virement
-                    <Send className="h-4 w-4" />
-                  </Link>
-                </Button>
               </div>
             </CardContent>
           </Card>
