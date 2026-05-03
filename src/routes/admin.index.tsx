@@ -359,7 +359,7 @@ function AdminDashboard() {
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs text-muted-foreground">{formatDate(l.created_at)}</p>
+                        <p className="text-xs text-muted-foreground">{formatDateTime(l.created_at)}</p>
                         <Button asChild variant="link" size="sm" className="h-auto p-0 text-xs mt-1">
                           <Link to="/admin/clients/$userId" params={{ userId: l.user_id }}>
                             Ouvrir <ArrowRight className="h-3 w-3 ml-1" />
