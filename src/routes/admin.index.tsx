@@ -667,7 +667,7 @@ function AdminDashboard() {
 
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Button asChild size="sm" variant="outline" className="flex-1">
-                      <Link to="/loans/$loanId" params={{ loanId: selectedLoan.id }}><Eye className="mr-1.5 h-4 w-4" /> Vue dossier complète</Link>
+                      <Link to="/admin/clients/$userId" params={{ userId: selectedLoan.user_id }}><Eye className="mr-1.5 h-4 w-4" /> Vue dossier complète</Link>
                     </Button>
                   </div>
                 </div>
