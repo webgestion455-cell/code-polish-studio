@@ -8,13 +8,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from "@/components/ui/empty";
 import { StatusBadge } from "@/components/StatusBadge";
+import { TransferDialog } from "@/components/TransferDialog";
 import { formatCurrency, formatDate, formatDateTime, STATUS_DESCRIPTIONS, STATUS_PROGRESS, type LoanStatus } from "@/lib/loan-helpers";
 import {
-  Plus, Wallet, ArrowUpRight, FileText, Landmark, ShieldCheck, History,
-  Eye, EyeOff, Sparkles, Send, TrendingUp, ArrowRight,
+  Plus, Wallet, ArrowUpRight, FileText, History,
+  Eye, EyeOff, Sparkles, Send, TrendingUp, ArrowRight, Mail,
 } from "lucide-react";
 import { toast } from "sonner";
-import { z } from "zod";
 import { useInactivityLogout } from "@/lib/use-inactivity";
 import { notifyAllAdmins } from "@/lib/notifications";
 
@@ -404,57 +404,15 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Withdrawal modal — préservé tel quel */}
-      {withdrawLoan && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-background/80 p-4 backdrop-blur-sm sm:items-center" onClick={() => setWithdrawLoanId(null)}>
-          <form onSubmit={handleWithdraw} className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-elevated" onClick={(event) => event.stopPropagation()}>
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                <Landmark className="h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="font-serif text-lg font-medium">Virement bancaire sécurisé</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Solde restant : <span className="font-semibold text-foreground">{formatCurrency(remainingBalance)}</span>
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="amount">Montant à transférer (€)</Label>
-                <Input id="amount" name="amount" type="number" step="0.01" min="1" max={remainingBalance} defaultValue={remainingBalance} required />
-                <p className="text-xs text-muted-foreground">Vous pouvez transférer une partie ou la totalité jusqu'à {formatCurrency(remainingBalance)}.</p>
-              </div>
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="beneficiary">Titulaire du compte</Label>
-                <Input id="beneficiary" name="beneficiary" autoComplete="name" placeholder="Nom et prénom" required />
-              </div>
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="iban">IBAN</Label>
-                <Input id="iban" name="iban" placeholder="FR76 3000 6000 0112 3456 7890 189" required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bic">BIC / SWIFT</Label>
-                <Input id="bic" name="bic" placeholder="AGRIFRPP" required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bankName">Banque</Label>
-                <Input id="bankName" name="bankName" placeholder="Nom de la banque" required />
-              </div>
-            </div>
-
-            <div className="mt-5 flex items-center gap-2 rounded-xl bg-secondary px-3 py-2 text-xs text-muted-foreground">
-              <ShieldCheck className="h-4 w-4 text-success" /> Coordonnées chiffrées · virement traité sous 1 jour ouvré
-            </div>
-
-            <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-              <Button type="button" variant="ghost" onClick={() => setWithdrawLoanId(null)}>Annuler</Button>
-              <Button type="submit" className="shadow-glow" disabled={withdrawing}>{withdrawing ? "Validation..." : "Confirmer le virement"}</Button>
-            </div>
-          </form>
-        </div>
-      )}
+      {/* Transfer dialog (instantané/classique riche) */}
+      <TransferDialog
+        open={!!withdrawLoan}
+        onClose={() => setWithdrawLoanId(null)}
+        initialLoanId={withdrawLoanId}
+        loans={loans.map((l) => ({ id: l.id, amount: Number(l.amount), disbursed_amount: Number(l.disbursed_amount ?? 0), status: l.status }))}
+        defaultBeneficiary={profileName}
+        onSuccess={() => void load()}
+      />
     </div>
   );
 }
