@@ -95,14 +95,17 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     const margin = 50;
     let y = height - margin;
 
+    const hsbcRed = rgb(0.85, 0.0, 0.0);
     // === Header band ===
     page.drawRectangle({ x: 0, y: height - 80, width, height: 80, color: rgb(0.98, 0.98, 0.97) });
-    // Logo square
-    page.drawRectangle({ x: margin, y: height - 56, width: 28, height: 28, color: ink });
-    page.drawText("L", { x: margin + 9, y: height - 49, size: 18, font: helvBold, color: rgb(1, 1, 1) });
-    page.drawText("HSBC BANK", { x: margin + 38, y: height - 47, size: 14, font: helvBold, color: ink });
-    page.drawText("Crédit en ligne — MVP de démonstration", {
-      x: margin + 38, y: height - 62, size: 8, font: helv, color: muted,
+    // HSBC hexagonal logo (deux triangles rouges + carrés blancs)
+    const lx = margin, ly = height - 60, ls = 32;
+    page.drawRectangle({ x: lx, y: ly, width: ls, height: ls, color: rgb(1, 1, 1), borderColor: hsbcRed, borderWidth: 1 });
+    page.drawRectangle({ x: lx, y: ly + ls / 2, width: ls / 2, height: ls / 2, color: hsbcRed });
+    page.drawRectangle({ x: lx + ls / 2, y: ly, width: ls / 2, height: ls / 2, color: hsbcRed });
+    page.drawText("HSBC BANK", { x: margin + 42, y: height - 47, size: 16, font: helvBold, color: hsbcRed });
+    page.drawText("Crédit en ligne — Contrat officiel", {
+      x: margin + 42, y: height - 62, size: 8, font: helv, color: muted,
     });
     // Right meta
     const refText = sanitize(`Réf. ${loan.id.slice(0, 8).toUpperCase()}`);
@@ -186,12 +189,35 @@ export const generateContractPdf = createServerFn({ method: "POST" })
 
     // Two signature boxes
     const sigW = (width - margin * 2 - 24) / 2;
-    const sigH = 90;
+    const sigH = 110;
 
+    // === Signature prêteur (avec cachet HSBC) ===
     page.drawRectangle({ x: margin, y: y - sigH, width: sigW, height: sigH, borderColor: line, borderWidth: 1, color: rgb(1, 1, 1) });
     page.drawText("Signature du prêteur", { x: margin + 10, y: y - 16, size: 9, font: helvBold, color: muted });
     page.drawText("HSBC BANK SAS", { x: margin + 10, y: y - 30, size: 9, font: helv, color: ink });
-    page.drawText("Signé électroniquement", { x: margin + 10, y: y - sigH + 12, size: 8, font: helv, color: muted });
+
+    // Cachet circulaire HSBC (rouge, à droite dans la box)
+    const stampCx = margin + sigW - 42;
+    const stampCy = y - sigH / 2 - 4;
+    const stampR = 32;
+    // hsbcRed déjà défini plus haut
+    page.drawCircle({ x: stampCx, y: stampCy, size: stampR, borderColor: hsbcRed, borderWidth: 2, color: rgb(1, 1, 1) });
+    page.drawCircle({ x: stampCx, y: stampCy, size: stampR - 4, borderColor: hsbcRed, borderWidth: 0.6, color: rgb(1, 1, 1) });
+    // Petits triangles rouges (rappel logo HSBC)
+    const tw = 6;
+    page.drawRectangle({ x: stampCx - tw, y: stampCy + 4, width: tw, height: 6, color: hsbcRed });
+    page.drawRectangle({ x: stampCx, y: stampCy - 10, width: tw, height: 6, color: hsbcRed });
+    page.drawText("HSBC", { x: stampCx - 12, y: stampCy + 14, size: 8, font: helvBold, color: hsbcRed });
+    page.drawText("BANK", { x: stampCx - 11, y: stampCy - 22, size: 7, font: helvBold, color: hsbcRed });
+    page.drawText("PARIS", { x: stampCx - 11, y: stampCy - 30, size: 6, font: helv, color: hsbcRed });
+
+    // Signature électronique stylisée (script)
+    page.drawText("HSBC BANK SAS", { x: margin + 14, y: y - sigH + 38, size: 14, font: helvBold, color: rgb(0.05, 0.18, 0.45) });
+    page.drawLine({ start: { x: margin + 14, y: y - sigH + 34 }, end: { x: margin + 130, y: y - sigH + 34 }, thickness: 1, color: rgb(0.05, 0.18, 0.45) });
+    page.drawText("Signé électroniquement · " + new Intl.DateTimeFormat("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date()),
+      { x: margin + 14, y: y - sigH + 14, size: 7, font: helv, color: muted });
+    page.drawText("Certificat: HSBC-eSign-" + loan.id.slice(0, 8).toUpperCase(),
+      { x: margin + 14, y: y - sigH + 6, size: 6.5, font: helv, color: muted });
 
     page.drawRectangle({ x: margin + sigW + 24, y: y - sigH, width: sigW, height: sigH, borderColor: line, borderWidth: 1, color: rgb(1, 1, 1) });
     page.drawText("Signature de l'emprunteur", { x: margin + sigW + 34, y: y - 16, size: 9, font: helvBold, color: muted });

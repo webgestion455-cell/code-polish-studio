@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { LogOut, ShieldCheck, LayoutDashboard, Settings as SettingsIcon } from "lucide-react";
+import { LogOut, ShieldCheck, LayoutDashboard, Settings as SettingsIcon, Mail } from "lucide-react";
+import hsbcLogo from "@/assets/hsbc-logo.png";
 
 export function AppHeader() {
   const { t } = useTranslation();
@@ -29,12 +30,13 @@ export function AppHeader() {
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent to-primary shadow-md shadow-accent/30">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 17L9 11L13 15L21 7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M15 7H21V13" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </span>
+          <img
+            src={hsbcLogo}
+            alt="HSBC BANK"
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-md object-contain bg-white p-0.5 shadow-sm"
+          />
           <div className="flex flex-col leading-tight">
             <span className="font-serif text-lg font-medium tracking-tight">HSBC BANK</span>
             {isAdminArea && role === "admin" && (
@@ -79,6 +81,13 @@ export function AppHeader() {
                 </Button>
               )}
               <NotificationBell />
+              {!isAdminArea && (
+                <Button asChild variant="ghost" size="icon" aria-label="Contact" className="h-9 w-9">
+                  <Link to="/contact">
+                    <Mail className="h-4 w-4" />
+                  </Link>
+                </Button>
+              )}
               <Button asChild variant="ghost" size="icon" aria-label={t("header.settings")} className="h-9 w-9">
                 <Link to="/settings">
                   <SettingsIcon className="h-4 w-4" />

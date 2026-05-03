@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/StatusBadge";
-import { formatCurrency, formatDate, STATUS_LABELS, type LoanStatus } from "@/lib/loan-helpers";
+import { formatCurrency, formatDate, formatDateTime, STATUS_LABELS, type LoanStatus } from "@/lib/loan-helpers";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
@@ -359,7 +359,7 @@ function AdminDashboard() {
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs text-muted-foreground">{formatDate(l.created_at)}</p>
+                        <p className="text-xs text-muted-foreground">{formatDateTime(l.created_at)}</p>
                         <Button asChild variant="link" size="sm" className="h-auto p-0 text-xs mt-1">
                           <Link to="/admin/clients/$userId" params={{ userId: l.user_id }}>
                             Ouvrir <ArrowRight className="h-3 w-3 ml-1" />
@@ -396,12 +396,6 @@ function AdminDashboard() {
                   <Link to="/admin/clients">
                     Gérer les clients
                     <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button asChild className="w-full justify-between shadow-glow">
-                  <Link to="/admin/transfers/new">
-                    Nouveau virement
-                    <Send className="h-4 w-4" />
                   </Link>
                 </Button>
               </div>
@@ -557,7 +551,7 @@ function AdminDashboard() {
                               </span>
                             </div>
                             <div className="mt-1 text-muted-foreground">{w.bank_name} · {w.iban}</div>
-                            <div className="text-muted-foreground">{formatDate(w.created_at)} · réf. {w.reference}</div>
+                            <div className="text-muted-foreground">{formatDateTime(w.created_at)} · réf. {w.reference}</div>
                           </div>
                         ))}
                       </div>
@@ -673,7 +667,7 @@ function AdminDashboard() {
 
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Button asChild size="sm" variant="outline" className="flex-1">
-                      <Link to="/loans/$loanId" params={{ loanId: selectedLoan.id }}><Eye className="mr-1.5 h-4 w-4" /> Vue dossier complète</Link>
+                      <Link to="/admin/clients/$userId" params={{ userId: selectedLoan.user_id }}><Eye className="mr-1.5 h-4 w-4" /> Vue dossier complète</Link>
                     </Button>
                   </div>
                 </div>
