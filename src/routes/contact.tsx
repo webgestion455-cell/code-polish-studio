@@ -76,7 +76,7 @@ function ContactPage() {
       return;
     }
     setBusy(true);
-    const { error } = await (supabase.from("contact_messages") as any).insert({
+    const { error } = await ((supabase as any).from("contact_messages")).insert({
       user_id: user?.id ?? null,
       full_name: parsed.data.full_name,
       email: parsed.data.email,
