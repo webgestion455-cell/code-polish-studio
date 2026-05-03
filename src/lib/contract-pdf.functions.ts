@@ -200,7 +200,7 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     const stampCx = margin + sigW - 42;
     const stampCy = y - sigH / 2 - 4;
     const stampR = 32;
-    const hsbcRed = rgb(0.85, 0.0, 0.0);
+    // hsbcRed déjà défini plus haut
     page.drawCircle({ x: stampCx, y: stampCy, size: stampR, borderColor: hsbcRed, borderWidth: 2, color: rgb(1, 1, 1) });
     page.drawCircle({ x: stampCx, y: stampCy, size: stampR - 4, borderColor: hsbcRed, borderWidth: 0.6, color: rgb(1, 1, 1) });
     // Petits triangles rouges (rappel logo HSBC)
