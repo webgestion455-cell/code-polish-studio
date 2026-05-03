@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useInactivityLogout } from "@/lib/use-inactivity";
-import { notifyAllAdmins } from "@/lib/notifications";
+// notifyAllAdmins handled in TransferDialog
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -67,7 +67,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [hideBalance, setHideBalance] = useState(false);
   const [withdrawLoanId, setWithdrawLoanId] = useState<string | null>(null);
-  const [withdrawing, setWithdrawing] = useState(false);
+  // withdrawing state moved into TransferDialog
   const [profileName, setProfileName] = useState<string>("");
 
   useInactivityLogout(async () => {
@@ -123,7 +123,7 @@ function Dashboard() {
   }
 
   const withdrawLoan = loans.find((l) => l.id === withdrawLoanId) ?? null;
-  const remainingBalance = withdrawLoan ? Number(withdrawLoan.amount) - Number(withdrawLoan.disbursed_amount ?? 0) : 0;
+  // remaining balance computed inside TransferDialog
   const totalAvailable = loans
     .filter((l) => l.status === "fonds_disponibles")
     .reduce((s, l) => s + (Number(l.amount) - Number(l.disbursed_amount ?? 0)), 0);
