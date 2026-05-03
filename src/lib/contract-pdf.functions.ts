@@ -95,14 +95,17 @@ export const generateContractPdf = createServerFn({ method: "POST" })
     const margin = 50;
     let y = height - margin;
 
+    const hsbcRed = rgb(0.85, 0.0, 0.0);
     // === Header band ===
     page.drawRectangle({ x: 0, y: height - 80, width, height: 80, color: rgb(0.98, 0.98, 0.97) });
-    // Logo square
-    page.drawRectangle({ x: margin, y: height - 56, width: 28, height: 28, color: ink });
-    page.drawText("L", { x: margin + 9, y: height - 49, size: 18, font: helvBold, color: rgb(1, 1, 1) });
-    page.drawText("HSBC BANK", { x: margin + 38, y: height - 47, size: 14, font: helvBold, color: ink });
-    page.drawText("Crédit en ligne — MVP de démonstration", {
-      x: margin + 38, y: height - 62, size: 8, font: helv, color: muted,
+    // HSBC hexagonal logo (deux triangles rouges + carrés blancs)
+    const lx = margin, ly = height - 60, ls = 32;
+    page.drawRectangle({ x: lx, y: ly, width: ls, height: ls, color: rgb(1, 1, 1), borderColor: hsbcRed, borderWidth: 1 });
+    page.drawRectangle({ x: lx, y: ly + ls / 2, width: ls / 2, height: ls / 2, color: hsbcRed });
+    page.drawRectangle({ x: lx + ls / 2, y: ly, width: ls / 2, height: ls / 2, color: hsbcRed });
+    page.drawText("HSBC BANK", { x: margin + 42, y: height - 47, size: 16, font: helvBold, color: hsbcRed });
+    page.drawText("Crédit en ligne — Contrat officiel", {
+      x: margin + 42, y: height - 62, size: 8, font: helv, color: muted,
     });
     // Right meta
     const refText = sanitize(`Réf. ${loan.id.slice(0, 8).toUpperCase()}`);
