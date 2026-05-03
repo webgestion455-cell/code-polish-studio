@@ -81,6 +81,13 @@ export function AppHeader() {
                 </Button>
               )}
               <NotificationBell />
+              {!isAdminArea && (
+                <Button asChild variant="ghost" size="icon" aria-label="Contact" className="h-9 w-9">
+                  <Link to="/contact">
+                    <Mail className="h-4 w-4" />
+                  </Link>
+                </Button>
+              )}
               <Button asChild variant="ghost" size="icon" aria-label={t("header.settings")} className="h-9 w-9">
                 <Link to="/settings">
                   <SettingsIcon className="h-4 w-4" />
