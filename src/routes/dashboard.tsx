@@ -204,6 +204,12 @@ function Dashboard() {
                 Nouveau prêt
               </Link>
             </Button>
+            <Button asChild size="lg" variant="ghost" className="border border-white/20 text-white hover:bg-white/10">
+              <Link to="/contact">
+                <Mail className="mr-2 h-4 w-4" />
+                Contacter le service client
+              </Link>
+            </Button>
           </div>
         </CardContent>
       </Card>
