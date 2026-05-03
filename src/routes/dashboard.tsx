@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from "@/components/ui/empty";
 import { StatusBadge } from "@/components/StatusBadge";
-import { formatCurrency, formatDate, STATUS_DESCRIPTIONS, STATUS_PROGRESS, type LoanStatus } from "@/lib/loan-helpers";
+import { formatCurrency, formatDate, formatDateTime, STATUS_DESCRIPTIONS, STATUS_PROGRESS, type LoanStatus } from "@/lib/loan-helpers";
 import {
   Plus, Wallet, ArrowUpRight, FileText, Landmark, ShieldCheck, History,
   Eye, EyeOff, Sparkles, Send, TrendingUp, ArrowRight,
@@ -392,7 +392,7 @@ function Dashboard() {
                           <span className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${STATUS_PILL[w.status] ?? "bg-secondary"}`}>
                             {STATUS_LABEL[w.status] ?? w.status}
                           </span>
-                          <span className="text-xs text-muted-foreground">{formatDate(w.created_at)}</span>
+                          <span className="text-xs text-muted-foreground">{formatDateTime(w.created_at)}</span>
                         </div>
                       </div>
                     </li>

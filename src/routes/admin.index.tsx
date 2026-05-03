@@ -551,7 +551,7 @@ function AdminDashboard() {
                               </span>
                             </div>
                             <div className="mt-1 text-muted-foreground">{w.bank_name} · {w.iban}</div>
-                            <div className="text-muted-foreground">{formatDate(w.created_at)} · réf. {w.reference}</div>
+                            <div className="text-muted-foreground">{formatDateTime(w.created_at)} · réf. {w.reference}</div>
                           </div>
                         ))}
                       </div>

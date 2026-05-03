@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatCurrency, formatDate, type LoanStatus } from "@/lib/loan-helpers";
+import { formatCurrency, formatDate, formatDateTime, type LoanStatus } from "@/lib/loan-helpers";
 import { LoanStepper, LOAN_STATUS_META, TONE_CLASSES } from "@/lib/loan-stepper";
 import { generateContractPdf } from "@/lib/contract-pdf.functions";
 import {
@@ -365,7 +365,7 @@ function LoanDetail() {
                         <Check className="h-3 w-3 text-accent" />
                       </span>
                       <p className="text-sm font-medium">{event.message}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{formatDate(event.created_at)}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{formatDateTime(event.created_at)}</p>
                     </li>
                   ))}
                 </ol>

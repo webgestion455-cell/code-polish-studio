@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { StatusBadge } from "@/components/StatusBadge";
-import { formatCurrency, formatDate, type LoanStatus } from "@/lib/loan-helpers";
+import { formatCurrency, formatDate, formatDateTime, type LoanStatus } from "@/lib/loan-helpers";
 import {
   ArrowLeft, Mail, Phone, Calendar, ShieldOff, ShieldCheck, AlertCircle,
   Wallet, ArrowRightLeft, Eye, Send,
@@ -344,7 +344,7 @@ function AdminClientDetail() {
                           {w.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-muted-foreground">{formatDate(w.created_at)}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{formatDateTime(w.created_at)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
