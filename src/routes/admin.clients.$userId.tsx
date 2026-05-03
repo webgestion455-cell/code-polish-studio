@@ -285,13 +285,9 @@ function AdminClientDetail() {
                       <TableCell className="text-right font-semibold tabular-nums">{formatCurrency(Number(l.amount))}</TableCell>
                       <TableCell className="text-muted-foreground">{l.duration_months} mois</TableCell>
                       <TableCell><StatusBadge status={l.status} /></TableCell>
-                      <TableCell className="text-sm text-muted-foreground">{formatDate(l.created_at)}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{formatDateTime(l.created_at)}</TableCell>
                       <TableCell className="text-right">
-                        <Button asChild size="sm" variant="ghost">
-                          <Link to="/loans/$loanId" params={{ loanId: l.id }}>
-                            <Eye className="h-4 w-4" />
-                          </Link>
-                        </Button>
+                        <span className="text-xs text-muted-foreground">—</span>
                       </TableCell>
                     </TableRow>
                   ))}

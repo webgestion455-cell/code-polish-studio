@@ -201,14 +201,9 @@ function AdminLoansPage() {
                       <TableCell className="text-muted-foreground text-sm">{formatDate(l.created_at)}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1">
-                          <Button asChild size="sm" variant="ghost">
-                            <Link to="/loans/$loanId" params={{ loanId: l.id }}>
-                              <Eye className="h-4 w-4" />
-                            </Link>
-                          </Button>
                           <Button asChild size="sm" variant="outline">
                             <Link to="/admin/clients/$userId" params={{ userId: l.user_id }}>
-                              {t("common.open")}
+                              <Eye className="h-4 w-4 mr-1" /> {t("common.open")}
                             </Link>
                           </Button>
                         </div>
