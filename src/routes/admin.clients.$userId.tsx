@@ -187,11 +187,6 @@ function AdminClientDetail() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button asChild>
-            <Link to="/admin/transfers/new" search={{ userId: profile.user_id }}>
-              <Send className="h-4 w-4 mr-1.5" /> {t("admin.quickActions.newTransfer")}
-            </Link>
-          </Button>
           {profile.blocked ? (
             <Button onClick={() => toggleBlock(false)} disabled={busy} variant="outline">
               <ShieldCheck className="h-4 w-4 mr-1.5 text-success" />
