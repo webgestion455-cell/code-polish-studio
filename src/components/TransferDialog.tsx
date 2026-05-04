@@ -75,6 +75,8 @@ export function TransferDialog({
   const [scheduledFor, setScheduledFor] = useState("");
   const [busy, setBusy] = useState(false);
 
+  // Reset SEULEMENT à l'ouverture du dialog. Sinon les champs se vident
+  // dès qu'un parent re-render (Realtime, etc.) car `eligibleLoans` change de référence.
   useEffect(() => {
     if (!open) return;
     setLoanId(initialLoanId ?? eligibleLoans[0]?.id ?? "");
@@ -87,7 +89,8 @@ export function TransferDialog({
     setReason("");
     setScheduledFor("");
     setBeneficiary(defaultBeneficiary ?? "");
-  }, [open, initialLoanId, defaultBeneficiary, eligibleLoans]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const selectedLoan = loans.find((l) => l.id === loanId);
   const remaining = selectedLoan
