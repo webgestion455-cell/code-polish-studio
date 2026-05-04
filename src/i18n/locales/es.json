@@ -1,18 +1,136 @@
 {
-  "common": { "loading": "Cargando…", "save": "Guardar", "cancel": "Cancelar", "close": "Cerrar", "back": "Volver", "open": "Abrir", "search": "Buscar", "actions": "Acciones", "yes": "Sí", "no": "No", "all": "Todos", "none": "Ninguno", "language": "Idioma" },
-  "header": { "myLoans": "Mis préstamos", "newLoan": "Solicitar préstamo", "dashboard": "Panel", "admin": "Admin", "settings": "Ajustes", "signOut": "Cerrar sesión", "signIn": "Iniciar sesión" },
+  "common": {
+    "loading": "Cargando…", "save": "Guardar", "cancel": "Cancelar", "close": "Cerrar", "back": "Volver",
+    "open": "Abrir", "search": "Buscar", "actions": "Acciones", "yes": "Sí", "no": "No",
+    "all": "Todos", "none": "Ninguno", "language": "Idioma", "submit": "Enviar", "send": "Enviar",
+    "confirm": "Confirmar", "delete": "Eliminar", "edit": "Editar", "view": "Ver",
+    "download": "Descargar", "upload": "Subir", "next": "Siguiente", "previous": "Anterior",
+    "from": "De", "to": "A", "amount": "Importe", "date": "Fecha", "status": "Estado",
+    "details": "Detalles", "optional": "opcional", "required": "obligatorio"
+  },
+  "header": {
+    "myLoans": "Mis préstamos", "newLoan": "Solicitar préstamo", "dashboard": "Panel",
+    "admin": "Admin", "settings": "Ajustes", "signOut": "Cerrar sesión", "signIn": "Iniciar sesión",
+    "contact": "Contacto", "menu": "Menú"
+  },
+  "notifications": { "title": "Notificaciones", "empty": "Sin notificaciones", "markAllRead": "Marcar todo leído" },
+  "auth": {
+    "title": "Área de cliente", "signIn": "Iniciar sesión", "signUp": "Crear cuenta",
+    "email": "Email", "password": "Contraseña", "fullName": "Nombre completo", "phone": "Teléfono",
+    "forgotPassword": "¿Olvidó la contraseña?", "noAccount": "¿Aún no tiene cuenta?",
+    "hasAccount": "¿Ya tiene cuenta?", "createAccount": "Crear mi cuenta",
+    "loginSuccess": "Sesión iniciada con éxito", "signupSuccess": "Cuenta creada · revise su correo"
+  },
+  "dashboard": {
+    "title": "Mi panel", "welcome": "Hola", "balance": "Saldo disponible",
+    "showBalance": "Mostrar", "hideBalance": "Ocultar", "newLoan": "Nueva solicitud",
+    "withdraw": "Retirar", "transfer": "Realizar transferencia", "myLoans": "Mis préstamos",
+    "transferHistory": "Historial de transferencias", "noLoans": "Aún no tiene préstamos",
+    "startApplication": "Iniciar solicitud", "noTransfers": "Sin transferencias",
+    "viewLoan": "Ver expediente", "needHelp": "¿Necesita ayuda?", "contactSupport": "Contactar soporte"
+  },
+  "loanForm": {
+    "title": "Nueva solicitud de préstamo", "subtitle": "Complete el formulario y adjunte sus documentos.",
+    "fullName": "Nombre completo", "email": "Email", "amount": "Importe solicitado (€)",
+    "duration": "Duración (meses)", "monthlyIncome": "Ingresos mensuales netos (€)",
+    "purpose": "Motivo del préstamo (opcional)",
+    "purposePlaceholder": "Reformas, coche, proyecto personal…",
+    "documents": "Documentos requeridos (máx. 5, 5 MB cada uno)",
+    "uploadHint": "Haga clic para añadir (PDF, JPG, PNG)",
+    "submit": "Enviar solicitud", "submitting": "Enviando…",
+    "success": "¡Solicitud enviada!", "requiredDocs": "Documentos necesarios para el estudio",
+    "requiredDocsHint": "Suba archivos PDF, JPG o PNG legibles para acelerar la aprobación.",
+    "doc1": "DNI válido por ambas caras", "doc2": "Justificante de domicilio reciente",
+    "doc3": "Últimas tres nóminas o justificante de ingresos",
+    "doc4": "Último extracto bancario o IBAN a nombre del solicitante"
+  },
+  "transfer": {
+    "title": "Realizar una transferencia",
+    "subtitle": "Elija el tipo, introduzca los datos del beneficiario y confirme.",
+    "kindInstant": "Instantánea (SEPA Instant)",
+    "kindInstantHint": "Acreditada al beneficiario al instante (24/7).",
+    "kindClassic": "Clásica (SEPA estándar)", "kindClassicHint": "Acreditada en 1 día hábil · programable.",
+    "sourceLoan": "Préstamo origen", "amount": "Importe (€)", "available": "Saldo disponible",
+    "beneficiary": "Beneficiario", "beneficiaryPlaceholder": "Nombre y apellidos",
+    "iban": "IBAN", "bic": "BIC / SWIFT", "bankName": "Banco",
+    "bankNamePlaceholder": "Nombre del banco", "reference": "Referencia",
+    "referencePlaceholder": "Generada si vacía",
+    "schedule": "Programar (opcional)",
+    "scheduleHint": "Dejar vacío para el próximo día hábil.",
+    "reason": "Concepto (opcional)",
+    "reasonPlaceholder": "Alquiler, compra, reembolso…",
+    "secureInstant": "Datos cifrados · ejecución inmediata",
+    "secureClassic": "Datos cifrados · 1 día hábil",
+    "executeInstant": "Ejecutar transferencia", "confirmClassic": "Confirmar transferencia",
+    "successInstant": "Transferencia instantánea ejecutada",
+    "successScheduled": "Transferencia programada",
+    "successClassic": "Orden de transferencia registrada",
+    "errorEmit": "Error al emitir",
+    "noLoanSelected": "Ningún préstamo seleccionado", "amountInvalid": "Importe inválido",
+    "ibanInvalid": "IBAN inválido", "bicInvalid": "BIC/SWIFT inválido",
+    "beneficiaryRequired": "Beneficiario obligatorio", "bankRequired": "Banco obligatorio",
+    "scheduleFuture": "La fecha programada debe ser futura"
+  },
+  "contact": {
+    "title": "Contactar con atención al cliente",
+    "subtitle": "Respondemos en 24h hábiles · confidencialidad garantizada.",
+    "infoTitle": "Datos de contacto", "phoneLabel": "Atención al cliente",
+    "phoneHours": "Lun-Vie · 8h-20h", "emailLabel": "Email",
+    "addressLabel": "Sede social",
+    "secureNote": "Sus mensajes son cifrados y tratados con confidencialidad por nuestro equipo de cumplimiento.",
+    "formTitle": "Enviar un mensaje", "fullName": "Nombre completo", "email": "Email",
+    "subject": "Asunto", "message": "Mensaje",
+    "messagePlaceholder": "Describa su solicitud en detalle…",
+    "send": "Enviar mensaje",
+    "success": "Mensaje enviado · le responderemos en 24 horas",
+    "error": "Error al enviar",
+    "subjects": {
+      "account": "Pregunta sobre mi cuenta", "loan": "Pregunta sobre un préstamo",
+      "transfer": "Problema con transferencia", "complaint": "Reclamación",
+      "appointment": "Solicitud de cita", "other": "Otro"
+    }
+  },
   "admin": {
-    "title": "Panel de administración",
-    "subtitle": "Visión general de la actividad bancaria.",
+    "title": "Panel de administración", "subtitle": "Visión general de la actividad bancaria.",
     "kpis": { "total": "Solicitudes totales", "pending": "Pendientes", "accepted": "Aceptadas", "refused": "Rechazadas" },
     "amounts": { "requested": "Importe total solicitado", "accepted": "Importe total aceptado", "disbursed": "Fondos desembolsados" },
     "recent": { "title": "Actividad reciente", "empty": "Sin actividad reciente", "open": "Abrir" },
-    "quickActions": { "title": "Acciones rápidas", "subtitle": "Gestione primero los expedientes pendientes.", "toStudy": "Expedientes a revisar", "signedContracts": "Contratos firmados", "manageClients": "Gestionar clientes", "newTransfer": "Nueva transferencia" },
-    "loansPage": { "title": "Todos los expedientes", "subtitle": "Vista detallada y filtrable.", "client": "Cliente", "amount": "Importe", "status": "Estado", "date": "Fecha", "documents": "Docs", "duration": "Duración" },
-    "clientsPage": { "title": "Clientes", "subtitle": "Cuentas de clientes y estado de acceso.", "client": "Cliente", "phone": "Teléfono", "loans": "Préstamos", "totalBorrowed": "Total prestado", "joined": "Alta", "status": "Estado", "active": "Activo", "blocked": "Bloqueado" },
-    "clientDetail": { "title": "Ficha de cliente", "personalInfo": "Información personal", "summary": "Resumen", "loans": "Préstamos del cliente", "withdrawals": "Transferencias", "noLoans": "Este cliente aún no tiene expedientes.", "noWithdrawals": "Sin transferencias.", "blockBtn": "Bloquear cuenta", "unblockBtn": "Desbloquear cuenta", "blockTitle": "Bloquear cuenta de cliente", "blockReason": "Motivo del bloqueo", "blockReasonPlaceholder": "Ej.: sospecha de fraude, KYC no conforme…", "blockedSince": "Bloqueado desde", "blockedReason": "Motivo", "confirm": "Confirmar" },
-    "transfer": { "title": "Nueva transferencia", "subtitle": "Iniciar una transferencia bancaria a un cliente.", "kind": "Tipo de transferencia", "instant": "Instantánea (SEPA Instant)", "instantHint": "Acreditada al instante (1€ comisión)", "classic": "Clásica (SEPA estándar)", "classicHint": "Acreditada en 1 día hábil", "client": "Cliente", "selectClient": "Seleccionar cliente", "loan": "Expediente de préstamo", "selectLoan": "Seleccionar expediente", "amount": "Importe (€)", "beneficiary": "Beneficiario", "iban": "IBAN", "bic": "BIC", "bankName": "Nombre del banco", "reference": "Referencia", "submit": "Emitir transferencia", "success": "Transferencia emitida con éxito", "error": "Error al emitir la transferencia" }
+    "quickActions": {
+      "title": "Acciones rápidas", "subtitle": "Gestione primero los expedientes pendientes.",
+      "toStudy": "Expedientes a revisar", "signedContracts": "Contratos firmados",
+      "manageClients": "Gestionar clientes"
+    },
+    "loansPage": {
+      "title": "Todos los expedientes", "subtitle": "Vista detallada y filtrable.",
+      "client": "Cliente", "amount": "Importe", "status": "Estado", "date": "Fecha",
+      "documents": "Docs", "duration": "Duración"
+    },
+    "clientsPage": {
+      "title": "Clientes", "subtitle": "Cuentas de clientes y estado de acceso.",
+      "client": "Cliente", "phone": "Teléfono", "loans": "Préstamos",
+      "totalBorrowed": "Total prestado", "joined": "Alta", "status": "Estado",
+      "active": "Activo", "blocked": "Bloqueado"
+    },
+    "clientDetail": {
+      "title": "Ficha de cliente", "personalInfo": "Información personal", "summary": "Resumen",
+      "loans": "Préstamos del cliente", "withdrawals": "Transferencias",
+      "noLoans": "Este cliente aún no tiene expedientes.", "noWithdrawals": "Sin transferencias.",
+      "blockBtn": "Bloquear cuenta", "unblockBtn": "Desbloquear cuenta",
+      "blockTitle": "Bloquear cuenta de cliente", "blockReason": "Motivo del bloqueo",
+      "blockReasonPlaceholder": "Ej.: sospecha de fraude, KYC no conforme…",
+      "blockedSince": "Bloqueado desde", "blockedReason": "Motivo", "confirm": "Confirmar"
+    }
   },
-  "blocked": { "title": "Cuenta suspendida", "message": "Su cuenta ha sido suspendida temporalmente por nuestro equipo de cumplimiento.", "reasonLabel": "Motivo", "contact": "Contacte con soporte para más información.", "signOut": "Cerrar sesión" },
-  "status": { "en_attente": "Pendiente", "accepte": "Aceptado", "refuse": "Rechazado", "contrat_envoye": "Contrato enviado", "contrat_signe": "Contrato firmado", "en_traitement": "En tratamiento", "fonds_disponibles": "Fondos disponibles" }
+  "blocked": {
+    "title": "Cuenta suspendida",
+    "message": "Su cuenta ha sido suspendida temporalmente por nuestro equipo de cumplimiento.",
+    "reasonLabel": "Motivo", "contact": "Contacte con soporte para más información.",
+    "signOut": "Cerrar sesión"
+  },
+  "status": {
+    "en_attente": "Pendiente", "accepte": "Aceptado", "refuse": "Rechazado",
+    "contrat_envoye": "Contrato enviado", "contrat_signe": "Contrato firmado",
+    "en_traitement": "En tratamiento", "fonds_disponibles": "Fondos disponibles",
+    "envoye": "Enviado", "rejete": "Rechazado"
+  }
 }
