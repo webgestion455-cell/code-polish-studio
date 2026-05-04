@@ -95,12 +95,14 @@ function AdminNewTransfer() {
     if (!userId) return;
     const p = profiles.find((p) => p.user_id === userId);
     if (p && !beneficiary) setBeneficiary(p.full_name ?? "");
-  }, [userId, profiles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, profiles.length]);
 
-  // Auto-pick loan if a single one
+  // Auto-pick loan if a single one (only when client changes)
   useEffect(() => {
     if (!loanId && selectedClientLoans.length === 1) setLoanId(selectedClientLoans[0].id);
-  }, [selectedClientLoans, loanId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, selectedClientLoans.length]);
 
   async function submit() {
     if (!userId || !loanId || !amount || !beneficiary || !iban || !bic || !bankName) {
