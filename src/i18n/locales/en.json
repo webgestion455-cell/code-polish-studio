@@ -1,131 +1,136 @@
 {
   "common": {
-    "loading": "Loading…",
-    "save": "Save",
-    "cancel": "Cancel",
-    "close": "Close",
-    "back": "Back",
-    "open": "Open",
-    "search": "Search",
-    "actions": "Actions",
-    "yes": "Yes",
-    "no": "No",
-    "all": "All",
-    "none": "None",
-    "language": "Language"
+    "loading": "Loading…", "save": "Save", "cancel": "Cancel", "close": "Close", "back": "Back",
+    "open": "Open", "search": "Search", "actions": "Actions", "yes": "Yes", "no": "No",
+    "all": "All", "none": "None", "language": "Language", "submit": "Submit", "send": "Send",
+    "confirm": "Confirm", "delete": "Delete", "edit": "Edit", "view": "View",
+    "download": "Download", "upload": "Upload", "next": "Next", "previous": "Previous",
+    "from": "From", "to": "To", "amount": "Amount", "date": "Date", "status": "Status",
+    "details": "Details", "optional": "optional", "required": "required"
   },
   "header": {
-    "myLoans": "My loans",
-    "newLoan": "Apply for a loan",
-    "dashboard": "Dashboard",
-    "admin": "Admin",
-    "settings": "Settings",
-    "signOut": "Sign out",
-    "signIn": "Sign in"
+    "myLoans": "My loans", "newLoan": "Apply for a loan", "dashboard": "Dashboard",
+    "admin": "Admin", "settings": "Settings", "signOut": "Sign out", "signIn": "Sign in",
+    "contact": "Contact", "menu": "Menu"
+  },
+  "notifications": { "title": "Notifications", "empty": "No notifications", "markAllRead": "Mark all read" },
+  "auth": {
+    "title": "Client area", "signIn": "Sign in", "signUp": "Create account",
+    "email": "Email", "password": "Password", "fullName": "Full name", "phone": "Phone",
+    "forgotPassword": "Forgot password?", "noAccount": "No account yet?",
+    "hasAccount": "Already have an account?", "createAccount": "Create my account",
+    "loginSuccess": "Successfully signed in", "signupSuccess": "Account created · check your inbox"
+  },
+  "dashboard": {
+    "title": "My dashboard", "welcome": "Hello", "balance": "Available balance",
+    "showBalance": "Show", "hideBalance": "Hide", "newLoan": "New application",
+    "withdraw": "Withdraw", "transfer": "Make a transfer", "myLoans": "My loans",
+    "transferHistory": "Transfer history", "noLoans": "You don't have a loan yet",
+    "startApplication": "Start an application", "noTransfers": "No transfers",
+    "viewLoan": "View file", "needHelp": "Need help?", "contactSupport": "Contact support"
+  },
+  "loanForm": {
+    "title": "New loan application", "subtitle": "Fill in the form and attach your documents.",
+    "fullName": "Full name", "email": "Email", "amount": "Requested amount (€)",
+    "duration": "Duration (months)", "monthlyIncome": "Net monthly income (€)",
+    "purpose": "Purpose of the loan (optional)",
+    "purposePlaceholder": "Renovation, car, personal project…",
+    "documents": "Required documents (max 5, 5 MB each)",
+    "uploadHint": "Click to add (PDF, JPG, PNG)",
+    "submit": "Submit application", "submitting": "Sending…",
+    "success": "Application sent!", "requiredDocs": "Required documents for review",
+    "requiredDocsHint": "Upload readable PDF, JPG or PNG files to speed up approval.",
+    "doc1": "Valid ID (both sides)", "doc2": "Recent proof of address",
+    "doc3": "Last three pay slips or income proof",
+    "doc4": "Latest bank statement or IBAN in the applicant's name"
+  },
+  "transfer": {
+    "title": "Make a transfer",
+    "subtitle": "Choose the type, enter the beneficiary details and confirm.",
+    "kindInstant": "Instant (SEPA Instant)",
+    "kindInstantHint": "Credited to the beneficiary immediately (24/7).",
+    "kindClassic": "Standard (SEPA)", "kindClassicHint": "Credited within 1 business day · scheduling available.",
+    "sourceLoan": "Source loan", "amount": "Amount (€)", "available": "Available balance",
+    "beneficiary": "Beneficiary", "beneficiaryPlaceholder": "First and last name",
+    "iban": "IBAN", "bic": "BIC / SWIFT", "bankName": "Bank",
+    "bankNamePlaceholder": "Bank name", "reference": "Reference",
+    "referencePlaceholder": "Auto-generated if empty",
+    "schedule": "Schedule (optional)",
+    "scheduleHint": "Leave empty for the next business day.",
+    "reason": "Reason (optional)",
+    "reasonPlaceholder": "Rent, purchase, repayment…",
+    "secureInstant": "Encrypted details · immediate execution",
+    "secureClassic": "Encrypted details · 1 business day",
+    "executeInstant": "Execute transfer", "confirmClassic": "Confirm transfer",
+    "successInstant": "Instant transfer executed",
+    "successScheduled": "Transfer scheduled",
+    "successClassic": "Transfer order recorded",
+    "errorEmit": "Error issuing the transfer",
+    "noLoanSelected": "No loan selected", "amountInvalid": "Invalid amount",
+    "ibanInvalid": "Invalid IBAN", "bicInvalid": "Invalid BIC/SWIFT",
+    "beneficiaryRequired": "Beneficiary required", "bankRequired": "Bank required",
+    "scheduleFuture": "Scheduled date must be in the future"
+  },
+  "contact": {
+    "title": "Contact customer service",
+    "subtitle": "We respond within 24 business hours · confidentiality guaranteed.",
+    "infoTitle": "Contact details", "phoneLabel": "Customer service",
+    "phoneHours": "Mon-Fri · 8am-8pm", "emailLabel": "Email",
+    "addressLabel": "Head office",
+    "secureNote": "Your messages are encrypted and handled confidentially by our compliance team.",
+    "formTitle": "Send a message", "fullName": "Full name", "email": "Email",
+    "subject": "Subject", "message": "Message",
+    "messagePlaceholder": "Describe your request in detail…",
+    "send": "Send message",
+    "success": "Message sent · customer service will reply within 24 hours",
+    "error": "Sending failed",
+    "subjects": {
+      "account": "Question about my account", "loan": "Question about a loan",
+      "transfer": "Transfer issue", "complaint": "Complaint",
+      "appointment": "Appointment request", "other": "Other"
+    }
   },
   "admin": {
-    "title": "Admin Dashboard",
-    "subtitle": "Overview of banking activity.",
-    "kpis": {
-      "total": "Total applications",
-      "pending": "Pending",
-      "accepted": "Accepted",
-      "refused": "Refused"
-    },
-    "amounts": {
-      "requested": "Total requested",
-      "accepted": "Total accepted",
-      "disbursed": "Funds disbursed"
-    },
-    "recent": {
-      "title": "Recent activity",
-      "empty": "No recent activity",
-      "open": "Open"
-    },
+    "title": "Admin Dashboard", "subtitle": "Overview of banking activity.",
+    "kpis": { "total": "Total applications", "pending": "Pending", "accepted": "Accepted", "refused": "Refused" },
+    "amounts": { "requested": "Total requested", "accepted": "Total accepted", "disbursed": "Funds disbursed" },
+    "recent": { "title": "Recent activity", "empty": "No recent activity", "open": "Open" },
     "quickActions": {
-      "title": "Quick actions",
-      "subtitle": "Handle pending files first.",
-      "toStudy": "Files to review",
-      "signedContracts": "Signed contracts to process",
-      "manageClients": "Manage clients",
-      "newTransfer": "New transfer"
+      "title": "Quick actions", "subtitle": "Handle pending files first.",
+      "toStudy": "Files to review", "signedContracts": "Signed contracts to process",
+      "manageClients": "Manage clients"
     },
     "loansPage": {
-      "title": "All loan files",
-      "subtitle": "Detailed and filterable view of applications.",
-      "client": "Client",
-      "amount": "Amount",
-      "status": "Status",
-      "date": "Date",
-      "documents": "Docs",
-      "duration": "Duration"
+      "title": "All loan files", "subtitle": "Detailed and filterable view of applications.",
+      "client": "Client", "amount": "Amount", "status": "Status", "date": "Date",
+      "documents": "Docs", "duration": "Duration"
     },
     "clientsPage": {
-      "title": "Clients",
-      "subtitle": "Client accounts and access status.",
-      "client": "Client",
-      "phone": "Phone",
-      "loans": "Loans",
-      "totalBorrowed": "Total borrowed",
-      "joined": "Joined",
-      "status": "Status",
-      "active": "Active",
-      "blocked": "Blocked"
+      "title": "Clients", "subtitle": "Client accounts and access status.",
+      "client": "Client", "phone": "Phone", "loans": "Loans",
+      "totalBorrowed": "Total borrowed", "joined": "Joined", "status": "Status",
+      "active": "Active", "blocked": "Blocked"
     },
     "clientDetail": {
-      "title": "Client profile",
-      "personalInfo": "Personal information",
-      "summary": "Summary",
-      "loans": "Client's loans",
-      "withdrawals": "Transfers",
-      "noLoans": "This client has no files yet.",
-      "noWithdrawals": "No transfers.",
-      "blockBtn": "Block account",
-      "unblockBtn": "Unblock account",
-      "blockTitle": "Block client account",
-      "blockReason": "Block reason",
+      "title": "Client profile", "personalInfo": "Personal information", "summary": "Summary",
+      "loans": "Client's loans", "withdrawals": "Transfers",
+      "noLoans": "This client has no files yet.", "noWithdrawals": "No transfers.",
+      "blockBtn": "Block account", "unblockBtn": "Unblock account",
+      "blockTitle": "Block client account", "blockReason": "Block reason",
       "blockReasonPlaceholder": "e.g. fraud suspicion, KYC non-compliant…",
-      "blockedSince": "Blocked since",
-      "blockedReason": "Reason",
-      "confirm": "Confirm"
-    },
-    "transfer": {
-      "title": "New transfer",
-      "subtitle": "Initiate a bank transfer to a client.",
-      "kind": "Transfer type",
-      "instant": "Instant (SEPA Instant)",
-      "instantHint": "Credited immediately (€1 fee)",
-      "classic": "Classic (SEPA standard)",
-      "classicHint": "Credited within 1 business day",
-      "client": "Client",
-      "selectClient": "Select a client",
-      "loan": "Loan file",
-      "selectLoan": "Select a file",
-      "amount": "Amount (€)",
-      "beneficiary": "Beneficiary",
-      "iban": "IBAN",
-      "bic": "BIC",
-      "bankName": "Bank name",
-      "reference": "Reference",
-      "submit": "Issue transfer",
-      "success": "Transfer issued successfully",
-      "error": "Failed to issue transfer"
+      "blockedSince": "Blocked since", "blockedReason": "Reason", "confirm": "Confirm"
     }
   },
   "blocked": {
     "title": "Account suspended",
     "message": "Your account has been temporarily suspended by our compliance team.",
-    "reasonLabel": "Reason",
-    "contact": "Please contact support for more information.",
+    "reasonLabel": "Reason", "contact": "Please contact support for more information.",
     "signOut": "Sign out"
   },
   "status": {
-    "en_attente": "Pending",
-    "accepte": "Accepted",
-    "refuse": "Refused",
-    "contrat_envoye": "Contract sent",
-    "contrat_signe": "Contract signed",
-    "en_traitement": "Processing",
-    "fonds_disponibles": "Funds available"
+    "en_attente": "Pending", "accepte": "Accepted", "refuse": "Refused",
+    "contrat_envoye": "Contract sent", "contrat_signe": "Contract signed",
+    "en_traitement": "Processing", "fonds_disponibles": "Funds available",
+    "envoye": "Sent", "rejete": "Rejected"
   }
 }

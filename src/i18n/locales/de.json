@@ -1,18 +1,136 @@
 {
-  "common": { "loading": "Laden…", "save": "Speichern", "cancel": "Abbrechen", "close": "Schließen", "back": "Zurück", "open": "Öffnen", "search": "Suchen", "actions": "Aktionen", "yes": "Ja", "no": "Nein", "all": "Alle", "none": "Keine", "language": "Sprache" },
-  "header": { "myLoans": "Meine Kredite", "newLoan": "Kredit beantragen", "dashboard": "Dashboard", "admin": "Admin", "settings": "Einstellungen", "signOut": "Abmelden", "signIn": "Anmelden" },
+  "common": {
+    "loading": "Laden…", "save": "Speichern", "cancel": "Abbrechen", "close": "Schließen", "back": "Zurück",
+    "open": "Öffnen", "search": "Suchen", "actions": "Aktionen", "yes": "Ja", "no": "Nein",
+    "all": "Alle", "none": "Keine", "language": "Sprache", "submit": "Senden", "send": "Senden",
+    "confirm": "Bestätigen", "delete": "Löschen", "edit": "Bearbeiten", "view": "Ansehen",
+    "download": "Herunterladen", "upload": "Hochladen", "next": "Weiter", "previous": "Zurück",
+    "from": "Von", "to": "An", "amount": "Betrag", "date": "Datum", "status": "Status",
+    "details": "Details", "optional": "optional", "required": "erforderlich"
+  },
+  "header": {
+    "myLoans": "Meine Kredite", "newLoan": "Kredit beantragen", "dashboard": "Dashboard",
+    "admin": "Admin", "settings": "Einstellungen", "signOut": "Abmelden", "signIn": "Anmelden",
+    "contact": "Kontakt", "menu": "Menü"
+  },
+  "notifications": { "title": "Benachrichtigungen", "empty": "Keine Benachrichtigungen", "markAllRead": "Alle gelesen markieren" },
+  "auth": {
+    "title": "Kundenbereich", "signIn": "Anmelden", "signUp": "Konto erstellen",
+    "email": "E-Mail", "password": "Passwort", "fullName": "Vollständiger Name", "phone": "Telefon",
+    "forgotPassword": "Passwort vergessen?", "noAccount": "Noch kein Konto?",
+    "hasAccount": "Schon ein Konto?", "createAccount": "Konto erstellen",
+    "loginSuccess": "Erfolgreich angemeldet", "signupSuccess": "Konto erstellt · prüfen Sie Ihre E-Mails"
+  },
+  "dashboard": {
+    "title": "Mein Dashboard", "welcome": "Hallo", "balance": "Verfügbarer Saldo",
+    "showBalance": "Anzeigen", "hideBalance": "Verbergen", "newLoan": "Neuer Antrag",
+    "withdraw": "Auszahlen", "transfer": "Überweisung tätigen", "myLoans": "Meine Kredite",
+    "transferHistory": "Überweisungsverlauf", "noLoans": "Sie haben noch keinen Kredit",
+    "startApplication": "Antrag starten", "noTransfers": "Keine Überweisungen",
+    "viewLoan": "Akte ansehen", "needHelp": "Brauchen Sie Hilfe?", "contactSupport": "Kundendienst kontaktieren"
+  },
+  "loanForm": {
+    "title": "Neuer Kreditantrag", "subtitle": "Füllen Sie das Formular aus und fügen Sie Ihre Belege bei.",
+    "fullName": "Vollständiger Name", "email": "E-Mail", "amount": "Gewünschter Betrag (€)",
+    "duration": "Laufzeit (Monate)", "monthlyIncome": "Monatliches Nettoeinkommen (€)",
+    "purpose": "Verwendungszweck (optional)",
+    "purposePlaceholder": "Renovierung, Auto, Privatprojekt…",
+    "documents": "Erforderliche Belege (max. 5, je 5 MB)",
+    "uploadHint": "Klicken zum Hinzufügen (PDF, JPG, PNG)",
+    "submit": "Antrag senden", "submitting": "Senden…",
+    "success": "Antrag gesendet!", "requiredDocs": "Erforderliche Unterlagen zur Prüfung",
+    "requiredDocsHint": "Laden Sie lesbare PDF-, JPG- oder PNG-Dateien hoch, um die Genehmigung zu beschleunigen.",
+    "doc1": "Gültiger Ausweis (Vorder- und Rückseite)", "doc2": "Aktueller Adressnachweis",
+    "doc3": "Letzte drei Gehaltsabrechnungen oder Einkommensnachweis",
+    "doc4": "Letzter Kontoauszug oder IBAN auf Antragstellernamen"
+  },
+  "transfer": {
+    "title": "Überweisung tätigen",
+    "subtitle": "Wählen Sie den Typ, geben Sie die Empfängerdaten ein und bestätigen Sie.",
+    "kindInstant": "Sofort (SEPA Instant)",
+    "kindInstantHint": "Sofort beim Empfänger gutgeschrieben (24/7).",
+    "kindClassic": "Standard (SEPA)", "kindClassicHint": "Innerhalb von 1 Werktag gutgeschrieben · planbar.",
+    "sourceLoan": "Quellkredit", "amount": "Betrag (€)", "available": "Verfügbarer Saldo",
+    "beneficiary": "Empfänger", "beneficiaryPlaceholder": "Vor- und Nachname",
+    "iban": "IBAN", "bic": "BIC / SWIFT", "bankName": "Bank",
+    "bankNamePlaceholder": "Bankname", "reference": "Referenz",
+    "referencePlaceholder": "Automatisch generiert, wenn leer",
+    "schedule": "Planen (optional)",
+    "scheduleHint": "Leer lassen für nächsten Werktag.",
+    "reason": "Verwendungszweck (optional)",
+    "reasonPlaceholder": "Miete, Einkauf, Rückzahlung…",
+    "secureInstant": "Verschlüsselte Daten · sofortige Ausführung",
+    "secureClassic": "Verschlüsselte Daten · 1 Werktag",
+    "executeInstant": "Überweisung ausführen", "confirmClassic": "Überweisung bestätigen",
+    "successInstant": "Sofortüberweisung ausgeführt",
+    "successScheduled": "Überweisung geplant",
+    "successClassic": "Überweisungsauftrag erfasst",
+    "errorEmit": "Fehler bei der Ausführung",
+    "noLoanSelected": "Kein Kredit ausgewählt", "amountInvalid": "Ungültiger Betrag",
+    "ibanInvalid": "Ungültige IBAN", "bicInvalid": "Ungültige BIC/SWIFT",
+    "beneficiaryRequired": "Empfänger erforderlich", "bankRequired": "Bank erforderlich",
+    "scheduleFuture": "Geplantes Datum muss in der Zukunft liegen"
+  },
+  "contact": {
+    "title": "Kundendienst kontaktieren",
+    "subtitle": "Wir antworten innerhalb von 24 Geschäftsstunden · Vertraulichkeit garantiert.",
+    "infoTitle": "Kontaktdaten", "phoneLabel": "Kundendienst",
+    "phoneHours": "Mo-Fr · 8-20 Uhr", "emailLabel": "E-Mail",
+    "addressLabel": "Hauptsitz",
+    "secureNote": "Ihre Nachrichten werden verschlüsselt und vertraulich von unserem Compliance-Team bearbeitet.",
+    "formTitle": "Nachricht senden", "fullName": "Vollständiger Name", "email": "E-Mail",
+    "subject": "Betreff", "message": "Nachricht",
+    "messagePlaceholder": "Beschreiben Sie Ihre Anfrage detailliert…",
+    "send": "Nachricht senden",
+    "success": "Nachricht gesendet · der Kundendienst antwortet innerhalb von 24 Stunden",
+    "error": "Senden fehlgeschlagen",
+    "subjects": {
+      "account": "Frage zu meinem Konto", "loan": "Frage zu einem Kredit",
+      "transfer": "Überweisungsproblem", "complaint": "Beschwerde",
+      "appointment": "Terminanfrage", "other": "Sonstiges"
+    }
+  },
   "admin": {
-    "title": "Admin-Dashboard",
-    "subtitle": "Übersicht der Bankaktivität.",
+    "title": "Admin-Dashboard", "subtitle": "Übersicht der Bankaktivität.",
     "kpis": { "total": "Anfragen gesamt", "pending": "Ausstehend", "accepted": "Angenommen", "refused": "Abgelehnt" },
     "amounts": { "requested": "Beantragte Summe", "accepted": "Angenommene Summe", "disbursed": "Ausgezahlte Mittel" },
     "recent": { "title": "Letzte Aktivität", "empty": "Keine aktuelle Aktivität", "open": "Öffnen" },
-    "quickActions": { "title": "Schnellaktionen", "subtitle": "Bearbeiten Sie zuerst ausstehende Akten.", "toStudy": "Zu prüfende Akten", "signedContracts": "Unterzeichnete Verträge", "manageClients": "Kunden verwalten", "newTransfer": "Neue Überweisung" },
-    "loansPage": { "title": "Alle Kreditakten", "subtitle": "Detaillierte und filterbare Ansicht.", "client": "Kunde", "amount": "Betrag", "status": "Status", "date": "Datum", "documents": "Dok.", "duration": "Dauer" },
-    "clientsPage": { "title": "Kunden", "subtitle": "Kundenkonten und Zugriffsstatus.", "client": "Kunde", "phone": "Telefon", "loans": "Kredite", "totalBorrowed": "Gesamtbetrag", "joined": "Beigetreten", "status": "Status", "active": "Aktiv", "blocked": "Gesperrt" },
-    "clientDetail": { "title": "Kundenprofil", "personalInfo": "Persönliche Daten", "summary": "Zusammenfassung", "loans": "Kredite des Kunden", "withdrawals": "Überweisungen", "noLoans": "Dieser Kunde hat noch keine Akten.", "noWithdrawals": "Keine Überweisungen.", "blockBtn": "Konto sperren", "unblockBtn": "Konto entsperren", "blockTitle": "Kundenkonto sperren", "blockReason": "Grund der Sperrung", "blockReasonPlaceholder": "z.B. Betrugsverdacht, KYC nicht konform…", "blockedSince": "Gesperrt seit", "blockedReason": "Grund", "confirm": "Bestätigen" },
-    "transfer": { "title": "Neue Überweisung", "subtitle": "Banküberweisung an einen Kunden initiieren.", "kind": "Überweisungsart", "instant": "Sofort (SEPA Instant)", "instantHint": "Sofort gutgeschrieben (1€ Gebühr)", "classic": "Klassisch (SEPA Standard)", "classicHint": "Innerhalb von 1 Werktag gutgeschrieben", "client": "Kunde", "selectClient": "Kunde auswählen", "loan": "Kreditakte", "selectLoan": "Akte auswählen", "amount": "Betrag (€)", "beneficiary": "Empfänger", "iban": "IBAN", "bic": "BIC", "bankName": "Bankname", "reference": "Referenz", "submit": "Überweisung ausführen", "success": "Überweisung erfolgreich ausgeführt", "error": "Überweisung fehlgeschlagen" }
+    "quickActions": {
+      "title": "Schnellaktionen", "subtitle": "Bearbeiten Sie zuerst ausstehende Akten.",
+      "toStudy": "Zu prüfende Akten", "signedContracts": "Unterzeichnete Verträge",
+      "manageClients": "Kunden verwalten"
+    },
+    "loansPage": {
+      "title": "Alle Kreditakten", "subtitle": "Detaillierte und filterbare Ansicht.",
+      "client": "Kunde", "amount": "Betrag", "status": "Status", "date": "Datum",
+      "documents": "Dok.", "duration": "Dauer"
+    },
+    "clientsPage": {
+      "title": "Kunden", "subtitle": "Kundenkonten und Zugriffsstatus.",
+      "client": "Kunde", "phone": "Telefon", "loans": "Kredite",
+      "totalBorrowed": "Gesamtbetrag", "joined": "Beigetreten", "status": "Status",
+      "active": "Aktiv", "blocked": "Gesperrt"
+    },
+    "clientDetail": {
+      "title": "Kundenprofil", "personalInfo": "Persönliche Daten", "summary": "Zusammenfassung",
+      "loans": "Kredite des Kunden", "withdrawals": "Überweisungen",
+      "noLoans": "Dieser Kunde hat noch keine Akten.", "noWithdrawals": "Keine Überweisungen.",
+      "blockBtn": "Konto sperren", "unblockBtn": "Konto entsperren",
+      "blockTitle": "Kundenkonto sperren", "blockReason": "Grund der Sperrung",
+      "blockReasonPlaceholder": "z.B. Betrugsverdacht, KYC nicht konform…",
+      "blockedSince": "Gesperrt seit", "blockedReason": "Grund", "confirm": "Bestätigen"
+    }
   },
-  "blocked": { "title": "Konto gesperrt", "message": "Ihr Konto wurde vorübergehend von unserem Compliance-Team gesperrt.", "reasonLabel": "Grund", "contact": "Bitte kontaktieren Sie den Support.", "signOut": "Abmelden" },
-  "status": { "en_attente": "Ausstehend", "accepte": "Angenommen", "refuse": "Abgelehnt", "contrat_envoye": "Vertrag gesendet", "contrat_signe": "Vertrag unterzeichnet", "en_traitement": "In Bearbeitung", "fonds_disponibles": "Mittel verfügbar" }
+  "blocked": {
+    "title": "Konto gesperrt",
+    "message": "Ihr Konto wurde vorübergehend von unserem Compliance-Team gesperrt.",
+    "reasonLabel": "Grund", "contact": "Bitte kontaktieren Sie den Support.",
+    "signOut": "Abmelden"
+  },
+  "status": {
+    "en_attente": "Ausstehend", "accepte": "Angenommen", "refuse": "Abgelehnt",
+    "contrat_envoye": "Vertrag gesendet", "contrat_signe": "Vertrag unterzeichnet",
+    "en_traitement": "In Bearbeitung", "fonds_disponibles": "Mittel verfügbar",
+    "envoye": "Gesendet", "rejete": "Abgelehnt"
+  }
 }
