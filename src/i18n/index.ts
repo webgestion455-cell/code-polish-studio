@@ -37,10 +37,14 @@ if (!i18n.isInitialized) {
         sk: { translation: sk },
       },
       fallbackLng: "fr",
+      // Restreint strictement aux langues supportées (sinon -> fallbackLng)
       supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
+      nonExplicitSupportedLngs: true, // "fr-FR" -> "fr", "en-US" -> "en"
+      load: "languageOnly",
       interpolation: { escapeValue: false },
       detection: {
-        order: ["localStorage", "navigator"],
+        // Priorité : choix précédent stocké, puis langue navigateur/appareil
+        order: ["localStorage", "navigator", "htmlTag"],
         caches: ["localStorage"],
         lookupLocalStorage: "hsbc.lang",
       },
