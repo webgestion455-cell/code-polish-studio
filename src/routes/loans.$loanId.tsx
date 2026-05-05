@@ -311,8 +311,8 @@ function LoanDetail() {
             </Card>
           )}
 
-          {/* Contract card */}
-          {(status === "accepte" || status === "contrat_envoye" || status === "contrat_signe" || status === "en_traitement" || status === "fonds_disponibles") && (
+          {/* Contract card — disponible UNIQUEMENT si contrat_envoye, signé ou aval */}
+          {(status === "contrat_envoye" || status === "contrat_signe" || status === "en_traitement" || status === "fonds_disponibles") && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-base flex items-center gap-2">
@@ -320,12 +320,15 @@ function LoanDetail() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Button variant="outline" className="w-full justify-between" onClick={downloadContractPdf}>
-                  Télécharger le contrat
-                  <Download className="h-4 w-4" />
-                </Button>
+                {/* Téléchargement strictement réservé à 'contrat_envoye' (à signer) */}
+                {status === "contrat_envoye" && (
+                  <Button variant="outline" className="w-full justify-between" onClick={downloadContractPdf}>
+                    Télécharger le contrat
+                    <Download className="h-4 w-4" />
+                  </Button>
+                )}
 
-                {(status === "accepte" || status === "contrat_envoye") && (
+                {status === "contrat_envoye" && (
                   <div className="pt-4 border-t space-y-3">
                     <p className="text-sm">Veuillez signer le contrat puis l'envoyer ci-dessous pour validation.</p>
                     <input type="file" id="signedContract" accept=".pdf,.jpg,.jpeg,.png" className="hidden" onChange={handleSignedUpload} disabled={uploading} />

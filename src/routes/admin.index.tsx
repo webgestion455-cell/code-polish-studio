@@ -214,24 +214,36 @@ function AdminDashboard() {
   }
 
   async function processWithdrawal(w: AdminWithdrawal, status: "envoye" | "rejete") {
-    const { error } = await supabase
-      .from("withdrawals")
-      .update({ status, processed_at: new Date().toISOString() })
-      .eq("id", w.id);
-    if (error) {
-      toast.error("Échec");
-      return;
+    if (status === "rejete") {
+      // Recrédit atomique côté DB via RPC
+      const { error } = await (supabase as any).rpc("reject_transfer", {
+        _withdrawal_id: w.id,
+        _reason: "Rejeté par l'administrateur",
+      });
+      if (error) {
+        toast.error(error.message || "Échec du rejet");
+        return;
+      }
+    } else {
+      const { error } = await supabase
+        .from("withdrawals")
+        .update({ status, processed_at: new Date().toISOString() })
+        .eq("id", w.id);
+      if (error) {
+        toast.error("Échec");
+        return;
+      }
     }
     await notifyUser({
       userId: w.user_id,
-      title: status === "envoye" ? "Virement exécuté" : "Virement rejeté",
+      title: status === "envoye" ? "Virement exécuté" : "Virement rejeté · fonds recrédités",
       message: status === "envoye"
         ? `${formatCurrency(Number(w.amount))} ont été envoyés sur ${w.iban.slice(0, 4)}…${w.iban.slice(-4)} (réf. ${w.reference})`
-        : `Votre demande de virement de ${formatCurrency(Number(w.amount))} a été rejetée. Contactez le support.`,
+        : `Votre virement de ${formatCurrency(Number(w.amount))} a été rejeté. Le solde a été recrédité automatiquement.`,
       category: status === "envoye" ? "success" : "warning",
       link: "/dashboard",
     });
-    toast.success(status === "envoye" ? "Virement marqué exécuté" : "Virement rejeté");
+    toast.success(status === "envoye" ? "Virement marqué exécuté" : "Virement rejeté · fonds recrédités");
     void load();
   }
 
