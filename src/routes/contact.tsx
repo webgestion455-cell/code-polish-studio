@@ -122,7 +122,9 @@ function ContactPage() {
               <Phone className="h-4 w-4 mt-0.5 text-primary shrink-0" />
               <div>
                 <p className="font-medium">Service client</p>
-                <p className="text-muted-foreground">+33 (0)1 40 70 70 40</p>
+                <a
+                  href="tel:+33140707040"
+                  className="text-muted-foreground hover:text-primary hover:underline transition cursor-pointer">+33 (0)1 40 70 70 40</a>
                 <p className="text-xs text-muted-foreground">Lun-Ven · 8h-20h</p>
               </div>
             </div>
@@ -130,16 +132,20 @@ function ContactPage() {
               <Mail className="h-4 w-4 mt-0.5 text-primary shrink-0" />
               <div>
                 <p className="font-medium">Email</p>
-                <p className="text-muted-foreground break-all">contact@hsbc-bank.fr</p>
+                <a
+                 href="mailto:info@hsbc-bank" 
+                 className="text-muted-foreground hover:text-primary hover:underline transition break-all cursor-pointer">info@hsbc-bank.fr</a>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <MapPin className="h-4 w-4 mt-0.5 text-primary shrink-0" />
               <div>
                 <p className="font-medium">Siège social</p>
-                <p className="text-muted-foreground">
-                  103 avenue des Champs-Élysées<br />75008 Paris, France
-                </p>
+                <a 
+                  href="https://www.google.com/maps/search/?api=1&query=103+avenue+des+Champs-Élysées+75008+Paris"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary hover:underline transition cursor-pointer">103 avenue des Champs-Élysées<br />75008 Paris, France</a>
               </div>
             </div>
             <div className="rounded-lg bg-secondary p-3 text-xs text-muted-foreground flex items-start gap-2">

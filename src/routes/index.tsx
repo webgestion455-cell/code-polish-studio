@@ -29,7 +29,7 @@ function Landing() {
             <span className="text-gradient">avec confiance.</span>
           </h1>
           <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-            HSBC BANK est la nouvelle génération de banque européenne offrant des prêts personnels rapides, transparents et sécurisés.
+            HSBC BANK fait partir de la meilleure génération des banques européennes offrant des prêts personnels rapides, transparents et sécurisés.
           </p>
           <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg" className="h-14 rounded-full px-8 text-base shadow-glow">

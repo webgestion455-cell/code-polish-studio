@@ -248,7 +248,7 @@ function Dashboard() {
               </EmptyHeader>
               <EmptyContent>
                 <Button asChild className="shadow-glow">
-                  <Link to="/loans/new">Faire une simulation</Link>
+                  <Link to="/loans/new">Faire une demande</Link>
                 </Button>
               </EmptyContent>
             </Empty>
