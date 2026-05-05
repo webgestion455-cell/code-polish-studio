@@ -1,7 +1,9 @@
 import type { Database } from "@/integrations/supabase/types";
+import i18n from "@/i18n";
 
 export type LoanStatus = Database["public"]["Enums"]["loan_status"];
 
+// Static defaults (fallback FR). UI components should prefer t(`status.<key>`).
 export const STATUS_LABELS: Record<LoanStatus, string> = {
   en_attente: "En attente",
   accepte: "Accepté",
@@ -42,21 +44,39 @@ export const STATUS_PROGRESS: Record<LoanStatus, number> = {
   fonds_disponibles: 100,
 };
 
+/** Translate a status key reactively-safe by reading current i18n language. */
+export function tStatus(s: LoanStatus): string {
+  const key = `status.${s}`;
+  const translated = i18n.t(key);
+  return translated === key ? STATUS_LABELS[s] : translated;
+}
+
+function currentLocale(): string {
+  const lng = i18n.resolvedLanguage || i18n.language || "fr";
+  const map: Record<string, string> = {
+    fr: "fr-FR", en: "en-GB", de: "de-DE", es: "es-ES",
+    sl: "sl-SI", bg: "bg-BG", sk: "sk-SK",
+  };
+  return map[lng] ?? lng;
+}
+
 export function formatCurrency(amount: number) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(amount);
+  return new Intl.NumberFormat(currentLocale(), {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(amount);
 }
 
 export function formatDate(date: string) {
-  return new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", year: "numeric" }).format(new Date(date));
+  return new Intl.DateTimeFormat(currentLocale(), {
+    day: "numeric", month: "short", year: "numeric",
+  }).format(new Date(date));
 }
 
 export function formatDateTime(date: string) {
-  return new Intl.DateTimeFormat("fr-FR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
+  return new Intl.DateTimeFormat(currentLocale(), {
+    day: "2-digit", month: "short", year: "numeric",
+    hour: "2-digit", minute: "2-digit", second: "2-digit",
   }).format(new Date(date));
 }
