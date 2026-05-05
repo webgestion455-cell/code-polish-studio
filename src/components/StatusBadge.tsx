@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { LoanStatus } from "@/lib/loan-helpers";
-import { STATUS_LABELS, STATUS_VARIANTS } from "@/lib/loan-helpers";
+import { STATUS_VARIANTS, tStatus } from "@/lib/loan-helpers";
+import { useTranslation } from "react-i18next";
 
 const VARIANT_STYLES: Record<string, string> = {
   default: "bg-secondary text-secondary-foreground border-border",
@@ -11,6 +12,8 @@ const VARIANT_STYLES: Record<string, string> = {
 };
 
 export function StatusBadge({ status, className }: { status: LoanStatus; className?: string }) {
+  // re-render when language changes
+  useTranslation();
   const variant = STATUS_VARIANTS[status];
   return (
     <span
@@ -21,7 +24,7 @@ export function StatusBadge({ status, className }: { status: LoanStatus; classNa
       )}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
-      {STATUS_LABELS[status]}
+      {tStatus(status)}
     </span>
   );
 }
