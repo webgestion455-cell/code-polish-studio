@@ -264,11 +264,15 @@ function AdminDashboard() {
     refused: loans.filter((l) => l.status === "refuse").length,
   };
 
+  const acceptedStatuses: LoanStatus[] = ["accepte", "contrat_envoye", "contrat_signe", "en_traitement", "fonds_disponibles"];
   const totalAmountRequested = loans.reduce((s, l) => s + Number(l.amount), 0);
   const totalAmountAccepted = loans
-    .filter((l) => ["accepte", "contrat_envoye", "contrat_signe", "en_traitement", "fonds_disponibles"].includes(l.status))
+    .filter((l) => acceptedStatuses.includes(l.status))
     .reduce((s, l) => s + Number(l.amount), 0);
-  const totalDisbursed = loans.reduce((s, l) => s + Number(l.disbursed_amount ?? 0), 0);
+  // Total financé = uniquement prêts acceptés (les refusés ne comptent pas)
+  const totalDisbursed = loans
+    .filter((l) => acceptedStatuses.includes(l.status))
+    .reduce((s, l) => s + Number(l.disbursed_amount ?? 0), 0);
   const contractSignedCount = loans.filter((l) => l.status === "contrat_signe").length;
 
   const kpis: Array<{ title: string; value: number; icon: typeof FileText; color: string; border: string; status: LoanStatus | "all" | "accepted_group" }> = [
@@ -281,10 +285,29 @@ function AdminDashboard() {
   const amounts = [
     { title: "Montant total demandé", value: formatCurrency(totalAmountRequested) },
     { title: "Montant total accepté", value: formatCurrency(totalAmountAccepted) },
-    { title: "Fonds débloqués", value: formatCurrency(totalDisbursed) },
+    { title: "Fonds débloqués (acceptés)", value: formatCurrency(totalDisbursed) },
   ];
 
-  const recentActivity = loans.slice(0, 10);
+  // Activité récente fusionnée : prêts + virements (triés par date desc)
+  type Activity =
+    | { kind: "loan"; id: string; date: string; user_id: string; title: string; subtitle: string; status: LoanStatus }
+    | { kind: "withdrawal"; id: string; date: string; user_id: string; title: string; subtitle: string; status: string };
+  const recentActivity: Activity[] = [
+    ...loans.slice(0, 20).map<Activity>((l) => ({
+      kind: "loan", id: l.id, date: l.created_at, user_id: l.user_id,
+      title: `${l.full_name} — ${STATUS_LABELS[l.status]}`,
+      subtitle: `Prêt · ${formatCurrency(Number(l.amount))} · n°${l.id.slice(0, 8)}`,
+      status: l.status,
+    })),
+    ...withdrawals.slice(0, 20).map<Activity>((w) => ({
+      kind: "withdrawal", id: w.id, date: w.created_at, user_id: w.user_id,
+      title: `Virement ${w.status === "envoye" ? "exécuté" : w.status === "rejete" ? "rejeté" : "en attente"} — ${w.beneficiary}`,
+      subtitle: `${formatCurrency(Number(w.amount))} · ${w.bank_name} · réf. ${w.reference ?? "—"}`,
+      status: w.status,
+    })),
+  ]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 12);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl pb-28 lg:pb-10">
@@ -361,19 +384,19 @@ function AdminDashboard() {
                 </Empty>
               ) : (
                 <div className="space-y-3">
-                  {recentActivity.map((l) => (
-                    <div key={l.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/30 transition-colors">
+                  {recentActivity.map((a) => (
+                    <div key={`${a.kind}-${a.id}`} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/30 transition-colors">
                       <div className="flex items-center gap-4 min-w-0">
-                        <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                        <div className={cn("w-2 h-2 rounded-full shrink-0", a.kind === "withdrawal" ? "bg-accent" : "bg-primary")} />
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{l.full_name} — {STATUS_LABELS[l.status]}</p>
-                          <p className="text-xs text-muted-foreground truncate">{formatCurrency(Number(l.amount))} · Dossier n°{l.id.slice(0, 8)}</p>
+                          <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
+                          <p className="text-xs text-muted-foreground truncate">{a.subtitle}</p>
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs text-muted-foreground">{formatDateTime(l.created_at)}</p>
+                        <p className="text-xs text-muted-foreground">{formatDateTime(a.date)}</p>
                         <Button asChild variant="link" size="sm" className="h-auto p-0 text-xs mt-1">
-                          <Link to="/admin/clients/$userId" params={{ userId: l.user_id }}>
+                          <Link to="/admin/clients/$userId" params={{ userId: a.user_id }}>
                             Ouvrir <ArrowRight className="h-3 w-3 ml-1" />
                           </Link>
                         </Button>

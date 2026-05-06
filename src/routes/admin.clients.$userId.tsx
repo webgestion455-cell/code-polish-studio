@@ -282,7 +282,11 @@ function AdminClientDetail() {
                       <TableCell><StatusBadge status={l.status} /></TableCell>
                       <TableCell className="text-sm text-muted-foreground">{formatDateTime(l.created_at)}</TableCell>
                       <TableCell className="text-right">
-                        <span className="text-xs text-muted-foreground">—</span>
+                        <Button asChild size="sm" variant="outline">
+                          <Link to="/loans/$loanId" params={{ loanId: l.id }}>
+                            <Eye className="h-4 w-4 mr-1" /> {t("common.open")}
+                          </Link>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -11,6 +11,7 @@ import {
   playNotificationSound,
   type AppNotification,
 } from "@/lib/notifications";
+import { subscribeToPush } from "@/lib/push";
 import { formatDistanceToNow } from "date-fns";
 import { fr, enUS, de, es, sl, bg, sk } from "date-fns/locale";
 import type { Locale } from "date-fns";
@@ -26,7 +27,9 @@ export function NotificationBell() {
 
   useEffect(() => {
     if (!user) return;
-    void ensureBrowserPermission();
+    void ensureBrowserPermission().then((p) => {
+      if (p === "granted") void subscribeToPush(user.id).catch(() => {});
+    });
     void load();
 
     const channel = supabase

@@ -31,8 +31,8 @@ function NotFoundComponent() {
   );
 }
 
-// Inline script to set theme class BEFORE first paint (no FOUC)
-const themeInitScript = `(function(){try{var k='lendly-theme';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.toggle('dark',t==='dark');document.documentElement.style.colorScheme=t;}catch(e){}})();`;
+// Inline script to set theme class BEFORE first paint (no FOUC) + sets <html lang> from saved i18n choice
+const themeInitScript = `(function(){try{var k='lendly-theme';var t=localStorage.getItem(k);if(t!=='light'&&t!=='dark'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.toggle('dark',t==='dark');document.documentElement.style.colorScheme=t;var lng=localStorage.getItem('hsbc.lang');if(lng){document.documentElement.lang=lng.split('-')[0];}}catch(e){}})();`;
 
 export const Route = createRootRoute({
   head: () => ({
