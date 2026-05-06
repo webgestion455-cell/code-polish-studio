@@ -384,19 +384,19 @@ function AdminDashboard() {
                 </Empty>
               ) : (
                 <div className="space-y-3">
-                  {recentActivity.map((l) => (
-                    <div key={l.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/30 transition-colors">
+                  {recentActivity.map((a) => (
+                    <div key={`${a.kind}-${a.id}`} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/30 transition-colors">
                       <div className="flex items-center gap-4 min-w-0">
-                        <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                        <div className={cn("w-2 h-2 rounded-full shrink-0", a.kind === "withdrawal" ? "bg-accent" : "bg-primary")} />
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{l.full_name} — {STATUS_LABELS[l.status]}</p>
-                          <p className="text-xs text-muted-foreground truncate">{formatCurrency(Number(l.amount))} · Dossier n°{l.id.slice(0, 8)}</p>
+                          <p className="text-sm font-medium text-foreground truncate">{a.title}</p>
+                          <p className="text-xs text-muted-foreground truncate">{a.subtitle}</p>
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-xs text-muted-foreground">{formatDateTime(l.created_at)}</p>
+                        <p className="text-xs text-muted-foreground">{formatDateTime(a.date)}</p>
                         <Button asChild variant="link" size="sm" className="h-auto p-0 text-xs mt-1">
-                          <Link to="/admin/clients/$userId" params={{ userId: l.user_id }}>
+                          <Link to="/admin/clients/$userId" params={{ userId: a.user_id }}>
                             Ouvrir <ArrowRight className="h-3 w-3 ml-1" />
                           </Link>
                         </Button>
