@@ -7,7 +7,8 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
-  build: {
-    ssr: false
+
+  server: {
+    allowedHosts: true
   }
 });
