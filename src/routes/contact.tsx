@@ -219,7 +219,7 @@ function ContactPage() {
                 ) : (
                   <Send className="h-4 w-4 mr-1.5" />
                 )}
-                Envoyer le message
+                Envoyer le messag
               </Button>
             </div>
           </CardContent>
