@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { ShieldCheck, Lock, Sparkles } from "lucide-react";
+import hsbcLogo from "@/assets/hsbc-logo.png";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -109,10 +110,13 @@ function AuthPage() {
         <div>
           <div className="mb-8 text-center lg:hidden">
             <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent to-primary shadow-glow">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 17L9 11L13 15L21 7" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M15 7H21V13" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <img
+                src={hsbcLogo}
+                alt="HSBC BANK"
+                width={22}
+                height={22}
+                className="h-8 w-8 sm:h-9 sm:w-9 rounded-md object-contain bg-white p-0.5 shadow-sm shrink-0"
+              />
             </div>
             <h1 className="font-serif text-3xl font-medium">HSBC BANK</h1>
             <p className="mt-1 text-sm text-muted-foreground">Connectez-vous ou créez votre compte.</p>

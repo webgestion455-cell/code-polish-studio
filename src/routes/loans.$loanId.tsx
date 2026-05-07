@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { TransferDialog } from "@/components/TransferDialog";
 
 export const Route = createFileRoute("/loans/$loanId")({
   component: LoanDetail,
@@ -33,8 +34,13 @@ interface Loan {
   contract_pdf_path: string | null;
   signed_contract_path: string | null;
   created_at: string;
+  accepted_at: string | null;
+  contract_sent_at: string | null;
+  contract_signed_at: string | null;
+  processing_started_at: string | null;
   funds_available_at: string | null;
   disbursed_amount: number;
+  updated_at: string;
 }
 
 interface DocRow {
@@ -59,6 +65,7 @@ function LoanDetail() {
   const [docs, setDocs] = useState<DocRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [withdrawLoanId, setWithdrawLoanId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate({ to: "/auth" });
@@ -135,7 +142,7 @@ function LoanDetail() {
     }
     const { error: updateErr } = await supabase
       .from("loans")
-      .update({ signed_contract_path: path, status: "contrat_signe" })
+      .update({ signed_contract_path: path, status: "contrat_signe", })
       .eq("id", loan.id);
     setUploading(false);
     if (updateErr) {
@@ -150,7 +157,7 @@ function LoanDetail() {
         category: "success",
       });
       setTimeout(async () => {
-        await supabase.from("loans").update({ status: "en_traitement" }).eq("id", loan.id);
+        await supabase.from("loans").update({ status: "en_traitement", }).eq("id", loan.id);
         void load();
       }, 3000);
       void load();
@@ -234,9 +241,9 @@ function LoanDetail() {
         </CardContent>
       </Card>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-6 min-w-0">
         {/* Main column */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-6 min-w-0">
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Résumé de la demande</CardTitle>
@@ -282,10 +289,26 @@ function LoanDetail() {
               </CardContent>
             </Card>
           )}
+
+          <TransferDialog
+            open={!!withdrawLoanId}
+            onClose={() => setWithdrawLoanId(null)}
+            initialLoanId={withdrawLoanId}
+            loans={[
+              {
+                id: loan.id,
+                amount: Number(loan.amount),
+                disbursed_amount: Number(loan.disbursed_amount ?? 0),
+                status: loan.status,
+              },
+            ]}
+            defaultBeneficiary={loan.full_name}
+            onSuccess={() => void load()}
+          />
         </div>
 
         {/* Side column */}
-        <div className="space-y-6">
+        <div className="space-y-6 min-w-0">
           {/* Wallet card if funds available */}
           {status === "fonds_disponibles" && (
             <Card className="border-0 shadow-elevated overflow-hidden bg-gradient-to-br from-success to-emerald-700 text-white relative">
@@ -294,7 +317,7 @@ function LoanDetail() {
                 <div className="flex items-center gap-2 text-white/80 text-xs font-medium uppercase tracking-wider">
                   <Wallet className="h-4 w-4" /> Solde disponible
                 </div>
-                <div className="text-3xl md:text-4xl font-serif font-medium mt-1.5 tabular-nums">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-serif font-medium mt-1.5 tabular-nums break-all">
                   {formatCurrency(remainingBalance)}
                 </div>
                 {Number(loan.disbursed_amount ?? 0) > 0 && (
@@ -302,10 +325,13 @@ function LoanDetail() {
                     Déjà retiré : {formatCurrency(Number(loan.disbursed_amount))} sur {formatCurrency(Number(loan.amount))}
                   </p>
                 )}
-                <Button asChild className="w-full mt-5 bg-white text-success hover:bg-white/95 font-semibold shadow-md" size="lg">
-                  <Link to="/dashboard">
-                    <Send className="mr-2 h-4 w-4" /> Effectuer un virement
-                  </Link>
+                <Button
+                  className="w-full mt-5 bg-white text-success hover:bg-white/95 font-semibold shadow-md"
+                  size="lg"
+                  onClick={() => setWithdrawLoanId(loan.id)}
+                >
+                 <Send className="mr-2 h-4 w-4" />
+                                                 Effectuer un virement
                 </Button>
               </CardContent>
             </Card>
@@ -367,8 +393,8 @@ function LoanDetail() {
                       <span className="absolute left-0 top-1 h-6 w-6 rounded-full bg-accent/10 border-2 border-background ring-2 ring-accent/30 flex items-center justify-center">
                         <Check className="h-3 w-3 text-accent" />
                       </span>
-                      <p className="text-sm font-medium">{event.message}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{formatDateTime(event.created_at)}</p>
+                      <p className="text-sm font-medium break-words">{event.message}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5 break-all">{formatDateTime(event.created_at)}</p>
                     </li>
                   ))}
                 </ol>
@@ -385,7 +411,7 @@ function SummaryItem({ label, value, highlight }: { label: string; value: string
   return (
     <div>
       <dt className="text-xs uppercase tracking-wide text-muted-foreground font-medium">{label}</dt>
-      <dd className={cn("mt-1 tabular-nums", highlight ? "text-2xl font-serif font-medium" : "text-base font-medium")}>
+      <dd className={cn("mt-1 tabular-nums break-words overflow-hidden", highlight ? "text-xl sm:text-2xl font-serif font-medium" : "text-base font-medium")}>
         {value}
       </dd>
     </div>

@@ -102,7 +102,7 @@ function ContactPage() {
         </Button>
       </div>
 
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-start gap-4 mb-8">
         <img src={hsbcLogo} alt="HSBC BANK" width={56} height={56} className="h-14 w-14 rounded-md bg-white p-1 shadow-sm" />
         <div>
           <h1 className="text-3xl md:text-4xl font-serif text-primary">Contactez le service client</h1>
@@ -123,8 +123,10 @@ function ContactPage() {
               <div>
                 <p className="font-medium">Service client</p>
                 <a
-                  href="tel:+33140707040"
-                  className="text-muted-foreground hover:text-primary hover:underline transition cursor-pointer">+33 (0)1 40 70 70 40</a>
+                  href="https://wa.me/447529529674"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary hover:underline transition cursor-pointer">+44 7529 529674</a>
                 <p className="text-xs text-muted-foreground">Lun-Ven · 8h-20h</p>
               </div>
             </div>

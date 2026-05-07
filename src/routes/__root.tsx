@@ -6,6 +6,7 @@ import { AppHeader } from "@/components/AppHeader";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { BlockedAccountGuard } from "@/components/BlockedAccountGuard";
 import "@/i18n";
+import { useLocation } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 
@@ -85,18 +86,27 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  const location = useLocation();
+
+  const hideLayout = [
+    "/auth",
+  ].includes(location.pathname);
+
   return (
     <ThemeProvider>
       <AuthProvider>
         <div className="min-h-screen flex flex-col">
-          <AppHeader />
+          {!hideLayout && <AppHeader />}
+
           <main className="flex-1">
             <BlockedAccountGuard>
               <Outlet />
             </BlockedAccountGuard>
           </main>
-          <MobileBottomNav />
+
+          {!hideLayout && <MobileBottomNav />}
         </div>
+
         <Toaster richColors closeButton />
       </AuthProvider>
     </ThemeProvider>
