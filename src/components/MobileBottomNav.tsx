@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { FilePlus2, Home, Settings as SettingsIcon, ShieldCheck } from "lucide-react";
+import { FilePlus2, Home, Mail, Settings as SettingsIcon, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 export function MobileBottomNav() {
@@ -16,6 +16,7 @@ export function MobileBottomNav() {
     : [
         { to: "/dashboard" as const, label: "Accueil", icon: Home },
         { to: "/loans/new" as const, label: "Demande", icon: FilePlus2 },
+        { to: "/contact" as const, label: "Contact", icon: Mail },
         { to: "/settings" as const, label: "Paramètres", icon: SettingsIcon },
       ];
 
@@ -24,7 +25,7 @@ export function MobileBottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 px-3 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur-xl sm:hidden"
       aria-label="Navigation principale"
     >
-      <div className={`mx-auto grid max-w-md gap-1 ${items.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+      <div className={`mx-auto grid max-w-md gap-1 ${items.length === 4 ? "grid-cols-4" : items.length === 3 ?"grid-cols-3" : "grid-cols-2"}`}>
         {items.map((item) => {
           const Icon = item.icon;
           const active = location.pathname === item.to;

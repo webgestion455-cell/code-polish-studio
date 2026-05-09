@@ -31,10 +31,27 @@ function NewLoan() {
   const navigate = useNavigate();
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [profileName, setProfileName] = useState("");
 
   useEffect(() => {
     if (!authLoading && !user) navigate({ to: "/auth" });
   }, [user, authLoading, navigate]);
+
+  useEffect(() => {
+  if (!user) return;
+
+  void (async () => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("full_name")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (data?.full_name) {
+      setProfileName(data.full_name);
+    }
+  })();
+}, [user]);
 
   function onFilesChange(e: React.ChangeEvent<HTMLInputElement>) {
     const list = Array.from(e.target.files ?? []);
@@ -120,7 +137,7 @@ function NewLoan() {
     });
 
     setSubmitting(false);
-    toast.success("Demande envoyée !");
+    toast.success("Votre demande a été envoyée avec succès");
     navigate({ to: "/loans/$loanId", params: { loanId: loan.id } });
   }
 
@@ -128,12 +145,19 @@ function NewLoan() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 pb-28 pt-8 sm:px-6 lg:px-8 lg:pb-10">
-      <Button asChild variant="ghost" size="sm" className="mb-6">
+      <Button asChild variant="ghost" size="sm" className="mb-6 hidden sm:inline-flex">
         <Link to="/dashboard"><ArrowLeft className="mr-1.5 h-4 w-4" /> Retour</Link>
       </Button>
 
-      <h1 className="text-3xl font-bold">Nouvelle demande de prêt</h1>
-      <p className="mt-2 text-muted-foreground">Remplissez le formulaire et joignez vos justificatifs.</p>
+      <div className="mb-6 sm:hidden">
+       <h1 className="text-2xl font-bold tracking-tight">Nouvelle demande</h1>
+       <p className="mt-1 text-sm text-muted-foreground">Effectuez votre demande de prêt</p>
+      </div>
+
+      <div className="hidden sm:block">
+       <h1 className="text-3xl font-bold">Nouvelle demande de prêt</h1>
+       <p className="mt-2 text-muted-foreground">Remplissez le formulaire et joignez vos justificatifs.</p>
+      </div>
 
       <section className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-card">
         <div className="flex items-start gap-3">
@@ -160,42 +184,42 @@ function NewLoan() {
         </div>
       </section>
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-2xl border border-border bg-card p-6 shadow-card">
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-card">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="fullName">Nom complet</Label>
-            <Input id="fullName" name="fullName" required defaultValue="" />
+            <Input id="fullName" name="fullName" className="h-11" required defaultValue={profileName} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" required defaultValue={user.email ?? ""} />
+            <Input id="email" name="email" type="email" className="h-11" required defaultValue={user.email ?? ""} />
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="amount">Montant souhaité (€)</Label>
-            <Input id="amount" name="amount" type="number" min={500} max={100000} step={100} required placeholder="5000" />
+            <Input id="amount" name="amount" type="number" className="h-11" min={500} max={100000} step={100} required placeholder="5000" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="duration_months">Durée (mois)</Label>
-            <Input id="duration_months" name="duration_months" type="number" min={3} max={120} required placeholder="24" />
+            <Input id="duration_months" name="duration_months" type="number" className="h-11" min={3} max={120} required placeholder="24" />
           </div>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="monthly_income">Revenus mensuels nets (€)</Label>
-          <Input id="monthly_income" name="monthly_income" type="number" min={0} step={50} required placeholder="2500" />
+          <Input id="monthly_income" name="monthly_income" type="number" className="h-11" min={0} step={50} required placeholder="2500" />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="purpose">Objet du prêt (optionnel)</Label>
-          <Textarea id="purpose" name="purpose" rows={3} maxLength={500} placeholder="Travaux, voiture, projet personnel..." />
+          <Textarea id="purpose" name="purpose" rows={4} className="min-h-[110px]" maxLength={500} placeholder="Travaux, voiture, projet personnel..." />
         </div>
 
         <div className="space-y-2">
           <Label>Justificatifs requis (max 5, 5 Mo chacun)</Label>
-          <label className="flex items-center justify-center gap-2 rounded-lg border border-dashed border-border bg-input/30 px-4 py-6 text-sm text-muted-foreground cursor-pointer hover:bg-input/50 transition">
+          <label className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-input/30 px-4 py-7 text-sm text-muted-foreground cursor-pointer hover:bg-input/50 transition">
             <Upload className="h-4 w-4" />
             <span>Cliquez pour ajouter (PDF, JPG, PNG)</span>
             <input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple onChange={onFilesChange} className="hidden" />
@@ -214,7 +238,7 @@ function NewLoan() {
           )}
         </div>
 
-        <Button type="submit" className="w-full shadow-glow" size="lg" disabled={submitting}>
+        <Button type="submit" className="h-11 w-full shadow-glow" size="lg" disabled={submitting}>
           {submitting ? "Envoi..." : "Soumettre la demande"}
         </Button>
       </form>

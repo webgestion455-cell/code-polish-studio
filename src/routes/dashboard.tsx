@@ -14,6 +14,7 @@ import {
   Eye, EyeOff, Sparkles, Send, TrendingUp, ArrowRight, Mail,
 } from "lucide-react";
 import { toast } from "sonner";
+import { subscribeToPush } from "@/lib/push";
 import { useInactivityLogout } from "@/lib/use-inactivity";
 // notifyAllAdmins handled in TransferDialog
 
@@ -76,16 +77,47 @@ function Dashboard() {
   });
 
   useEffect(() => {
-    if (!authLoading && !user) navigate({ to: "/auth" });
-  }, [user, authLoading, navigate]);
+  if (!user) return;
+
+  void load();
+
+  // Active les notifications push VAPID
+  void subscribeToPush(user.id);
+
+  const interval = setInterval(() => void simulateProgress(), 30_000);
+
+  return () => clearInterval(interval);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [user]);
 
   useEffect(() => {
-    if (!user) return;
-    void load();
-    const interval = setInterval(() => void simulateProgress(), 30_000);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  if (typeof window === "undefined") return;
+
+  const unlockAudio = () => {
+    const audio = new Audio("/notification.mp3");
+    audio.volume = 0.9;
+
+    // petit play/pause silencieux pour débloquer audio mobile
+    audio.play()
+      .then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+      })
+      .catch(() => {});
+
+    window.removeEventListener("click", unlockAudio);
+    window.removeEventListener("touchstart", unlockAudio);
+  };
+
+  window.addEventListener("click", unlockAudio);
+  window.addEventListener("touchstart", unlockAudio);
+
+  return () => {
+    window.removeEventListener("click", unlockAudio);
+    window.removeEventListener("touchstart", unlockAudio);
+  };
+}, []);
 
   async function load() {
     if (!user) return;

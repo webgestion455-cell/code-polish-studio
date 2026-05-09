@@ -93,8 +93,8 @@ function ContactPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-10 max-w-5xl pb-28 lg:pb-10">
-      <div className="mb-4">
+    <div className="container mx-auto px-4 py-6 sm:py-10 max-w-5xl pb-28 lg:pb-10">
+      <div className="mb-4 hidden sm:block">
         <Button asChild variant="ghost" size="sm">
           <Link to={user ? "/dashboard" : "/"}>
             <ArrowLeft className="h-4 w-4 mr-1" /> Retour
@@ -103,9 +103,9 @@ function ContactPage() {
       </div>
 
       <div className="flex items-start gap-4 mb-8">
-        <img src={hsbcLogo} alt="HSBC BANK" width={56} height={56} className="h-14 w-14 rounded-md bg-white p-1 shadow-sm" />
+        <img src={hsbcLogo} alt="HSBC BANK" width={56} height={56} className="h-11 w-11 sm:h-14 sm:w-14 rounded-md bg-white p-1 shadow-sm" />
         <div>
-          <h1 className="text-3xl md:text-4xl font-serif text-primary">Contactez le service client</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif text-primary">Contactez le service client</h1>
           <p className="text-muted-foreground mt-1">
             Notre équipe vous répond sous 24h ouvrées · confidentialité garantie.
           </p>
@@ -214,14 +214,14 @@ function ContactPage() {
                 {message.length} / 4000
               </p>
             </div>
-            <div className="pt-2 flex justify-end">
-              <Button onClick={submit} disabled={busy} className="shadow-glow">
+            <div className="pt-2 flex justify-stretch sm:justify-end">
+              <Button onClick={submit} disabled={busy} className="w-full sm:w-auto shadow-glow">
                 {busy ? (
                   <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
                 ) : (
                   <Send className="h-4 w-4 mr-1.5" />
                 )}
-                Envoyer le messag
+                Envoyer le message
               </Button>
             </div>
           </CardContent>

@@ -112,21 +112,51 @@ export function NotificationBell() {
             <div className="px-4 py-8 text-center text-sm text-muted-foreground">{t("notifications.empty")}</div>
           ) : (
             items.map((n) => (
-              <a
-                key={n.id}
-                href={n.link ?? "#"}
-                onClick={() => setOpen(false)}
-                className={`block border-b border-border/50 px-4 py-3 text-sm transition-colors hover:bg-secondary ${n.read ? "" : "bg-primary/5"}`}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <span className="font-medium">{n.title}</span>
-                  {!n.read && <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />}
-                </div>
-                <p className="mt-0.5 text-xs text-muted-foreground">{n.message}</p>
-                <p className="mt-1 text-[10px] text-muted-foreground">
-                  {formatDistanceToNow(new Date(n.created_at), { addSuffix: true, locale: dateLocale })}
-                </p>
-              </a>
+              <button
+  key={n.id}
+  type="button"
+  onClick={async () => {
+    setOpen(false);
+
+    if (!n.read) {
+      await supabase
+        .from("notifications")
+        .update({ read: true })
+        .eq("id", n.id);
+
+      setItems((prev) =>
+        prev.map((p) =>
+          p.id === n.id ? { ...p, read: true } : p
+        )
+      );
+    }
+
+    if (n.link) {
+      window.location.href = n.link;
+    }
+  }}
+  className={`block w-full text-left border-b border-border/50 px-4 py-3 text-sm transition-colors hover:bg-secondary ${
+    n.read ? "" : "bg-primary/5"
+  }`}
+>
+  <div className="flex items-start justify-between gap-2">
+    <span className="font-medium">{n.title}</span>
+    {!n.read && (
+      <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
+    )}
+  </div>
+
+  <p className="mt-0.5 text-xs text-muted-foreground">
+    {n.message}
+  </p>
+
+  <p className="mt-1 text-[10px] text-muted-foreground">
+    {formatDistanceToNow(new Date(n.created_at), {
+      addSuffix: true,
+      locale: dateLocale,
+    })}
+  </p>
+</button>
             ))
           )}
         </div>

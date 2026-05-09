@@ -18,12 +18,24 @@ export async function notifyUser(params: {
   link?: string;
   category?: "info" | "success" | "warning" | "danger";
 }) {
-  await supabase.from("notifications").insert({
+  const { error } = await supabase.from("notifications").insert({
     user_id: params.userId,
     title: params.title,
     message: params.message,
     link: params.link ?? null,
     category: params.category ?? "info",
+    read: false,
+  });
+
+  if (error) {
+    console.error("Notification insert error:", error);
+  }
+
+  await sendPush({
+    userId: params.userId,
+    title: params.title,
+    message: params.message,
+    link: params.link,
   });
 }
 
@@ -46,6 +58,17 @@ export async function notifyAllAdmins(params: {
       }),
     ),
   );
+}
+
+export async function sendPush(params: {
+  userId: string;
+  title: string;
+  message: string;
+  link?: string;
+}) {
+  await supabase.functions.invoke("send-push", {
+    body: params,
+  });
 }
 
 export function ensureBrowserPermission() {
@@ -92,27 +115,11 @@ function getCtx(): AudioContext | null {
 
 export function playNotificationSound() {
   try {
-    const ctx = getCtx();
-    if (!ctx) return;
-    if (ctx.state === "suspended") void ctx.resume();
-    const now = ctx.currentTime;
+    const audio = new Audio("/notification.mp3");
 
-    // Deux notes courtes type "ding-dong" bancaire (E5 -> A5)
-    [
-      { f: 659.25, t: 0 },
-      { f: 880.0, t: 0.14 },
-    ].forEach(({ f, t }) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = f;
-      gain.gain.setValueAtTime(0.0001, now + t);
-      gain.gain.exponentialRampToValueAtTime(0.18, now + t + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + t + 0.35);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(now + t);
-      osc.stop(now + t + 0.4);
-    });
+    audio.volume = 1.0;
+
+    audio.play().catch(() => {});
   } catch {
     // ignore
   }
