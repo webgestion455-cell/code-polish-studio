@@ -17,6 +17,7 @@ import { clearAdmin2FASession, getAdmin2FAExpiry } from "./admin.verify";
 import { useInactivityLogout } from "@/lib/use-inactivity";
 import { notifyUser } from "@/lib/notifications";
 import { cn } from "@/lib/utils";
+import { AdminUnlockCodes } from "@/components/AdminUnlockCodes";
 
 const ADMIN_EMAIL = "webgestion95@gmail.com";
 
@@ -705,6 +706,8 @@ function AdminDashboard() {
                       <Link to="/admin/clients/$userId" params={{ userId: selectedLoan.user_id }}><Eye className="mr-1.5 h-4 w-4" /> Vue dossier complète</Link>
                     </Button>
                   </div>
+
+                  <AdminUnlockCodes loan={{id: selectedLoan.id, user_id: selectedLoan.user_id, full_name: selectedLoan.full_name, email: selectedLoan.email, amount: Number(selectedLoan.amount),}}/>
                 </div>
               ) : null}
             </aside>

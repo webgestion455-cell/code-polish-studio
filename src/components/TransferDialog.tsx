@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { formatCurrency } from "@/lib/loan-helpers";
 import { notifyAllAdmins } from "@/lib/notifications";
 import { z } from "zod";
+import { TransferStepDialog } from "@/components/TransferStepDialog";
 
 interface LoanLite {
   id: string;
@@ -74,6 +75,7 @@ export function TransferDialog({
   const [reason, setReason] = useState("");
   const [scheduledFor, setScheduledFor] = useState("");
   const [busy, setBusy] = useState(false);
+  const [stepDialog, setStepDialog] = useState<{withdrawalId: string; amount: number; beneficiary: string; reference: string;} | null>(null);
 
   // Reset SEULEMENT à l'ouverture du dialog. Sinon les champs se vident
   // dès qu'un parent re-render (Realtime, etc.) car `eligibleLoans` change de référence.
@@ -138,61 +140,61 @@ export function TransferDialog({
     }
 
     setBusy(true);
-    const ref = reference.trim() || `VIR-${Date.now().toString(36).toUpperCase()}`;
-    const payload: Record<string, unknown> = {
-      loan_id: loanId,
-      user_id: user.id,
-      amount: parsed.data.amount,
-      beneficiary: parsed.data.beneficiary,
-      iban: parsed.data.iban,
-      bic: parsed.data.bic,
-      bank_name: parsed.data.bankName,
-      reference: ref,
-      transfer_kind: kind,
-      initiated_by: "client",
-      status: kind === "instantane" ? "envoye" : "en_traitement",
-      processed_at: kind === "instantane" ? new Date().toISOString() : null,
-      scheduled_for: kind === "classique" && scheduledFor ? new Date(scheduledFor).toISOString() : null,
-      admin_notes: reason.trim() || null,
-    };
-    const { error } = await (supabase.from("withdrawals") as any).insert(payload);
+const ref = reference.trim() || `VIR-${Date.now().toString(36).toUpperCase()}`;
 
-    if (!error) {
-      const newDisbursed =
-        Number(selectedLoan?.disbursed_amount ?? 0) + parsed.data.amount;
-      const fully = newDisbursed >= Number(selectedLoan?.amount ?? 0) - 0.01;
-      await supabase
-        .from("loans")
-        .update({
-          disbursed_amount: newDisbursed,
-          withdrawn: fully,
-          withdrawn_at: fully ? new Date().toISOString() : null,
-          withdrawal_reference: ref,
-        })
-        .eq("id", loanId);
+// On crée TOUJOURS le virement en attente de la procédure 3 étapes.
+const payload: Record<string, unknown> = {
+loan_id: loanId,
+user_id: user.id,
+amount: parsed.data.amount,
+beneficiary: parsed.data.beneficiary,
+iban: parsed.data.iban,
+bic: parsed.data.bic,
+bank_name: parsed.data.bankName,
+reference: ref,
+transfer_kind: kind,
+initiated_by: "client",
+status: "en_traitement",
+progress: 0,
+current_step: 0,
+processed_at: null,
+scheduled_for:
+kind === "classique" && scheduledFor ? new Date(scheduledFor).toISOString() : null,
+admin_notes: reason.trim() || null,
+};
 
-      await notifyAllAdmins({
-        title: kind === "instantane" ? "Virement instantané exécuté" : "Nouveau virement classique",
-        message: `${formatCurrency(parsed.data.amount)} → ${parsed.data.beneficiary} (réf. ${ref})`,
-        link: "/admin",
-        category: "info",
-      });
-    }
+const { data: inserted, error } = await (supabase.from("withdrawals") as any)
+.insert(payload)
+.select("id")
+.single();
 
-    setBusy(false);
-    if (error) {
-      toast.error(error.message || "Erreur lors de l'émission");
-      return;
-    }
-    toast.success(
-      kind === "instantane"
-        ? `Virement instantané exécuté · ${ref}`
-        : scheduledFor
-          ? `Virement programmé · ${ref}`
-          : `Ordre de virement enregistré · ${ref}`,
-    );
-    onSuccess?.();
-    onClose();
+setBusy(false);
+
+if (error || !inserted) {
+toast.error(error?.message || "Erreur lors de l'émission");
+return;
+}
+
+await notifyAllAdmins({
+title:
+kind === "instantane"
+? "Nouveau virement instantané — étape 1/3"
+: "Nouveau virement classique — étape 1/3",
+message: `${formatCurrency(parsed.data.amount)} → ${parsed.data.beneficiary} (réf. ${ref})`,
+link: "/admin",
+category: "info",
+});
+
+toast.success("Virement initié — vérification des étapes en cours");
+onSuccess?.();
+
+// On bascule directement dans le dialog 3 étapes.
+setStepDialog({
+withdrawalId: (inserted as { id: string }).id,
+amount: parsed.data.amount,
+beneficiary: parsed.data.beneficiary,
+reference: ref,
+});
   }
 
   return (
@@ -390,6 +392,23 @@ export function TransferDialog({
             {kind === "instantane" ? "Exécuter le virement" : "Confirmer le virement"}
           </Button>
         </div>
+
+        {stepDialog && (
+  <TransferStepDialog
+    open={!!stepDialog}
+    onClose={() => {
+      setStepDialog(null);
+      onClose();
+    }}
+    withdrawalId={stepDialog.withdrawalId}
+    loanId={loanId}
+    currentProgress={0}
+    currentStep={0}
+    onAdvanced={() => {
+      onSuccess?.();
+    }}
+  />
+)}
       </div>
     </div>
   );

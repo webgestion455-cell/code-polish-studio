@@ -30,7 +30,9 @@
     "status": "Statut",
     "details": "Détails",
     "optional": "optionnel",
-    "required": "obligatoire"
+    "required": "obligatoire",
+    "refresh": "Actualiser",
+    "viewAll": "Voir tout"
   },
   "header": {
     "myLoans": "Mes prêts",
@@ -46,7 +48,11 @@
   "notifications": {
     "title": "Notifications",
     "empty": "Aucune notification",
-    "markAllRead": "Tout lire"
+    "markAllRead": "Tout lire",
+    "pageTitle": "Toutes les notifications",
+    "noLink": "Aucun lien",
+    "allRead": "Tout est à jour",
+    "viewAll": "Voir toutes les notifications"
   },
   "auth": {
     "title": "Espace client",
@@ -232,6 +238,19 @@
       "blockedSince": "Bloqué depuis",
       "blockedReason": "Motif",
       "confirm": "Confirmer"
+    },
+    "stages": {
+      "title": "Frais et codes de déblocage",
+      "planSaved": "Plan enregistré",
+      "planFirst": "Planifiez d'abord les frais",
+      "codeSent": "Code envoyé pour l'étape {{stage}}%",
+      "unlocked": "Débloqué",
+      "codeSentBadge": "Code envoyé",
+      "fee": "Frais (€)",
+      "sentAt": "Envoyé",
+      "genAndSend": "Générer & envoyer",
+      "regenAndSend": "Régénérer & envoyer",
+      "savePlan": "Enregistrer le plan"
     }
   },
   "blocked": {
@@ -251,5 +270,39 @@
     "fonds_disponibles": "Fonds disponibles",
     "envoye": "Envoyé",
     "rejete": "Rejeté"
+  },
+  "client": {
+    "stages": {
+      "title": "Virements en cours",
+      "blockedTitle": "Virement bloqué à {{stage}}%",
+      "blockedDesc": "Frais à régler : {{fee}}. Vous recevrez un code après validation.",
+      "codePlaceholder": "Code de déblocage",
+      "unlock": "Débloquer",
+      "enterCode": "Saisissez le code",
+      "invalidCode": "Code invalide",
+      "unlocked": "Étape débloquée",
+      "awaitCode": "En attente du code de l'administrateur",
+      "codeReceivedTitle": "Code de déblocage {{stage}}%",
+      "codeReceivedMsg": "Votre code : {{code}} (frais {{fee}})"
+    }
   }
+  ,
+"adminCodes": {
+  "title": "Codes de déblocage",
+  "help": "Gérez les codes de progression du virement.",
+  "step": "Étape",
+  "released": "Débloqué",
+  "fee": "Frais (€)",
+  "code": "Code",
+  "generate": "Générer",
+  "regenerate": "Régénérer",
+  "send": "Envoyer",
+  "generateAndSend": "Générer et envoyer",
+  "regenerateAndSend": "Régénérer et envoyer",
+  "noCode": "Aucun code",
+  "created": "Code créé",
+  "updated": "Code mis à jour",
+  "error": "Erreur",
+  "success": "Succès"
+}
 }
