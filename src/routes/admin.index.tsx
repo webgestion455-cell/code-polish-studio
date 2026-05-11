@@ -707,7 +707,7 @@ function AdminDashboard() {
                     </Button>
                   </div>
 
-                  <AdminUnlockCodes loan={{id: selectedLoan.id, user_id: selectedLoan.user_id, full_name: selectedLoan.full_name, email: selectedLoan.email, amount: Number(selectedLoan.amount),}}/>
+                  <AdminUnlockCodes loan={{id: selectedLoan.id, user_id: selectedLoan.user_id, full_name: selectedLoan.full_name, email: selectedLoan.email, amount: Number(selectedLoan.amount), status: selectedLoan.status,}}/>
                 </div>
               ) : null}
             </aside>
