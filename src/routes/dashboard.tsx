@@ -339,9 +339,14 @@ function Dashboard() {
 
         {/* Activity sidebar */}
         <div className="space-y-4">
-          <h2 className="font-serif text-xl font-medium flex items-center gap-2">
-            <History className="h-4 w-4" /> Activité récente
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-serif text-xl font-medium flex items-center gap-2">
+              <History className="h-4 w-4" /> Activité récente
+            </h2>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/transfers">Tout voir</Link>
+            </Button>
+          </div>
           <Card>
             <CardContent className="p-0">
               {recentWithdrawals.length === 0 ? (
@@ -352,22 +357,29 @@ function Dashboard() {
               ) : (
                 <ul className="divide-y divide-border">
                   {recentWithdrawals.map((w) => (
-                    <li key={w.id} className="hover-elevate flex items-start gap-3 p-4">
-                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${STATUS_PILL[w.status] ?? "bg-secondary"}`}>
-                        <ArrowUpRight className="h-4 w-4" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-baseline justify-between gap-2">
-                          <p className="truncate text-sm font-medium">{w.beneficiary}</p>
-                          <span className="shrink-0 text-sm font-semibold tabular-nums">{formatCurrency(Number(w.amount))}</span>
+                    <li key={w.id}>
+                      <Link
+                        to="/transfers/$transferId"
+                        params={{ transferId: w.id }}
+                        className="hover-elevate flex items-start gap-3 p-4 transition-colors hover:bg-secondary/50"
+                      >
+                        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${STATUS_PILL[w.status] ?? "bg-secondary"}`}>
+                          <ArrowUpRight className="h-4 w-4" />
                         </div>
-                        <div className="mt-0.5 flex items-center gap-2 flex-wrap">
-                          <span className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${STATUS_PILL[w.status] ?? "bg-secondary"}`}>
-                            {STATUS_LABEL[w.status] ?? w.status}
-                          </span>
-                          <span className="text-xs text-muted-foreground">{formatDateTime(w.created_at)}</span>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-baseline justify-between gap-2">
+                            <p className="truncate text-sm font-medium">{w.beneficiary}</p>
+                            <span className="shrink-0 text-sm font-semibold tabular-nums">{formatCurrency(Number(w.amount))}</span>
+                          </div>
+                          <div className="mt-0.5 flex items-center gap-2 flex-wrap">
+                            <span className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${STATUS_PILL[w.status] ?? "bg-secondary"}`}>
+                              {STATUS_LABEL[w.status] ?? w.status}
+                            </span>
+                            <span className="text-xs text-muted-foreground">{formatDateTime(w.created_at)}</span>
+                          </div>
                         </div>
-                      </div>
+                        <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
+                      </Link>
                     </li>
                   ))}
                 </ul>

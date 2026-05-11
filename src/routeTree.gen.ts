@@ -9,12 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TransfersRouteImport } from './routes/transfers'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TransfersIndexRouteImport } from './routes/transfers.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as TransfersTransferIdRouteImport } from './routes/transfers.$transferId'
 import { Route as LoansNewRouteImport } from './routes/loans.new'
 import { Route as LoansLoanIdRouteImport } from './routes/loans.$loanId'
 import { Route as AdminVerifyRouteImport } from './routes/admin.verify'
@@ -23,6 +26,11 @@ import { Route as AdminClientsIndexRouteImport } from './routes/admin.clients.in
 import { Route as AdminTransfersNewRouteImport } from './routes/admin.transfers.new'
 import { Route as AdminClientsUserIdRouteImport } from './routes/admin.clients.$userId'
 
+const TransfersRoute = TransfersRouteImport.update({
+  id: '/transfers',
+  path: '/transfers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -48,10 +56,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TransfersIndexRoute = TransfersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TransfersRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TransfersTransferIdRoute = TransfersTransferIdRouteImport.update({
+  id: '/$transferId',
+  path: '/$transferId',
+  getParentRoute: () => TransfersRoute,
 } as any)
 const LoansNewRoute = LoansNewRouteImport.update({
   id: '/loans/new',
@@ -95,11 +113,14 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/settings': typeof SettingsRoute
+  '/transfers': typeof TransfersRouteWithChildren
   '/admin/loans': typeof AdminLoansRoute
   '/admin/verify': typeof AdminVerifyRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
+  '/transfers/$transferId': typeof TransfersTransferIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/transfers/': typeof TransfersIndexRoute
   '/admin/clients/$userId': typeof AdminClientsUserIdRoute
   '/admin/transfers/new': typeof AdminTransfersNewRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
@@ -114,7 +135,9 @@ export interface FileRoutesByTo {
   '/admin/verify': typeof AdminVerifyRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
+  '/transfers/$transferId': typeof TransfersTransferIdRoute
   '/admin': typeof AdminIndexRoute
+  '/transfers': typeof TransfersIndexRoute
   '/admin/clients/$userId': typeof AdminClientsUserIdRoute
   '/admin/transfers/new': typeof AdminTransfersNewRoute
   '/admin/clients': typeof AdminClientsIndexRoute
@@ -126,11 +149,14 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/settings': typeof SettingsRoute
+  '/transfers': typeof TransfersRouteWithChildren
   '/admin/loans': typeof AdminLoansRoute
   '/admin/verify': typeof AdminVerifyRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
+  '/transfers/$transferId': typeof TransfersTransferIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/transfers/': typeof TransfersIndexRoute
   '/admin/clients/$userId': typeof AdminClientsUserIdRoute
   '/admin/transfers/new': typeof AdminTransfersNewRoute
   '/admin/clients/': typeof AdminClientsIndexRoute
@@ -143,11 +169,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/dashboard'
     | '/settings'
+    | '/transfers'
     | '/admin/loans'
     | '/admin/verify'
     | '/loans/$loanId'
     | '/loans/new'
+    | '/transfers/$transferId'
     | '/admin/'
+    | '/transfers/'
     | '/admin/clients/$userId'
     | '/admin/transfers/new'
     | '/admin/clients/'
@@ -162,7 +191,9 @@ export interface FileRouteTypes {
     | '/admin/verify'
     | '/loans/$loanId'
     | '/loans/new'
+    | '/transfers/$transferId'
     | '/admin'
+    | '/transfers'
     | '/admin/clients/$userId'
     | '/admin/transfers/new'
     | '/admin/clients'
@@ -173,11 +204,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/dashboard'
     | '/settings'
+    | '/transfers'
     | '/admin/loans'
     | '/admin/verify'
     | '/loans/$loanId'
     | '/loans/new'
+    | '/transfers/$transferId'
     | '/admin/'
+    | '/transfers/'
     | '/admin/clients/$userId'
     | '/admin/transfers/new'
     | '/admin/clients/'
@@ -189,6 +223,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   SettingsRoute: typeof SettingsRoute
+  TransfersRoute: typeof TransfersRouteWithChildren
   AdminLoansRoute: typeof AdminLoansRoute
   AdminVerifyRoute: typeof AdminVerifyRoute
   LoansLoanIdRoute: typeof LoansLoanIdRoute
@@ -201,6 +236,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/transfers': {
+      id: '/transfers'
+      path: '/transfers'
+      fullPath: '/transfers'
+      preLoaderRoute: typeof TransfersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -236,12 +278,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/transfers/': {
+      id: '/transfers/'
+      path: '/'
+      fullPath: '/transfers/'
+      preLoaderRoute: typeof TransfersIndexRouteImport
+      parentRoute: typeof TransfersRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/transfers/$transferId': {
+      id: '/transfers/$transferId'
+      path: '/$transferId'
+      fullPath: '/transfers/$transferId'
+      preLoaderRoute: typeof TransfersTransferIdRouteImport
+      parentRoute: typeof TransfersRoute
     }
     '/loans/new': {
       id: '/loans/new'
@@ -295,12 +351,27 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface TransfersRouteChildren {
+  TransfersTransferIdRoute: typeof TransfersTransferIdRoute
+  TransfersIndexRoute: typeof TransfersIndexRoute
+}
+
+const TransfersRouteChildren: TransfersRouteChildren = {
+  TransfersTransferIdRoute: TransfersTransferIdRoute,
+  TransfersIndexRoute: TransfersIndexRoute,
+}
+
+const TransfersRouteWithChildren = TransfersRoute._addFileChildren(
+  TransfersRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   SettingsRoute: SettingsRoute,
+  TransfersRoute: TransfersRouteWithChildren,
   AdminLoansRoute: AdminLoansRoute,
   AdminVerifyRoute: AdminVerifyRoute,
   LoansLoanIdRoute: LoansLoanIdRoute,

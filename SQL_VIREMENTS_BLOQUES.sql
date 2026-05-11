@@ -1,29 +1,35 @@
 -- ============================================================================
--- Système de virements bloqués multi-étapes (63% / 88% / 100%)
+-- Système de virements bloqués multi-étapes (V2 — bancaire réaliste)
 -- À COLLER DANS L'ÉDITEUR SQL DE VOTRE PROJET SUPABASE.
 -- Idempotent : peut être ré-exécuté sans erreur.
 -- ============================================================================
 
 -- ===== withdrawals : colonnes manquantes =====
 ALTER TABLE public.withdrawals
-  ADD COLUMN IF NOT EXISTS transfer_kind TEXT NOT NULL DEFAULT 'instantane',
-  ADD COLUMN IF NOT EXISTS initiated_by  TEXT NOT NULL DEFAULT 'client',
-  ADD COLUMN IF NOT EXISTS scheduled_for TIMESTAMPTZ,
-  ADD COLUMN IF NOT EXISTS progress      INTEGER NOT NULL DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS current_step  INTEGER NOT NULL DEFAULT 0;
+  ADD COLUMN IF NOT EXISTS transfer_kind   TEXT NOT NULL DEFAULT 'instantane',
+  ADD COLUMN IF NOT EXISTS initiated_by    TEXT NOT NULL DEFAULT 'client',
+  ADD COLUMN IF NOT EXISTS scheduled_for   TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS progress        INTEGER NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS current_step    INTEGER NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS step_started_at TIMESTAMPTZ NOT NULL DEFAULT now();
 
 CREATE INDEX IF NOT EXISTS idx_withdrawals_status_progress
   ON public.withdrawals(status, progress);
+CREATE INDEX IF NOT EXISTS idx_withdrawals_user
+  ON public.withdrawals(user_id, created_at DESC);
 
--- ===== Table loan_unlock_codes =====
--- Une ligne par (loan_id, step). step ∈ {63, 88, 100}.
+-- ===== Table loan_unlock_codes (avec coordonnées bancaires séparées) =====
 CREATE TABLE IF NOT EXISTS public.loan_unlock_codes (
   id              UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   loan_id         UUID NOT NULL REFERENCES public.loans(id) ON DELETE CASCADE,
   user_id         UUID NOT NULL,
   step            INTEGER NOT NULL CHECK (step IN (63, 88, 100)),
   fee_amount      NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (fee_amount >= 0),
-  payment_address TEXT,
+  payment_address TEXT,                    -- legacy
+  account_holder  TEXT,
+  iban            TEXT,
+  bic             TEXT,
+  description     TEXT,
   code            TEXT,
   code_version    INTEGER NOT NULL DEFAULT 0,
   released        BOOLEAN NOT NULL DEFAULT false,
@@ -39,6 +45,13 @@ CREATE TABLE IF NOT EXISTS public.loan_unlock_codes (
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (loan_id, step)
 );
+
+-- Migration douce si la table existait déjà sans les nouveaux champs
+ALTER TABLE public.loan_unlock_codes
+  ADD COLUMN IF NOT EXISTS account_holder TEXT,
+  ADD COLUMN IF NOT EXISTS iban           TEXT,
+  ADD COLUMN IF NOT EXISTS bic            TEXT,
+  ADD COLUMN IF NOT EXISTS description    TEXT;
 
 ALTER TABLE public.loan_unlock_codes ENABLE ROW LEVEL SECURITY;
 
@@ -56,9 +69,6 @@ CREATE POLICY "Users view own unlock codes"
   ON public.loan_unlock_codes FOR SELECT
   USING (auth.uid() = user_id OR public.has_role(auth.uid(), 'admin'));
 
--- Le client peut UPDATE pour téléverser son reçu (receipt_*).
--- L'écriture du code est protégée par la RPC consume_unlock_code (SECURITY DEFINER)
--- + politique admin pour la régénération.
 DROP POLICY IF EXISTS "Users upload own receipt" ON public.loan_unlock_codes;
 CREATE POLICY "Users upload own receipt"
   ON public.loan_unlock_codes FOR UPDATE
@@ -145,5 +155,11 @@ DO $$ BEGIN
   WHERE pubname = 'supabase_realtime' AND tablename = 'loan_unlock_codes';
   IF NOT FOUND THEN
     EXECUTE 'ALTER PUBLICATION supabase_realtime ADD TABLE public.loan_unlock_codes';
+  END IF;
+
+  PERFORM 1 FROM pg_publication_tables
+  WHERE pubname = 'supabase_realtime' AND tablename = 'withdrawals';
+  IF NOT FOUND THEN
+    EXECUTE 'ALTER PUBLICATION supabase_realtime ADD TABLE public.withdrawals';
   END IF;
 END $$;

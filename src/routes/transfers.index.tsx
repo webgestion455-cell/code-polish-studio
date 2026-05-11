@@ -1,0 +1,234 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from "@/components/ui/empty";
+import {
+  ArrowUpRight,
+  ArrowRight,
+  Send,
+  Wallet,
+  Lock,
+  CheckCircle2,
+  Loader2,
+  XCircle,
+} from "lucide-react";
+import { formatCurrency, formatDateTime } from "@/lib/loan-helpers";
+
+export const Route = createFileRoute("/transfers/")({
+  component: TransfersIndex,
+  head: () => ({ meta: [{ title: "Mes virements — HSBC BANK" }] }),
+});
+
+interface Withdrawal {
+  id: string;
+  loan_id: string;
+  amount: number;
+  beneficiary: string;
+  iban: string;
+  bank_name: string;
+  reference: string | null;
+  status: string;
+  progress: number;
+  current_step: number;
+  created_at: string;
+  processed_at: string | null;
+  transfer_kind?: string;
+}
+
+function statusInfo(w: Withdrawal) {
+  if (w.status === "envoye" || w.current_step >= 3) {
+    return { label: "Validé", icon: CheckCircle2, cls: "bg-success/15 text-success" };
+  }
+  if (w.status === "rejete") {
+    return { label: "Rejeté", icon: XCircle, cls: "bg-destructive/15 text-destructive" };
+  }
+  // En traitement: distinguer "bloqué" (palier atteint) vs "en cours"
+  const targets = [63, 88, 100];
+  const target = targets[w.current_step] ?? 100;
+  if (w.progress >= target && w.current_step < 3) {
+    return { label: "Conformité requise", icon: Lock, cls: "bg-warning/15 text-warning" };
+  }
+  return { label: "En traitement", icon: Loader2, cls: "bg-info/15 text-info" };
+}
+
+function TransfersIndex() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [list, setList] = useState<Withdrawal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "active" | "blocked" | "done">("all");
+
+  useEffect(() => {
+    if (!user) return;
+    void load();
+    const ch = supabase
+      .channel("transfers-list")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "withdrawals", filter: `user_id=eq.${user.id}` },
+        () => void load(),
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(ch);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  async function load() {
+    setLoading(true);
+    const { data } = await supabase
+      .from("withdrawals")
+      .select("*")
+      .order("created_at", { ascending: false });
+    setList((data as Withdrawal[]) ?? []);
+    setLoading(false);
+  }
+
+  if (authLoading || !user) {
+    return (
+      <div className="flex h-96 items-center justify-center text-muted-foreground">Chargement…</div>
+    );
+  }
+
+  const filtered = list.filter((w) => {
+    if (filter === "all") return true;
+    if (filter === "done") return w.status === "envoye" || w.current_step >= 3;
+    if (filter === "blocked") {
+      const targets = [63, 88, 100];
+      const t = targets[w.current_step] ?? 100;
+      return w.progress >= t && w.current_step < 3 && w.status !== "rejete";
+    }
+    if (filter === "active") return w.status === "en_traitement" && w.current_step < 3;
+    return true;
+  });
+
+  return (
+    <div className="container mx-auto max-w-5xl space-y-6 px-4 pb-28 pt-8 sm:px-6 lg:px-8 lg:pb-10">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm text-muted-foreground">Espace bancaire</p>
+          <h1 className="mt-0.5 font-serif text-3xl font-medium tracking-tight md:text-4xl">
+            Mes virements
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Historique complet, suivi temps réel et reprise des virements en attente.
+          </p>
+        </div>
+        <Button asChild className="shadow-glow">
+          <Link to="/dashboard">
+            <Send className="mr-2 h-4 w-4" /> Nouveau virement
+          </Link>
+        </Button>
+      </div>
+
+      {/* Filtres */}
+      <div className="flex flex-wrap gap-2">
+        {[
+          { k: "all", l: "Tous" },
+          { k: "active", l: "En cours" },
+          { k: "blocked", l: "À débloquer" },
+          { k: "done", l: "Validés" },
+        ].map((f) => (
+          <button
+            key={f.k}
+            onClick={() => setFilter(f.k as typeof filter)}
+            className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+              filter === f.k
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-card hover:bg-secondary"
+            }`}
+          >
+            {f.l}
+          </button>
+        ))}
+      </div>
+
+      {/* Liste */}
+      {loading ? (
+        <Card>
+          <CardContent className="p-12 text-center text-muted-foreground">Chargement…</CardContent>
+        </Card>
+      ) : filtered.length === 0 ? (
+        <Empty className="border bg-card shadow-card">
+          <EmptyHeader>
+            <EmptyMedia variant="icon" className="bg-accent/10 text-accent">
+              <Wallet className="h-6 w-6" />
+            </EmptyMedia>
+            <EmptyTitle>Aucun virement</EmptyTitle>
+            <EmptyDescription>
+              Vous n'avez pas encore initié de virement avec ce filtre.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      ) : (
+        <div className="space-y-3">
+          {filtered.map((w) => {
+            const s = statusInfo(w);
+            const Icon = s.icon;
+            return (
+              <Card
+                key={w.id}
+                className="cursor-pointer transition hover:border-accent/40 hover:shadow-elevated"
+                onClick={() =>
+                  navigate({ to: "/transfers/$transferId", params: { transferId: w.id } })
+                }
+              >
+                <CardContent className="p-5">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xl font-semibold tabular-nums">
+                          {formatCurrency(Number(w.amount))}
+                        </span>
+                        <Badge className={`${s.cls} border-0 gap-1`}>
+                          <Icon className={`h-3 w-3 ${s.label === "En traitement" ? "animate-spin" : ""}`} />
+                          {s.label}
+                        </Badge>
+                      </div>
+                      <p className="mt-1 truncate text-sm">
+                        <span className="text-muted-foreground">Bénéficiaire : </span>
+                        <span className="font-medium">{w.beneficiary}</span>
+                      </p>
+                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                        {w.bank_name} · {w.iban}
+                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Émis le {formatDateTime(w.created_at)}
+                        {w.reference ? ` · réf. ${w.reference}` : ""}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <ArrowUpRight className="h-5 w-5 text-muted-foreground" />
+                      <Button variant="outline" size="sm">
+                        Détails <ArrowRight className="ml-1.5 h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Mini barre de progression neutre */}
+                  <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+                    <div
+                      className="h-full bg-gradient-accent transition-all duration-500"
+                      style={{ width: `${Math.max(2, Math.min(100, w.progress || 0))}%` }}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}

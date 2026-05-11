@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,6 @@ import { toast } from "sonner";
 import { formatCurrency } from "@/lib/loan-helpers";
 import { notifyAllAdmins } from "@/lib/notifications";
 import { z } from "zod";
-import { TransferStepDialog } from "@/components/TransferStepDialog";
 
 interface LoanLite {
   id: string;
@@ -53,6 +53,7 @@ export function TransferDialog({
 }: TransferDialogProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const eligibleLoans = useMemo(
     () =>
@@ -75,7 +76,7 @@ export function TransferDialog({
   const [reason, setReason] = useState("");
   const [scheduledFor, setScheduledFor] = useState("");
   const [busy, setBusy] = useState(false);
-  const [stepDialog, setStepDialog] = useState<{withdrawalId: string; amount: number; beneficiary: string; reference: string;} | null>(null);
+  
 
   // Reset SEULEMENT à l'ouverture du dialog. Sinon les champs se vident
   // dès qu'un parent re-render (Realtime, etc.) car `eligibleLoans` change de référence.
@@ -185,16 +186,10 @@ link: "/admin",
 category: "info",
 });
 
-toast.success("Virement initié — vérification des étapes en cours");
+toast.success("Virement initié — suivi disponible dans Mes virements");
 onSuccess?.();
-
-// On bascule directement dans le dialog 3 étapes.
-setStepDialog({
-withdrawalId: (inserted as { id: string }).id,
-amount: parsed.data.amount,
-beneficiary: parsed.data.beneficiary,
-reference: ref,
-});
+onClose();
+navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id: string }).id } });
   }
 
   return (
@@ -393,22 +388,6 @@ reference: ref,
           </Button>
         </div>
 
-        {stepDialog && (
-  <TransferStepDialog
-    open={!!stepDialog}
-    onClose={() => {
-      setStepDialog(null);
-      onClose();
-    }}
-    withdrawalId={stepDialog.withdrawalId}
-    loanId={loanId}
-    currentProgress={0}
-    currentStep={0}
-    onAdvanced={() => {
-      onSuccess?.();
-    }}
-  />
-)}
       </div>
     </div>
   );

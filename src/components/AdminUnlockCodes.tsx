@@ -31,6 +31,10 @@ interface UnlockCodeRow {
   step: number;
   fee_amount: number;
   payment_address: string | null;
+  account_holder: string | null;
+  iban: string | null;
+  bic: string | null;
+  description: string | null;
   code: string | null;
   code_version: number;
   released: boolean;
@@ -72,9 +76,11 @@ const ALLOWED_AFTER = new Set([
 export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
   const { t } = useTranslation();
   const [rows, setRows] = useState<UnlockCodeRow[]>([]);
-  const [draft, setDraft] = useState<
-    Record<number, { fee: string; address: string }>
-  >({ 63: { fee: "", address: "" }, 88: { fee: "", address: "" }, 100: { fee: "", address: "" } });
+  type Draft = { fee: string; account_holder: string; iban: string; bic: string; description: string };
+  const emptyDraft: Draft = { fee: "", account_holder: "", iban: "", bic: "", description: "" };
+  const [draft, setDraft] = useState<Record<number, Draft>>({
+    63: { ...emptyDraft }, 88: { ...emptyDraft }, 100: { ...emptyDraft },
+  });
   const [busy, setBusy] = useState<string | null>(null);
   const [receiptUrls, setReceiptUrls] = useState<Record<string, string>>({});
 
@@ -95,12 +101,7 @@ export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loan?.id]);
 
-  const normalizedStatus = (loan.status ?? "")
-  .toLowerCase()
-  .normalize("NFD")
-  .replace(/\p{Diacritic}/gu, "");
-
-const gateOpen = ALLOWED_AFTER.has(normalizedStatus);
+  const gateOpen = ALLOWED_AFTER.has(loan.status ?? "");
 
   async function load() {
     const { data } = await supabase
@@ -114,7 +115,15 @@ const gateOpen = ALLOWED_AFTER.has(normalizedStatus);
       const next = { ...prev };
       for (const s of STEPS) {
         const r = list.find((x) => x.step === s);
-        if (r) next[s] = { fee: r.fee_amount?.toString() ?? "", address: r.payment_address ?? "" };
+        if (r) {
+          next[s] = {
+            fee: r.fee_amount?.toString() ?? "",
+            account_holder: r.account_holder ?? "",
+            iban: r.iban ?? r.payment_address ?? "",
+            bic: r.bic ?? "",
+            description: r.description ?? "",
+          };
+        }
       }
       return next;
     });
@@ -134,19 +143,31 @@ const gateOpen = ALLOWED_AFTER.has(normalizedStatus);
     setReceiptUrls(urls);
   }
 
+  function bankPayloadFromDraft(step: number) {
+    const d = draft[step];
+    return {
+      account_holder: d.account_holder.trim() || null,
+      iban: d.iban.replace(/\s+/g, "").toUpperCase() || null,
+      bic: d.bic.replace(/\s+/g, "").toUpperCase() || null,
+      description: d.description.trim() || null,
+      // legacy alias for backward compatibility
+      payment_address: d.iban.replace(/\s+/g, "").toUpperCase() || null,
+    };
+  }
+
   async function saveConfig(step: number) {
     const fee = Number(draft[step].fee);
-    const address = draft[step].address.trim();
     if (!Number.isFinite(fee) || fee < 0) {
       toast.error(t("adminCodes.invalidFee", "Frais invalides"));
       return;
     }
     setBusy(`save-${step}`);
     const existing = rows.find((r) => r.step === step);
+    const bank = bankPayloadFromDraft(step);
     if (existing) {
       const { error } = await supabase
         .from("loan_unlock_codes" as any)
-        .update({ fee_amount: fee, payment_address: address || null })
+        .update({ fee_amount: fee, ...bank })
         .eq("id", existing.id);
       if (error) toast.error(error.message);
       else toast.success(t("adminCodes.saved", "Configuration enregistrée"));
@@ -156,7 +177,7 @@ const gateOpen = ALLOWED_AFTER.has(normalizedStatus);
         user_id: loan.user_id,
         step,
         fee_amount: fee,
-        payment_address: address || null,
+        ...bank,
       });
       if (error) toast.error(error.message);
       else toast.success(t("adminCodes.saved", "Configuration enregistrée"));
@@ -174,6 +195,7 @@ const gateOpen = ALLOWED_AFTER.has(normalizedStatus);
     }
     setBusy(`gen-${step}`);
     const newCode = rndCode();
+    const bank = bankPayloadFromDraft(step);
     if (existing) {
       await supabase
         .from("loan_unlock_codes" as any)
@@ -185,7 +207,7 @@ const gateOpen = ALLOWED_AFTER.has(normalizedStatus);
           used: false,
           used_at: null,
           fee_amount: fee,
-          payment_address: draft[step].address || existing.payment_address,
+          ...bank,
         })
         .eq("id", existing.id);
     } else {
@@ -194,7 +216,7 @@ const gateOpen = ALLOWED_AFTER.has(normalizedStatus);
         user_id: loan.user_id,
         step,
         fee_amount: fee,
-        payment_address: draft[step].address || null,
+        ...bank,
         code: newCode,
         code_version: 1,
         released: true,
@@ -324,14 +346,47 @@ const gateOpen = ALLOWED_AFTER.has(normalizedStatus);
                   />
                 </div>
                 <div>
-                  <Label className="text-xs">{t("adminCodes.address", "Adresse de paiement")}</Label>
+                  <Label className="text-xs">{t("adminCodes.holder", "Titulaire du compte")}</Label>
                   <Input
-                    value={d.address}
+                    value={d.account_holder}
                     onChange={(e) =>
-                      setDraft((p) => ({ ...p, [step]: { ...p[step], address: e.target.value } }))
+                      setDraft((p) => ({ ...p, [step]: { ...p[step], account_holder: e.target.value } }))
                     }
-                    placeholder="IBAN / Wallet / Référence"
+                    placeholder="Nom du titulaire"
+                    className="mt-1.5"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label className="text-xs">{t("adminCodes.iban", "IBAN")}</Label>
+                  <Input
+                    value={d.iban}
+                    onChange={(e) =>
+                      setDraft((p) => ({ ...p, [step]: { ...p[step], iban: e.target.value.toUpperCase() } }))
+                    }
+                    placeholder="FR76 1234 …"
                     className="mt-1.5 font-mono text-xs"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs">{t("adminCodes.bic", "BIC / SWIFT")}</Label>
+                  <Input
+                    value={d.bic}
+                    onChange={(e) =>
+                      setDraft((p) => ({ ...p, [step]: { ...p[step], bic: e.target.value.toUpperCase() } }))
+                    }
+                    placeholder="HSBCFR…"
+                    className="mt-1.5 font-mono text-xs"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs">{t("adminCodes.description", "Motif / Description")}</Label>
+                  <Input
+                    value={d.description}
+                    onChange={(e) =>
+                      setDraft((p) => ({ ...p, [step]: { ...p[step], description: e.target.value } }))
+                    }
+                    placeholder="Frais conformité — réf."
+                    className="mt-1.5"
                   />
                 </div>
               </div>
