@@ -23,9 +23,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
 
   useEffect(() => {
-    const initial = getInitialTheme();
-    setThemeState(initial);
-  }, []);
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+  const applyTheme = () => {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+
+    if (stored === "light" || stored === "dark") {
+      setThemeState(stored);
+    } else {
+      setThemeState(media.matches ? "dark" : "light");
+    }
+  };
+
+  applyTheme();
+
+  media.addEventListener("change", applyTheme);
+
+  return () => media.removeEventListener("change", applyTheme);
+}, []);
 
   useEffect(() => {
     const root = document.documentElement;
