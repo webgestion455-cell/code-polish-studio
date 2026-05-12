@@ -68,7 +68,7 @@ export function AppHeader() {
             className="h-8 w-8 sm:h-9 sm:w-9 rounded-md object-contain bg-white p-0.5 shadow-sm shrink-0"
           />
           <div className="flex flex-col leading-tight min-w-0">
-            <span className="font-serif text-base sm:text-lg font-medium tracking-tight truncate">HSBC BANK</span>
+            <span className="font-serif text-sm sm:text-lg font-medium tracking-tight truncate">HSBC BANK</span>
             {isAdminArea && role === "admin" && (
               <span className="hidden sm:inline text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
                 Espace sécurisé · Admin
@@ -129,7 +129,7 @@ export function AppHeader() {
                 <Button asChild variant="ghost" size="sm">
                   <Link to="/auth">{t("header.signIn")}</Link>
                 </Button>
-                <Button asChild size="sm" className="shadow-glow">
+                <Button asChild size="sm" className="hidden sm:inline-flex shadow-glow">
                   <Link to="/auth">{t("header.newLoan")}</Link>
                 </Button>
               </>
