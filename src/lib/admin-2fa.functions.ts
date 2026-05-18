@@ -5,23 +5,7 @@ import { Resend } from "resend";
 const ADMIN_EMAIL = "webgestion95@gmail.com";
 
 function getAdminClient() {
-  const supabaseUrl =
-    process.env.SUPABASE_URL ||
-    import.meta.env.VITE_SUPABASE_URL;
-
-  const serviceRoleKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl) {
-    throw new Error("SUPABASE_URL manquant");
-  }
-
-  if (!serviceRoleKey) {
-    throw new Error("SUPABASE_SERVICE_ROLE_KEY manquant");
-  }
-
-  return createClient(supabaseUrl, serviceRoleKey, {
+  return createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
     auth: { persistSession: false },
   });
 }
