@@ -99,23 +99,23 @@ function Landing() {
   ];
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col overflow-x-hidden">
       {/* Hero with carousel */}
       <section className="relative overflow-hidden bg-hero">
-        <div className="container relative z-10 mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:py-16 md:grid-cols-2 md:gap-12 md:py-24">
+        <div className="container relative z-10 mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24">
           <div className="flex flex-col justify-center">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent" />
               {t("landing.badge")}
             </div>
-            <h1 className="mt-6 font-serif text-3xl font-medium leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1 className="mt-6 max-w-2xl font-serif text-3xl font-medium leading-[1.1] tracking-tight text-foreground sm:text-4xl md:text-5xl xl:text-6xl">
               {t("landing.heroTitleA")}<br />
               <span className="text-gradient">{t("landing.heroTitleB")}</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">
               {t("landing.heroDesc")}
             </p>
-            <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-start">
+            <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <Button asChild size="lg" className="h-12 w-full rounded-full px-6 text-sm shadow-glow sm:h-14 sm:w-auto sm:px-8 sm:text-base">
                 <Link to="/auth">
                   {t("landing.ctaPrimary")}
@@ -135,7 +135,7 @@ function Landing() {
 
           {/* Carousel */}
           <div className="relative">
-            <div className="relative aspect-[4/3] min-h-[260px] overflow-hidden rounded-3xl border border-border bg-card shadow-card sm:min-h-[320px]">
+            <div className="relative aspect-[4/3] min-h-[240px] overflow-hidden rounded-2xl border border-border bg-card shadow-card sm:min-h-[320px] lg:min-h-[500px] lg:rounded-3xl">
               {slides.map((s, i) => (
                 <div
                   key={i}
@@ -174,7 +174,7 @@ function Landing() {
 
       {/* KPIs */}
       <section className="border-y border-border bg-card py-12">
-        <div className="container mx-auto grid max-w-5xl grid-cols-2 gap-8 px-4 md:grid-cols-4">
+        <div className="container mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 sm:gap-8 lg:grid-cols-4">
           {kpis.map((k) => (
             <div key={k.l} className="text-center">
               <div className="font-serif text-3xl font-medium text-primary md:text-4xl">{k.v}</div>
@@ -258,7 +258,7 @@ function Landing() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{t("landing.testi.eyebrow")}</p>
             <h2 className="mt-4 font-serif text-3xl font-medium text-foreground md:text-4xl">{t("landing.testi.title")}</h2>
           </div>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {testimonials.map((tm) => (
               <div key={tm.name} className="rounded-2xl border border-border bg-card p-8 shadow-card">
                 <Quote className="h-6 w-6 text-accent" />
@@ -321,7 +321,7 @@ function Landing() {
             <h2 className="mt-4 font-serif text-3xl font-medium text-foreground md:text-4xl">{t("landing.partners.title")}</h2>
             <p className="mx-auto mt-4 max-w-xl text-sm text-muted-foreground">{t("landing.partners.desc")}</p>
           </div>
-          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3 lg:grid-cols-6">
+          <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3 xl:grid-cols-6">
             {PARTNER_BANKS.map((bank) => (
               <div key={bank} className="flex items-center justify-center bg-card px-4 py-8 text-center text-sm font-semibold text-muted-foreground transition-colors hover:bg-surface hover:text-foreground">
                 {bank}
@@ -334,7 +334,7 @@ function Landing() {
       {/* Final CTA */}
       <section className="bg-gradient-wallet py-20 text-center text-white">
         <div className="container mx-auto px-4">
-          <h2 className="font-serif text-3xl font-medium md:text-5xl">{t("landing.finalCta.title")}</h2>
+          <h2 className="font-serif text-2xl font-medium leading-tight sm:text-3xl lg:text-5xl">{t("landing.finalCta.title")}</h2>
           <p className="mx-auto mt-4 max-w-xl text-white/70">{t("landing.finalCta.desc")}</p>
           <Button asChild size="lg" variant="secondary" className="mt-8 h-14 rounded-full bg-white px-8 text-base font-semibold text-primary hover:bg-white/90">
             <Link to="/auth">
