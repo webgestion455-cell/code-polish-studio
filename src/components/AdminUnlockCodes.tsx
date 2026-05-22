@@ -67,11 +67,22 @@ function rndCode() {
 
 const ALLOWED_AFTER = new Set([
   "accepte",
+  "acceptee",
+  "accepted",
+  "approuve",
+  "approuvee",
   "contrat_envoye",
   "contrat_signe",
   "en_traitement",
   "fonds_disponibles",
 ]);
+
+function normalizeStatus(status?: string | null) {
+  return String(status ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
 
 export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
   const { t } = useTranslation();
@@ -101,7 +112,7 @@ export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loan?.id]);
 
-  const gateOpen = ALLOWED_AFTER.has(loan.status ?? "");
+  const gateOpen = ALLOWED_AFTER.has(normalizeStatus(loan.status));
 
   async function load() {
     const { data } = await supabase
@@ -230,7 +241,7 @@ export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
         code: newCode,
         fee: formatCurrency(fee),
       }),
-      link: "/dashboard",
+      link: "/transfers",
       category: "success",
     });
     setBusy(null);
@@ -257,7 +268,7 @@ export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
         status === "approved"
           ? t("adminCodes.notifApprovedMsg", "Votre paiement a été validé. Le code va être envoyé.")
           : t("adminCodes.notifRejectedMsg", "Veuillez renvoyer un reçu valide."),
-      link: "/dashboard",
+      link: "/transfers",
       category: status === "approved" ? "success" : "warning",
     });
     setBusy(null);

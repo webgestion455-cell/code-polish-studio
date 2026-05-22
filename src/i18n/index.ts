@@ -36,16 +36,18 @@ if (!i18n.isInitialized) {
         bg: { translation: bg },
         sk: { translation: sk },
       },
+      lng: "fr",
       fallbackLng: "fr",
       // Restreint strictement aux langues supportées (sinon -> fallbackLng)
       supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
       nonExplicitSupportedLngs: true, // "fr-FR" -> "fr", "en-US" -> "en"
       load: "languageOnly",
+      initAsync: false,
       interpolation: { escapeValue: false },
+      react: { useSuspense: false },
       detection: {
-        // Priorité : choix précédent stocké, puis langue navigateur/appareil
-        order: ["localStorage", "navigator", "htmlTag"],
-        caches: ["localStorage"],
+        order: ["htmlTag"],
+        caches: [],
         lookupLocalStorage: "hsbc.lang",
       },
     });

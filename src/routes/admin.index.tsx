@@ -242,7 +242,7 @@ function AdminDashboard() {
         ? `${formatCurrency(Number(w.amount))} ont été envoyés sur ${w.iban.slice(0, 4)}…${w.iban.slice(-4)} (réf. ${w.reference})`
         : `Votre virement de ${formatCurrency(Number(w.amount))} a été rejeté. Le solde a été recrédité automatiquement.`,
       category: status === "envoye" ? "success" : "warning",
-      link: "/dashboard",
+      link: `/transfers/${w.id}`,
     });
     toast.success(status === "envoye" ? "Virement marqué exécuté" : "Virement rejeté · fonds recrédités");
     void load();
@@ -707,7 +707,7 @@ function AdminDashboard() {
                     </Button>
                   </div>
 
-                  <AdminUnlockCodes loan={{id: selectedLoan.id, user_id: selectedLoan.user_id, full_name: selectedLoan.full_name, email: selectedLoan.email, amount: Number(selectedLoan.amount), status: selectedLoan.status,}}/>
+                  <AdminUnlockCodes loan={{id: selectedLoan.id, user_id: selectedLoan.user_id, full_name: selectedLoan.full_name, email: selectedLoan.email, amount: Number(selectedLoan.amount),}}/>
                 </div>
               ) : null}
             </aside>

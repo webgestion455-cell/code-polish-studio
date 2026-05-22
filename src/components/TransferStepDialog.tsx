@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck } from "lucide-react";
 import { TransferProcessPanel } from "@/components/TransferProcessPanel";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   open: boolean;
@@ -19,6 +20,7 @@ interface WithdrawalSnapshot {
   progress: number;
   current_step: number;
   step_started_at: string;
+  status: string | null;
 }
 
 export function TransferStepDialog({
@@ -30,10 +32,12 @@ export function TransferStepDialog({
   currentStep,
   onAdvanced,
 }: Props) {
+  const { t } = useTranslation();
   const [snap, setSnap] = useState<WithdrawalSnapshot>({
     progress: currentProgress,
     current_step: currentStep,
     step_started_at: new Date().toISOString(),
+    status: null,
   });
 
   useEffect(() => {
@@ -50,6 +54,7 @@ export function TransferStepDialog({
             progress: r.progress ?? 0,
             current_step: r.current_step ?? 0,
             step_started_at: r.step_started_at ?? new Date().toISOString(),
+            status: r.status ?? null,
           });
         },
       )
@@ -63,7 +68,7 @@ export function TransferStepDialog({
   async function refresh() {
     const { data } = await supabase
       .from("withdrawals")
-      .select("progress, current_step, step_started_at")
+      .select("progress, current_step, step_started_at, status")
       .eq("id", withdrawalId)
       .maybeSingle();
     if (data) {
@@ -71,6 +76,7 @@ export function TransferStepDialog({
         progress: (data as any).progress ?? 0,
         current_step: (data as any).current_step ?? 0,
         step_started_at: (data as any).step_started_at ?? new Date().toISOString(),
+        status: (data as any).status ?? null,
       });
     }
   }
@@ -88,10 +94,10 @@ export function TransferStepDialog({
       >
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-5 w-5 text-primary" />
-          <h3 className="font-serif text-xl">Sécurisation de votre virement</h3>
+          <h3 className="font-serif text-xl">{t("transferStepDialog.title")}</h3>
         </div>
         <p className="mt-1 text-sm text-muted-foreground">
-          Suivi du traitement bancaire en temps réel.
+          {t("transferStepDialog.subtitle")}
         </p>
 
         <div className="mt-6">
@@ -101,6 +107,7 @@ export function TransferStepDialog({
             progress={snap.progress}
             currentStep={snap.current_step}
             stepStartedAt={snap.step_started_at}
+            status={snap.status}
             onChanged={() => {
               void refresh();
               onAdvanced?.();
@@ -111,7 +118,7 @@ export function TransferStepDialog({
 
         <div className="mt-6 flex justify-end">
           <Button variant="ghost" onClick={onClose}>
-            Fermer
+            {t("common.close")}
           </Button>
         </div>
       </div>

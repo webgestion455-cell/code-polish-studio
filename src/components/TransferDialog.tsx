@@ -182,7 +182,7 @@ kind === "instantane"
 ? "Nouveau virement instantané — étape 1/3"
 : "Nouveau virement classique — étape 1/3",
 message: `${formatCurrency(parsed.data.amount)} → ${parsed.data.beneficiary} (réf. ${ref})`,
-link: "/admin",
+link: `/admin/clients/${user.id}`,
 category: "info",
 });
 

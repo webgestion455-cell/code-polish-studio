@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Bell, Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,8 +20,9 @@ import type { Locale } from "date-fns";
 const LOCALES: Record<string, Locale> = { fr, en: enUS, de, es, sl, bg, sk };
 
 export function NotificationBell() {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [items, setItems] = useState<AppNotification[]>([]);
   const [open, setOpen] = useState(false);
   const dateLocale = LOCALES[i18n.resolvedLanguage ?? "fr"] ?? fr;
@@ -131,9 +133,7 @@ export function NotificationBell() {
       );
     }
 
-    if (n.link) {
-      window.location.href = n.link;
-    }
+    if (n.link) navigate({ to: n.link as never });
   }}
   className={`block w-full text-left border-b border-border/50 px-4 py-3 text-sm transition-colors hover:bg-secondary ${
     n.read ? "" : "bg-primary/5"
@@ -159,6 +159,15 @@ export function NotificationBell() {
 </button>
             ))
           )}
+        </div>
+        <div className="border-t border-border px-4 py-3">
+          <Link
+            to={role === "admin" ? "/admin/notifications" : "/notifications"}
+            onClick={() => setOpen(false)}
+            className="block text-center text-xs font-medium text-primary hover:underline"
+          >
+            {t("notifications.viewAll")}
+          </Link>
         </div>
       </PopoverContent>
     </Popover>

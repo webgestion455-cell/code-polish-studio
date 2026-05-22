@@ -132,22 +132,26 @@ function AdminNewTransfer() {
       status: kind === "instantane" ? "envoye" : "en_traitement",
       processed_at: kind === "instantane" ? new Date().toISOString() : null,
     };
-    const { error } = await (supabase.from("withdrawals") as any).insert(insertPayload);
+    const { data: inserted, error } = await (supabase.from("withdrawals") as any)
+      .insert(insertPayload)
+      .select("id")
+      .single();
     if (error) {
       setBusy(false);
       toast.error(error.message || t("admin.transfer.error"));
       return;
     }
 
-    // Notification au client
+    const newId: string = inserted?.id;
+    // Notification au client — redirige vers le détail du virement
     await notifyUser({
       userId,
-      title: kind === "instantane" ? "Virement instantané reçu" : "Virement en cours",
+      title: kind === "instantane" ? t("notif.transfer.instantTitle") : t("notif.transfer.classicTitle"),
       message: kind === "instantane"
-        ? `${formatCurrency(amt)} ont été crédités sur le compte ${iban.slice(0, 4)}…${iban.slice(-4)} (réf. ${ref})`
-        : `Un virement classique de ${formatCurrency(amt)} a été initié (crédit sous 1 jour ouvré, réf. ${ref})`,
+        ? t("notif.transfer.instantMsg", { amount: formatCurrency(amt), iban4: iban.slice(0, 4), ibanLast: iban.slice(-4), ref })
+        : t("notif.transfer.classicMsg", { amount: formatCurrency(amt), ref }),
       category: "success",
-      link: "/dashboard",
+      link: newId ? `/transfers/${newId}` : "/transfers",
     });
 
     setBusy(false);
