@@ -250,35 +250,76 @@ export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
   }
 
   async function reviewReceipt(row: UnlockCodeRow, status: "approved" | "rejected") {
-    setBusy(`review-${row.id}`);
+  setBusy(`review-${row.id}`);
+
+  // =========================
+  // CAS REFUS
+  // =========================
+  if (status === "rejected") {
     await supabase
       .from("loan_unlock_codes" as any)
       .update({
-        receipt_status: status,
+        receipt_status: "rejected",
         receipt_reviewed_at: new Date().toISOString(),
       })
       .eq("id", row.id);
+
     await notifyUser({
       userId: loan.user_id,
-      title:
-        status === "approved"
-          ? t("adminCodes.notifApprovedTitle", "Reçu approuvé — étape {{p}}%", { p: row.step })
-          : t("adminCodes.notifRejectedTitle", "Reçu refusé — étape {{p}}%", { p: row.step }),
-      message:
-        status === "approved"
-          ? t("adminCodes.notifApprovedMsg", "Votre paiement a été validé. Le code va être envoyé.")
-          : t("adminCodes.notifRejectedMsg", "Veuillez renvoyer un reçu valide."),
+      title: t("adminCodes.notifRejectedTitle", "Reçu refusé"),
+      message: t("adminCodes.notifRejectedMsg", "Veuillez renvoyer un reçu valide."),
       link: "/transfers",
-      category: status === "approved" ? "success" : "warning",
+      category: "warning",
     });
+
+    toast.success("Reçu refusé");
     setBusy(null);
-    toast.success(
-      status === "approved"
-        ? t("adminCodes.receiptApproved", "Reçu approuvé")
-        : t("adminCodes.receiptRejected", "Reçu refusé"),
-    );
     void load();
+    return;
   }
+
+  // =========================
+  // CAS APPROUVÉ
+  // =========================
+
+  const generatedCode = rndCode();
+
+  const { error } = await supabase
+    .from("loan_unlock_codes" as any)
+    .update({
+      receipt_status: "approved",
+      receipt_reviewed_at: new Date().toISOString(),
+
+      // IMPORTANT
+      code: generatedCode,
+      released: true,
+      released_at: new Date().toISOString(),
+      used: false,
+
+      code_version: (row.code_version ?? 0) + 1,
+    })
+    .eq("id", row.id);
+
+  if (error) {
+    toast.error(error.message);
+    setBusy(null);
+    return;
+  }
+
+  await notifyUser({
+    userId: loan.user_id,
+    title: `Code de déblocage ${row.step}%`,
+    message: `Votre code de déblocage est : ${generatedCode}`,
+    link: "/transfers",
+    category: "success",
+  });
+
+  toast.success("Code généré et envoyé");
+
+  setBusy(null);
+
+  void load();
+}
 
   if (!gateOpen) {
     return (
