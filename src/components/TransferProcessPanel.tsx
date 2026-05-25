@@ -286,16 +286,18 @@ export function TransferProcessPanel({
     }
     const newStep = currentStep + 1;
     const upd = {
-      current_step: newStep,
-      step_started_at: new Date().toISOString(),
-    ... (newStep >= 3 
-      ? {
-         progress: 100,
-      status: "envoye",
-      processed_at: new Date().toISOString(),
-    }
-  : {}),
-  };
+  current_step: newStep,
+  progress: previousTargetForTransferStep(newStep),
+  step_started_at: new Date().toISOString(),
+
+  ...(newStep >= 3
+    ? {
+        progress: 100,
+        status: "envoye",
+        processed_at: new Date().toISOString(),
+      }
+    : {}),
+};
     const { error: updErr } = await supabase
       .from("withdrawals")
       .update(upd)
@@ -305,6 +307,10 @@ export function TransferProcessPanel({
       toast.error(updErr.message);
       return;
     }
+
+    setLocalReachedTarget(false);
+    setAnimated(previousTargetForTransferStep(newStep));
+    
     setCode("");
     toast.success(newStep >= 3 ? t("transferProcess.successFinal") : t("transferProcess.advanced"));
     onChanged?.();
