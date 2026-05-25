@@ -272,75 +272,43 @@ export function TransferProcessPanel({
   }
 
   async function submitCode() {
-  if (!currentRow) return;
-
-  setBusy(true);
-
-  const { data, error } = await (supabase as any).rpc("consume_unlock_code", {
-    _loan_id: loanId,
-    _step: currentRow.step,
-    _code: code.trim(),
-  });
-
-  if (error || !data) {
-    setBusy(false);
-    toast.error(t("transferProcess.invalidCode"));
-    return;
-  }
-
-  const newStep = currentStep + 1;
-
-  // IMPORTANT :
-  // on garde le palier actuel atteint
-  // puis la nouvelle étape va relancer l'animation
-  const currentReachedProgress =
-    currentStep === 0 ? 63 :
-    currentStep === 1 ? 88 :
-    100;
-
-  const upd = {
-    current_step: newStep,
-    progress: currentReachedProgress,
-    step_started_at: new Date().toISOString(),
-
-    ...(newStep >= 3
+    if (!currentRow) return;
+    setBusy(true);
+    const { data, error } = await (supabase as any).rpc("consume_unlock_code", {
+      _loan_id: loanId,
+      _step: currentRow.step,
+      _code: code.trim(),
+    });
+    if (error || !data) {
+      setBusy(false);
+      toast.error(t("transferProcess.invalidCode"));
+      return;
+    }
+    const newStep = currentStep + 1;
+    const upd = {
+      current_step: newStep,
+      step_started_at: new Date().toISOString(),
+    ... (newStep >= 3 
       ? {
-          status: "envoye",
-          processed_at: new Date().toISOString(),
-          progress: 100,
-        }
-      : {}),
+         progress: 100,
+      status: "envoye",
+      processed_at: new Date().toISOString(),
+    }
+  : {}),
   };
-
-  const { error: updErr } = await supabase
-    .from("withdrawals")
-    .update(upd)
-    .eq("id", withdrawalId);
-
-  setBusy(false);
-
-  if (updErr) {
-    toast.error(updErr.message);
-    return;
+    const { error: updErr } = await supabase
+      .from("withdrawals")
+      .update(upd)
+      .eq("id", withdrawalId);
+    setBusy(false);
+    if (updErr) {
+      toast.error(updErr.message);
+      return;
+    }
+    setCode("");
+    toast.success(newStep >= 3 ? t("transferProcess.successFinal") : t("transferProcess.advanced"));
+    onChanged?.();
   }
-
-  // reset animation locale
-  setLocalReachedTarget(false);
-
-  // IMPORTANT :
-  // on repart du palier ACTUEL
-  setAnimated(currentReachedProgress);
-
-  setCode("");
-
-  toast.success(
-    newStep >= 3
-      ? t("transferProcess.successFinal")
-      : t("transferProcess.advanced")
-  );
-
-  onChanged?.();
-}
 
   function copyToClipboard(value: string, label: string) {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
