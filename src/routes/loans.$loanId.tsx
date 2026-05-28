@@ -55,6 +55,8 @@ interface TimelineEvent {
   id: string;
   message: string;
   created_at: string;
+  old_status: LoanStatus | null;
+  new_status: LoanStatus;
 }
 
 function LoanDetail() {
@@ -63,6 +65,7 @@ function LoanDetail() {
   const navigate = useNavigate();
   const [loan, setLoan] = useState<Loan | null>(null);
   const [docs, setDocs] = useState<DocRow[]>([]);
+  const [history, setHistory] = useState<TimelineEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [withdrawLoanId, setWithdrawLoanId] = useState<string | null>(null);
@@ -74,16 +77,56 @@ function LoanDetail() {
   useEffect(() => {
     if (!user) return;
     void load();
+    // Realtime: prêt + historique (timestamps réels)
+    const ch = supabase
+      .channel(`loan-${loanId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "loans", filter: `id=eq.${loanId}` },
+        () => void load(),
+      )
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "loan_status_history", filter: `loan_id=eq.${loanId}` },
+        () => void loadHistory(),
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(ch);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loanId]);
 
   async function load() {
     setLoading(true);
-    const { data: l } = await supabase.from("loans").select("*").eq("id", loanId).maybeSingle();
-    const { data: d } = await supabase.from("loan_documents").select("id, file_name, file_path, file_size, created_at").eq("loan_id", loanId).order("created_at");
+    const [{ data: l }, { data: d }] = await Promise.all([
+      supabase.from("loans").select("*").eq("id", loanId).maybeSingle(),
+      supabase.from("loan_documents").select("id, file_name, file_path, file_size, created_at").eq("loan_id", loanId).order("created_at"),
+    ]);
     setLoan(l as Loan | null);
     setDocs((d as DocRow[]) ?? []);
+    await loadHistory();
     setLoading(false);
+  }
+
+  async function loadHistory() {
+    const { data } = await supabase
+      .from("loan_status_history")
+      .select("id, old_status, new_status, note, created_at")
+      .eq("loan_id", loanId)
+      .order("created_at", { ascending: true });
+    const rows = (data ?? []) as Array<{
+      id: string; old_status: LoanStatus | null; new_status: LoanStatus; note: string | null; created_at: string;
+    }>;
+    setHistory(
+      rows.map((r) => ({
+        id: r.id,
+        old_status: r.old_status,
+        new_status: r.new_status,
+        message: r.note?.trim() || LOAN_STATUS_META[r.new_status]?.description || r.new_status,
+        created_at: r.created_at,
+      })),
+    );
   }
 
   async function downloadFile(bucket: string, path: string, name: string) {
@@ -177,19 +220,16 @@ function LoanDetail() {
   const monthlyPayment = Number(loan.amount) / Number(loan.duration_months);
   const remainingBalance = Number(loan.amount) - Number(loan.disbursed_amount ?? 0);
 
-  // Timeline reconstruite à partir du statut courant
-  const timeline: TimelineEvent[] = (() => {
-    const events: TimelineEvent[] = [
-      { id: "t-created", message: "Demande déposée", created_at: loan.created_at },
-    ];
-    const order: LoanStatus[] = ["accepte", "contrat_envoye", "contrat_signe", "en_traitement", "fonds_disponibles"];
-    const currentIdx = order.indexOf(status);
-    order.slice(0, currentIdx + 1).forEach((s) => {
-      events.push({ id: `t-${s}`, message: LOAN_STATUS_META[s].description, created_at: loan.funds_available_at ?? loan.created_at });
-    });
-    if (isRefused) events.push({ id: "t-refuse", message: "Demande refusée", created_at: loan.created_at });
-    return events;
-  })();
+  // Timeline réelle depuis loan_status_history (horodatages en temps réel)
+  const timeline: TimelineEvent[] = history.length > 0
+    ? history
+    : [{
+        id: "t-created",
+        message: "Demande déposée",
+        created_at: loan.created_at,
+        old_status: null,
+        new_status: loan.status,
+      }];
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl space-y-6 pb-28 lg:pb-10">
