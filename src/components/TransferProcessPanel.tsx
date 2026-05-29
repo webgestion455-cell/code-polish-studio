@@ -239,20 +239,16 @@ export function TransferProcessPanel({
   }, [currentStep, stepStartTs, target, prev, progress]);
 
   async function persistReachedTarget(value: number) {
-  console.log("Persist progress:", value);
-  console.log("Withdrawal ID:", withdrawalId);
-
   const { data, error } = await supabase
     .from("withdrawals")
     .update({
       progress: value,
     })
     .eq("id", withdrawalId)
+    .lt("progress", value)
     .select();
 
-  console.log("Persist result:", data, error);
-
-  if (!error) {
+  if (!error && data && data.length > 0) {
     await notifyAllAdmins({
       title: "Virement en attente de validation",
       message: `Un virement nécessite une intervention manuelle.`,
@@ -260,7 +256,6 @@ export function TransferProcessPanel({
       category: "warning",
     });
 
-    // IMPORTANT
     await refreshWithdrawal();
   }
 }
