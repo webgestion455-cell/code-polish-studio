@@ -1,13 +1,15 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useAuth } from "@/lib/auth-context";
+import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { ShieldCheck, Lock, Sparkles } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Lock, Sparkles } from "lucide-react";
 import hsbcLogo from "@/assets/hsbc-logo.png";
 
 export const Route = createFileRoute("/auth")({
@@ -30,9 +32,11 @@ const signInSchema = z.object({
 });
 
 function AuthPage() {
+  const { t } = useTranslation();
   const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/dashboard" });
@@ -85,24 +89,38 @@ function AuthPage() {
     }
   }
 
+  async function handleGoogleSignIn() {
+    setGoogleLoading(true);
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: `${window.location.origin}/dashboard`,
+      extraParams: { prompt: "select_account" },
+    });
+    setGoogleLoading(false);
+    if (result.error) {
+      toast.error(t("auth.googleError"));
+      return;
+    }
+    if (!result.redirected) navigate({ to: "/dashboard" });
+  }
+
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-hero px-4 py-12">
       <div className="grid w-full max-w-5xl gap-10 lg:grid-cols-[1fr_440px]">
         {/* Left side – brand promise */}
         <div className="hidden flex-col justify-center lg:flex">
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
-            <Sparkles className="h-3 w-3 text-accent" /> Banque nouvelle génération
+            <Sparkles className="h-3 w-3 text-accent" /> {t("auth.brandBadge")}
           </div>
           <h1 className="mt-6 font-serif text-5xl font-medium leading-[1.05] tracking-tight">
-            Bienvenue sur<br /><span className="text-gradient">HSBC BANK</span>
+            {t("auth.welcomeTitle")}<br /><span className="text-gradient">HSBC BANK</span>
           </h1>
           <p className="mt-6 max-w-md text-lg text-muted-foreground">
-            Connectez-vous pour suivre vos demandes de prêt, signer vos contrats et gérer vos virements en quelques secondes.
+            {t("auth.welcomeDesc")}
           </p>
           <ul className="mt-8 space-y-3 text-sm">
-            <li className="flex items-center gap-3"><Lock className="h-4 w-4 text-accent" /> Authentification chiffrée TLS 1.3</li>
-            <li className="flex items-center gap-3"><ShieldCheck className="h-4 w-4 text-accent" /> Conformité RGPD & DSP2</li>
-            <li className="flex items-center gap-3"><Sparkles className="h-4 w-4 text-accent" /> Décision sous 24h</li>
+            <li className="flex items-center gap-3"><Lock className="h-4 w-4 text-accent" /> {t("auth.tls")}</li>
+            <li className="flex items-center gap-3"><ShieldCheck className="h-4 w-4 text-accent" /> {t("auth.rgpd")}</li>
+            <li className="flex items-center gap-3"><Sparkles className="h-4 w-4 text-accent" /> {t("auth.decision")}</li>
           </ul>
         </div>
 
@@ -119,10 +137,18 @@ function AuthPage() {
               />
             </div>
             <h1 className="font-serif text-3xl font-medium">HSBC BANK</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Connectez-vous ou créez votre compte.</p>
+            <p className="mt-1 text-sm text-muted-foreground">{t("auth.mobileHint")}</p>
           </div>
 
+          <Button asChild variant="ghost" size="sm" className="mb-4">
+            <Link to="/"><ArrowLeft className="mr-2 h-4 w-4" /> {t("auth.backHome")}</Link>
+          </Button>
+
           <div className="rounded-2xl border border-border bg-card p-6 shadow-elevated md:p-8">
+            <Button type="button" variant="outline" className="mb-4 h-11 w-full" disabled={googleLoading} onClick={handleGoogleSignIn}>
+              <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full border border-border text-xs font-bold">G</span>
+              {googleLoading ? t("auth.googleLoading") : t("auth.google")}
+            </Button>
             <Tabs defaultValue="signin">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="signin">Connexion</TabsTrigger>
@@ -140,7 +166,7 @@ function AuthPage() {
                     <Input id="signin-password" name="password" type="password" required autoComplete="current-password" />
                   </div>
                   <Button type="submit" className="h-11 w-full shadow-glow" disabled={submitting}>
-                    {submitting ? "Connexion..." : "Se connecter"}
+                    {submitting ? t("auth.signingIn") : t("auth.signIn")}
                   </Button>
                 </form>
               </TabsContent>
@@ -162,10 +188,10 @@ function AuthPage() {
                   <div className="space-y-2">
                     <Label htmlFor="su-password">Mot de passe</Label>
                     <Input id="su-password" name="password" type="password" required autoComplete="new-password" minLength={8} />
-                    <p className="text-xs text-muted-foreground">8 caractères minimum.</p>
+                    <p className="text-xs text-muted-foreground">{t("auth.minPasswordHint")}</p>
                   </div>
                   <Button type="submit" className="h-11 w-full shadow-glow" disabled={submitting}>
-                    {submitting ? "Création..." : "Créer mon compte"}
+                    {submitting ? t("auth.creating") : t("auth.createAccount")}
                   </Button>
                 </form>
               </TabsContent>
@@ -173,7 +199,7 @@ function AuthPage() {
           </div>
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
-            En continuant, vous acceptez les conditions d'utilisation et la politique de confidentialité.
+            {t("auth.terms")}
           </p>
         </div>
       </div>

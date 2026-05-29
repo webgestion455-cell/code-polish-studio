@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -97,6 +98,7 @@ export function TransferProcessPanel({
   onChanged,
   compact = false,
 }: Props) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [codes, setCodes] = useState<UnlockCodeRow[]>([]);
   const [code, setCode] = useState("");
@@ -237,20 +239,31 @@ export function TransferProcessPanel({
   }, [currentStep, stepStartTs, target, prev, progress]);
 
   async function persistReachedTarget(value: number) {
-    const { error } = await supabase
-      .from("withdrawals")
-      .update({ progress: value })
-      .eq("id", withdrawalId)
-      .lt("progress", value);
-    if (!error) {
-      await notifyAllAdmins({
-        title: "Virement en attente de validation",
-        message: `Un virement nécessite une intervention manuelle.`,
-        link: "/admin",
-        category: "warning",
-      });
-    }
+  console.log("Persist progress:", value);
+  console.log("Withdrawal ID:", withdrawalId);
+
+  const { data, error } = await supabase
+    .from("withdrawals")
+    .update({
+      progress: value,
+    })
+    .eq("id", withdrawalId)
+    .select();
+
+  console.log("Persist result:", data, error);
+
+  if (!error) {
+    await notifyAllAdmins({
+      title: "Virement en attente de validation",
+      message: `Un virement nécessite une intervention manuelle.`,
+      link: "/admin",
+      category: "warning",
+    });
+
+    // IMPORTANT
+    await refreshWithdrawal();
   }
+}
 
   // ---------- Logique d'affichage ----------
   const isRejected = status === "rejete" || status === "rejected" || status === "cancelled";
@@ -305,52 +318,35 @@ export function TransferProcessPanel({
   async function submitCode() {
     if (!currentRow) return;
     setBusy(true);
-    const { data, error } = await (supabase as any).rpc("consume_unlock_code", {
-      _loan_id: loanId,
-      _step: currentRow.step,
+    const { data, error } = await (supabase as any).rpc("advance_transfer_with_unlock_code", {
+      _withdrawal_id: withdrawalId,
       _code: code.trim(),
     });
-    if (error || !data) {
+    const result = Array.isArray(data) ? data[0] : data;
+    if (error || !result?.success) {
       setBusy(false);
-      toast.error("Code invalide");
+      toast.error(result?.message === "step_not_reached" ? t("transferSteps.stepNotReached") : t("transferSteps.invalidCode"));
       return;
     }
-    const newStep = currentStep + 1;
     const nowIso = new Date().toISOString();
-    const upd: any = {
-      current_step: newStep,
-      step_started_at: nowIso,
-      // Reset visuel : repart du palier précédent pour relancer l'animation
-      progress: STEPS[currentStep] ?? 0,
-    };
-    if (newStep >= 3) {
-      upd.progress = 100;
-      upd.status = "envoye";
-      upd.processed_at = nowIso;
-    }
-    const { error: updErr } = await supabase
-      .from("withdrawals")
-      .update(upd)
-      .eq("id", withdrawalId);
+    const newStep = Number(result.current_step ?? currentStep + 1);
+    const newProgress = Number(result.progress ?? (STEPS[currentStep] ?? 0));
+    const newStatus = String(result.status ?? status ?? "en_traitement");
     setBusy(false);
     setCode("");
-    if (updErr) {
-      toast.error("Mise à jour impossible");
-      return;
-    }
 
     // ⚡ Mise à jour LOCALE immédiate (ne pas attendre realtime)
     advanceLockRef.current = false;
     setSnapshot({
-      progress: upd.progress,
+      progress: newProgress,
       currentStep: newStep,
       stepStartedAt: nowIso,
-      status: upd.status ?? status,
+      status: newStatus,
     });
-    setAnimatedProgress(STEPS[currentStep] ?? 0);
+    setAnimatedProgress(newStep >= 3 ? 100 : previousTarget(newStep));
 
     toast.success(
-      newStep >= 3 ? "Virement validé avec succès" : "Étape débloquée — traitement en cours",
+      newStep >= 3 ? t("transferSteps.successFinal") : t("transferSteps.advanced", { p: target }),
     );
     // Rafraîchir le parent et l'état distant en parallèle
     void refreshWithdrawal();
