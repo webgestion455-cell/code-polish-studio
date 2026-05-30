@@ -223,4 +223,4 @@
   .stepper-line-done { background: hsl(var(--success)); }
 }
 
-.pt-safe {padding-top: env(safe-area-inset-top);}
+.pt-safe {padding-top: env(safe-area-inset-top,0px);}
