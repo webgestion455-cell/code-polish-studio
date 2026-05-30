@@ -8,7 +8,11 @@ const config: CapacitorConfig = {
   server: {
     url: 'https://hsbc-fastloan.webgestion95.workers.dev',
     cleartext: false
-  }
+  },
+
+  android: {
+  allowMixedContent: true
+}
 };
 
 export default config;

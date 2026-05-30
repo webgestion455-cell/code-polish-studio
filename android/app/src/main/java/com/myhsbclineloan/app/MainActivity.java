@@ -1,5 +1,15 @@
 package com.myhsbclineloan.app;
 
+import android.os.Bundle;
+import android.view.Window;
 import com.getcapacitor.BridgeActivity;
 
-public class MainActivity extends BridgeActivity {}
+public class MainActivity extends BridgeActivity {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Window window = getWindow();
+        window.setDecorFitsSystemWindows(true);
+    }
+}
