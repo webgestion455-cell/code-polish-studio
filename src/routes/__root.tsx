@@ -1,4 +1,9 @@
+import { useEffect } from "react";
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Capacitor } from "@capacitor/core";
+import { StatusBar, Style } from "@capacitor/status-bar";
+import { SplashScreen } from "@capacitor/splash-screen";
+import { App } from "@capacitor/app";
 import { AuthProvider } from "@/lib/auth-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { Toaster } from "@/components/ui/sonner";
@@ -112,3 +117,26 @@ function RootComponent() {
     </ThemeProvider>
   );
 }
+
+useEffect(() => {
+  if (Capacitor.isNativePlatform()) {
+
+    // Barre du haut Android
+    StatusBar.setStyle({ style: Style.Dark });
+
+    // Couleur barre Android
+    StatusBar.setBackgroundColor({ color: "#000000" });
+
+    // Cache le splash automatiquement
+    SplashScreen.hide();
+
+    // Gestion bouton retour Android
+    App.addListener("backButton", ({ canGoBack }) => {
+      if (!canGoBack) {
+        App.exitApp();
+      } else {
+        window.history.back();
+      }
+    });
+  }
+}, []);
