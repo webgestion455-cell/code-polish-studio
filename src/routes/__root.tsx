@@ -100,7 +100,7 @@ function RootComponent() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col pt-safe">
           {!hideLayout && <AppHeader />}
 
           <main className="flex-1">
