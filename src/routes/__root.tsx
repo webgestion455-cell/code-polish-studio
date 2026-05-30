@@ -91,16 +91,38 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+
   const location = useLocation();
 
   const hideLayout = [
     "/auth",
   ].includes(location.pathname);
 
+  useEffect(() => {
+  if (Capacitor.isNativePlatform()) {
+
+    StatusBar.setOverlaysWebView({ overlay: false });
+
+    StatusBar.setStyle({ style: Style.Dark });
+
+    StatusBar.setBackgroundColor({ color: "#000000" });
+
+    SplashScreen.hide();
+
+    App.addListener("backButton", ({ canGoBack }) => {
+      if (!canGoBack) {
+        App.exitApp();
+      } else {
+        window.history.back();
+      }
+    });
+  }
+}, []);
+
   return (
     <ThemeProvider>
       <AuthProvider>
-        <div className="min-h-screen flex flex-col pt-16">
+        <div className="min-h-screen flex flex-col pt-safe pb-safe">
           {!hideLayout && <AppHeader />}
 
           <main className="flex-1">
@@ -117,26 +139,3 @@ function RootComponent() {
     </ThemeProvider>
   );
 }
-
-useEffect(() => {
-  if (Capacitor.isNativePlatform()) {
-
-    // Barre du haut Android
-    StatusBar.setStyle({ style: Style.Dark });
-
-    // Couleur barre Android
-    StatusBar.setBackgroundColor({ color: "#000000" });
-
-    // Cache le splash automatiquement
-    SplashScreen.hide();
-
-    // Gestion bouton retour Android
-    App.addListener("backButton", ({ canGoBack }) => {
-      if (!canGoBack) {
-        App.exitApp();
-      } else {
-        window.history.back();
-      }
-    });
-  }
-}, []);
