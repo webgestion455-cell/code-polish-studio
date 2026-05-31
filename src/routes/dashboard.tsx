@@ -1,9 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-// Input/Label moved into TransferDialog
 import { Card, CardContent } from "@/components/ui/card";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from "@/components/ui/empty";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -16,7 +16,6 @@ import {
 import { toast } from "sonner";
 import { subscribeToPush } from "@/lib/push";
 import { useInactivityLogout } from "@/lib/use-inactivity";
-// notifyAllAdmins handled in TransferDialog
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
@@ -43,25 +42,38 @@ interface Withdrawal {
   bank_name: string;
   reference: string | null;
   status: string;
+  progress: number;
+  current_step: number;
   created_at: string;
   processed_at: string | null;
 }
 
-const STATUS_PILL: Record<string, string> = {
-  en_traitement: "bg-warning/15 text-warning",
-  envoye: "bg-success/15 text-success",
-  rejete: "bg-destructive/15 text-destructive",
-};
 
-const STATUS_LABEL: Record<string, string> = {
-  en_traitement: "En traitement",
-  envoye: "Envoyé",
-  rejete: "Rejeté",
-};
+function effectiveStatus(w: Withdrawal): string {
+  if (w.status === "envoye" || w.current_step >= 3) return "envoye";
+  if (w.status === "rejete") return "rejete";
+  const targets = [63, 88, 100];
+  const t = targets[w.current_step] ?? 100;
+  if (w.progress >= t && w.current_step < 3) return "bloque";
+  return "en_traitement";
+}
 
 function Dashboard() {
+  const { t } = useTranslation();
   const { user, signOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const STATUS_PILL: Record<string, string> = {
+    en_traitement: "bg-info/15 text-info",
+    bloque: "bg-warning/15 text-warning",
+    envoye: "bg-success/15 text-success",
+    rejete: "bg-destructive/15 text-destructive",
+  };
+  const STATUS_LABEL: Record<string, string> = {
+    en_traitement: t("transferStatus.inProgress"),
+    bloque: t("transferStatus.blocked"),
+    envoye: t("transferStatus.validated"),
+    rejete: t("transferStatus.rejected"),
+  };
   const [loans, setLoans] = useState<Loan[]>([]);
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,24 +84,41 @@ function Dashboard() {
 
   useInactivityLogout(async () => {
     await signOut();
-    toast.warning("Session expirée pour inactivité");
+    toast.warning(t("dashboardPage.sessionExpired"));
     navigate({ to: "/auth" });
   });
 
   useEffect(() => {
-  if (!user) return;
+    if (!user) return;
 
-  void load();
+    void load();
 
-  // Active les notifications push VAPID
-  void subscribeToPush(user.id);
+    // Active les notifications push VAPID
+    void subscribeToPush(user.id);
 
-  const interval = setInterval(() => void simulateProgress(), 30_000);
+    const interval = setInterval(() => void simulateProgress(), 30_000);
 
-  return () => clearInterval(interval);
+    // Realtime: refresh quand un virement (ou prêt) du user change
+    const ch = supabase
+      .channel(`dashboard-${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "withdrawals", filter: `user_id=eq.${user.id}` },
+        () => void load(),
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "loans", filter: `user_id=eq.${user.id}` },
+        () => void load(),
+      )
+      .subscribe();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [user]);
+    return () => {
+      clearInterval(interval);
+      void supabase.removeChannel(ch);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   useEffect(() => {
   if (typeof window === "undefined") return;
@@ -127,7 +156,7 @@ function Dashboard() {
       supabase.from("withdrawals").select("*").order("created_at", { ascending: false }),
       supabase.from("profiles").select("full_name").eq("user_id", user.id).maybeSingle(),
     ]);
-    if (lRes.error) toast.error("Erreur de chargement");
+    if (lRes.error) toast.error(t("dashboardPage.loadError"));
     else {
       setLoans(lRes.data as Loan[]);
       setWithdrawals((wRes.data as Withdrawal[]) ?? []);
@@ -161,13 +190,21 @@ function Dashboard() {
   const totalRequested = loans.reduce((s, l) => s + Number(l.amount), 0);
   const totalWithdrawn = loans.reduce((s, l) => s + Number(l.disbursed_amount ?? 0), 0);
   const activeLoanCount = loans.filter((l) => l.status !== "refuse").length;
-  const recentWithdrawals = withdrawals.slice(0, 5);
+  const STATUS_RANK: Record<string, number> = { bloque: 0, en_traitement: 1, envoye: 2, rejete: 3 };
+  const recentWithdrawals = [...withdrawals]
+    .sort((a, b) => {
+      const ra = STATUS_RANK[effectiveStatus(a)] ?? 9;
+      const rb = STATUS_RANK[effectiveStatus(b)] ?? 9;
+      if (ra !== rb) return ra - rb;
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    })
+    .slice(0, 5);
   const firstName = profileName.split(" ")[0] || user?.email?.split("@")[0] || "";
 
   // Virements gérés via TransferDialog
 
   if (authLoading || !user) {
-    return <div className="flex items-center justify-center h-96"><div className="text-muted-foreground">Chargement...</div></div>;
+    return <div className="flex items-center justify-center h-96"><div className="text-muted-foreground">{t("dashboardPage.loading")}</div></div>;
   }
 
   return (
@@ -175,13 +212,13 @@ function Dashboard() {
       {/* Greeting */}
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-          <p className="text-sm text-muted-foreground">Bienvenue{firstName ? `, ${firstName}` : ""}</p>
-          <h1 className="mt-0.5 font-serif text-3xl font-medium tracking-tight md:text-4xl">Mon tableau de bord</h1>
+          <p className="text-sm text-muted-foreground">{t("dashboardPage.welcome")}{firstName ? `, ${firstName}` : ""}</p>
+          <h1 className="mt-0.5 font-serif text-3xl font-medium tracking-tight md:text-4xl">{t("dashboardPage.title")}</h1>
         </div>
         <Button asChild size="lg" className="shadow-glow">
           <Link to="/loans/new">
             <Plus className="mr-2 h-4 w-4" />
-            Nouvelle demande
+            {t("dashboardPage.newRequest")}
           </Link>
         </Button>
       </div>
@@ -193,12 +230,12 @@ function Dashboard() {
         <CardContent className="relative p-8 md:p-10">
           <div className="mb-2 flex items-start justify-between">
             <div className="flex items-center gap-2 text-sm font-medium text-white/70">
-              <Wallet className="h-4 w-4" /> Solde total disponible
+              <Wallet className="h-4 w-4" /> {t("dashboardPage.totalBalance")}
             </div>
             <button
               onClick={() => setHideBalance(!hideBalance)}
               className="rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label={hideBalance ? "Afficher le solde" : "Masquer le solde"}
+              aria-label={hideBalance ? t("dashboardPage.showBalance") : t("dashboardPage.hideBalance")}
             >
               {hideBalance ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -207,11 +244,11 @@ function Dashboard() {
             {hideBalance ? "•••••• €" : formatCurrency(totalAvailable)}
           </div>
           <div className="mt-1.5 flex items-center gap-2 text-sm text-white/70">
-            <span>sur {formatCurrency(totalRequested)} financés</span>
+            <span>{t("dashboardPage.outOfFunded", { total: formatCurrency(totalRequested) })}</span>
             {totalWithdrawn > 0 && (
               <>
                 <span className="opacity-30">•</span>
-                <span>{formatCurrency(totalWithdrawn)} retirés</span>
+                <span>{t("dashboardPage.withdrawn", { amount: formatCurrency(totalWithdrawn) })}</span>
               </>
             )}
           </div>
@@ -227,19 +264,19 @@ function Dashboard() {
                 className="bg-white font-semibold text-primary shadow-md hover:bg-white/90"
               >
                 <Send className="mr-2 h-4 w-4" />
-                Effectuer un virement
+                {t("dashboardPage.doTransfer")}
               </Button>
             )}
             <Button asChild size="lg" variant="ghost" className="border border-white/20 text-white hover:bg-white/10">
               <Link to="/loans/new">
                 <Plus className="mr-2 h-4 w-4" />
-                Nouveau prêt
+                {t("dashboardPage.newLoan")}
               </Link>
             </Button>
             <Button asChild size="lg" variant="ghost" className="border border-white/20 text-white hover:bg-white/10">
               <Link to="/contact">
                 <Mail className="mr-2 h-4 w-4" />
-                Contacter le service client
+                {t("dashboardPage.contactSupport")}
               </Link>
             </Button>
           </div>
@@ -248,39 +285,39 @@ function Dashboard() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-        <StatCard icon={<FileText className="h-5 w-5" />} label="Prêts actifs" value={activeLoanCount.toString()} tone="info" />
-        <StatCard icon={<TrendingUp className="h-5 w-5" />} label="Total financé" value={formatCurrency(totalRequested)} tone="primary" />
-        <StatCard icon={<ArrowUpRight className="h-5 w-5" />} label="Virements" value={withdrawals.length.toString()} tone="success" />
+        <StatCard icon={<FileText className="h-5 w-5" />} label={t("dashboardPage.activeLoans")} value={activeLoanCount.toString()} tone="info" />
+        <StatCard icon={<TrendingUp className="h-5 w-5" />} label={t("dashboardPage.totalFunded")} value={formatCurrency(totalRequested)} tone="primary" />
+        <StatCard icon={<ArrowUpRight className="h-5 w-5" />} label={t("dashboardPage.transfersStat")} value={withdrawals.length.toString()} tone="success" />
       </div>
 
       {/* Loans + Activity */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="font-serif text-xl font-medium">Mes prêts</h2>
+            <h2 className="font-serif text-xl font-medium">{t("dashboardPage.myLoans")}</h2>
             {loans.length > 0 && (
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/loans/new">+ Nouveau</Link>
+                <Link to="/loans/new">{t("dashboardPage.newPlus")}</Link>
               </Button>
             )}
           </div>
 
           {loading ? (
-            <div className="rounded-2xl border border-border bg-card p-12 text-center text-muted-foreground shadow-card">Chargement...</div>
+            <div className="rounded-2xl border border-border bg-card p-12 text-center text-muted-foreground shadow-card">{t("dashboardPage.loading")}</div>
           ) : loans.length === 0 ? (
             <Empty className="border bg-card shadow-card">
               <EmptyHeader>
                 <EmptyMedia variant="icon" className="bg-accent/10 text-accent">
                   <Sparkles className="h-6 w-6" />
                 </EmptyMedia>
-                <EmptyTitle>Commencez votre première demande</EmptyTitle>
+                <EmptyTitle>{t("dashboardPage.startTitle")}</EmptyTitle>
                 <EmptyDescription>
-                  Financez vos projets en quelques minutes : auto, travaux, trésorerie ou tout autre besoin.
+                  {t("dashboardPage.startDesc")}
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
                 <Button asChild className="shadow-glow">
-                  <Link to="/loans/new">Faire une demande</Link>
+                  <Link to="/loans/new">{t("dashboardPage.applyAction")}</Link>
                 </Button>
               </EmptyContent>
             </Empty>
@@ -299,23 +336,23 @@ function Dashboard() {
                             <StatusBadge status={loan.status} />
                           </div>
                           <p className="mt-1 text-sm text-muted-foreground">
-                            {loan.duration_months} mois · Demande du {formatDate(loan.created_at)}
+                            {t("dashboardPage.monthsAgoLine", { months: loan.duration_months, date: formatDate(loan.created_at) })}
                           </p>
                           {Number(loan.disbursed_amount ?? 0) > 0 && (
                             <p className="mt-1 text-xs text-muted-foreground">
-                              Décaissé : {formatCurrency(Number(loan.disbursed_amount))} · Restant : {formatCurrency(remaining)}
+                              {t("dashboardPage.disbursedRemaining", { disbursed: formatCurrency(Number(loan.disbursed_amount)), remaining: formatCurrency(remaining) })}
                             </p>
                           )}
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {canWithdraw && (
                             <Button onClick={() => setWithdrawLoanId(loan.id)} size="sm" className="shadow-glow">
-                              <ArrowUpRight className="mr-1.5 h-4 w-4" /> Retirer
+                              <ArrowUpRight className="mr-1.5 h-4 w-4" /> {t("dashboardPage.withdraw")}
                             </Button>
                           )}
                           <Button asChild variant="outline" size="sm">
                             <Link to="/loans/$loanId" params={{ loanId: loan.id }}>
-                              Détails <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                              {t("dashboardPage.details")} <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                             </Link>
                           </Button>
                         </div>
@@ -356,14 +393,16 @@ function Dashboard() {
                 </div>
               ) : (
                 <ul className="divide-y divide-border">
-                  {recentWithdrawals.map((w) => (
+                  {recentWithdrawals.map((w) => {
+                    const eff = effectiveStatus(w);
+                    return (
                     <li key={w.id}>
                       <Link
                         to="/transfers/$transferId"
                         params={{ transferId: w.id }}
                         className="hover-elevate flex items-start gap-3 p-4 transition-colors hover:bg-secondary/50"
                       >
-                        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${STATUS_PILL[w.status] ?? "bg-secondary"}`}>
+                        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${STATUS_PILL[eff] ?? "bg-secondary"}`}>
                           <ArrowUpRight className="h-4 w-4" />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -372,8 +411,8 @@ function Dashboard() {
                             <span className="shrink-0 text-sm font-semibold tabular-nums">{formatCurrency(Number(w.amount))}</span>
                           </div>
                           <div className="mt-0.5 flex items-center gap-2 flex-wrap">
-                            <span className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${STATUS_PILL[w.status] ?? "bg-secondary"}`}>
-                              {STATUS_LABEL[w.status] ?? w.status}
+                            <span className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${STATUS_PILL[eff] ?? "bg-secondary"}`}>
+                              {STATUS_LABEL[eff] ?? eff}
                             </span>
                             <span className="text-xs text-muted-foreground">{formatDateTime(w.created_at)}</span>
                           </div>
@@ -381,7 +420,7 @@ function Dashboard() {
                         <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
                       </Link>
                     </li>
-                  ))}
+                  );})}
                 </ul>
               )}
             </CardContent>

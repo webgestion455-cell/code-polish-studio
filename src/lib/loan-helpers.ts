@@ -54,7 +54,7 @@ export function tStatus(s: LoanStatus): string {
 function currentLocale(): string {
   const lng = i18n.resolvedLanguage || i18n.language || "fr";
   const map: Record<string, string> = {
-    fr: "fr-FR", en: "en-GB", de: "de-DE", es: "es-ES",
+    fr: "fr-FR", en: "en-GB", de: "de-DE", es: "es-ES", it: "it-IT",
     sl: "sl-SI", bg: "bg-BG", sk: "sk-SK",
   };
   return map[lng] ?? lng;
