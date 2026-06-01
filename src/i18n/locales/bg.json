@@ -67,23 +67,7 @@
     "hasAccount": "Вече имате акаунт?",
     "createAccount": "Създай акаунт",
     "loginSuccess": "Успешен вход",
-    "signupSuccess": "Акаунтът е създаден · проверете имейла",
-    "tabSignin": "Вход",
-    "tabSignup": "Регистрация",
-    "emailLabel": "Имейл",
-    "passwordLabel": "Парола",
-    "fullNameLabel": "Пълно име",
-    "phoneLabel": "Телефон",
-    "nameShort": "Името е твърде кратко",
-    "phoneInvalid": "Невалиден телефон",
-    "emailInvalid": "Невалиден имейл",
-    "passwordMin": "Минимум 8 символа",
-    "passwordRequired": "Изисква се парола",
-    "invalidCredentials": "Грешен имейл или парола",
-    "connectedToast": "Влязохте!",
-    "emailAlreadyUsed": "Този имейл вече е регистриран. Моля, влезте.",
-    "accountCreated": "Акаунтът е създаден! Влязохте.",
-    "headTitle": "Вход — HSBC BANK"
+    "signupSuccess": "Акаунтът е създаден · проверете имейла"
   },
   "dashboard": {
     "title": "Моето табло",
@@ -621,8 +605,7 @@
     "viewAll": "Виж всички",
     "noTransfersYet": "Все още няма преводи",
     "sessionExpired": "Сесията изтече поради неактивност",
-    "headTitle": "Моето табло — HSBC BANK",
-    "recentActivityH": "Скорошна активност"
+    "headTitle": "Моето табло — HSBC BANK"
   },
   "transfersPage": {
     "headTitle": "Моите преводи — HSBC BANK",
@@ -643,8 +626,7 @@
     "beneficiaryLabel": "Получател:",
     "issuedOn": "Издаден на {{date}}",
     "refSuffix": " · реф. {{ref}}",
-    "detailsBtn": "Детайли",
-    "loading": "Зареждане…"
+    "detailsBtn": "Детайли"
   },
   "transferDetail": {
     "headTitle": "Детайли за превод — HSBC BANK",
@@ -676,8 +658,7 @@
     "rightNow": "Току що",
     "receiptAvailable": "Налично банково потвърждение",
     "receiptHint": "Изтеглете официалното обобщение на това платежно нареждане.",
-    "downloadPrint": "Изтегли / Принтирай",
-    "loading": "Зареждане…"
+    "downloadPrint": "Изтегли / Принтирай"
   },
   "loanDetail": {
     "headTitle": "Детайли за кредита — HSBC BANK",
@@ -760,33 +741,5 @@
     "invalidCode": "Невалиден код",
     "advanced": "Стъпка {{p}}% отблокирана",
     "successFinal": "Преводът е извършен успешно"
-  },
-  "footer": {
-    "tagline": "Вашата онлайн банка от ново поколение.",
-    "products": "Продукти",
-    "aboutCol": "За нас",
-    "legalCol": "Правни",
-    "supportCol": "Поддръжка",
-    "loans": "Лични кредити",
-    "transfers": "Преводи",
-    "accounts": "Сметки",
-    "cards": "Карти",
-    "about": "За нас",
-    "careers": "Кариери",
-    "press": "Преса",
-    "blog": "Блог",
-    "legal": "Правна информация",
-    "privacy": "Поверителност",
-    "cookies": "Бисквитки",
-    "terms": "Условия",
-    "gdpr": "GDPR",
-    "help": "Помощен център",
-    "contactUs": "Контакт",
-    "security": "Сигурност",
-    "rights": "Всички права запазени.",
-    "regulated": "Лицензирана кредитна институция под надзора на ACPR.",
-    "iban": "IBAN гарантиран",
-    "ssl": "256-битов SSL",
-    "fdic": "Защитени средства"
   }
 }

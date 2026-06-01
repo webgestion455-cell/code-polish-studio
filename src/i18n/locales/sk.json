@@ -67,23 +67,7 @@
     "hasAccount": "Už máte účet?",
     "createAccount": "Vytvoriť účet",
     "loginSuccess": "Úspešné prihlásenie",
-    "signupSuccess": "Účet vytvorený · skontrolujte e-mail",
-    "tabSignin": "Prihlásenie",
-    "tabSignup": "Registrácia",
-    "emailLabel": "E-mail",
-    "passwordLabel": "Heslo",
-    "fullNameLabel": "Celé meno",
-    "phoneLabel": "Telefón",
-    "nameShort": "Meno je príliš krátke",
-    "phoneInvalid": "Neplatný telefón",
-    "emailInvalid": "Neplatný e-mail",
-    "passwordMin": "Minimálne 8 znakov",
-    "passwordRequired": "Heslo je povinné",
-    "invalidCredentials": "Nesprávny e-mail alebo heslo",
-    "connectedToast": "Prihlásený!",
-    "emailAlreadyUsed": "Tento e-mail je už zaregistrovaný. Prihláste sa.",
-    "accountCreated": "Účet vytvorený! Ste prihlásený.",
-    "headTitle": "Prihlásenie — HSBC BANK"
+    "signupSuccess": "Účet vytvorený · skontrolujte e-mail"
   },
   "dashboard": {
     "title": "Môj prehľad",
@@ -621,8 +605,7 @@
     "viewAll": "Zobraziť všetko",
     "noTransfersYet": "Zatiaľ žiadne prevody",
     "sessionExpired": "Relácia vypršala pre neaktivitu",
-    "headTitle": "Moja nástenka — HSBC BANK",
-    "recentActivityH": "Nedávna aktivita"
+    "headTitle": "Moja nástenka — HSBC BANK"
   },
   "transfersPage": {
     "headTitle": "Moje prevody — HSBC BANK",
@@ -643,8 +626,7 @@
     "beneficiaryLabel": "Príjemca:",
     "issuedOn": "Vydané {{date}}",
     "refSuffix": " · ref. {{ref}}",
-    "detailsBtn": "Detaily",
-    "loading": "Načítava sa…"
+    "detailsBtn": "Detaily"
   },
   "transferDetail": {
     "headTitle": "Detail prevodu — HSBC BANK",
@@ -676,8 +658,7 @@
     "rightNow": "Práve teraz",
     "receiptAvailable": "K dispozícii bankové potvrdenie",
     "receiptHint": "Stiahnite si oficiálny súhrn tohto príkazu na prevod.",
-    "downloadPrint": "Stiahnuť / Vytlačiť",
-    "loading": "Načítava sa…"
+    "downloadPrint": "Stiahnuť / Vytlačiť"
   },
   "loanDetail": {
     "headTitle": "Detaily úveru — HSBC BANK",
@@ -760,33 +741,5 @@
     "invalidCode": "Neplatný kód",
     "advanced": "Krok {{p}}% odblokovaný",
     "successFinal": "Prevod úspešne dokončený"
-  },
-  "footer": {
-    "tagline": "Vaša online banka novej generácie.",
-    "products": "Produkty",
-    "aboutCol": "O nás",
-    "legalCol": "Právne",
-    "supportCol": "Podpora",
-    "loans": "Osobné pôžičky",
-    "transfers": "Prevody",
-    "accounts": "Účty",
-    "cards": "Karty",
-    "about": "O nás",
-    "careers": "Kariéra",
-    "press": "Tlač",
-    "blog": "Blog",
-    "legal": "Právne informácie",
-    "privacy": "Ochrana súkromia",
-    "cookies": "Cookies",
-    "terms": "Podmienky",
-    "gdpr": "GDPR",
-    "help": "Centrum pomoci",
-    "contactUs": "Kontakt",
-    "security": "Bezpečnosť",
-    "rights": "Všetky práva vyhradené.",
-    "regulated": "Licencovaná úverová inštitúcia pod dohľadom ACPR.",
-    "iban": "IBAN garantovaný",
-    "ssl": "256-bitové SSL",
-    "fdic": "Chránené prostriedky"
   }
 }

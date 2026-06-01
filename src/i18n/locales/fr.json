@@ -67,23 +67,7 @@
     "hasAccount": "Déjà un compte ?",
     "createAccount": "Créer mon compte",
     "loginSuccess": "Connexion réussie",
-    "signupSuccess": "Compte créé · vérifiez vos emails",
-    "tabSignin": "Connexion",
-    "tabSignup": "Inscription",
-    "emailLabel": "Email",
-    "passwordLabel": "Mot de passe",
-    "fullNameLabel": "Nom complet",
-    "phoneLabel": "Téléphone",
-    "nameShort": "Nom trop court",
-    "phoneInvalid": "Téléphone invalide",
-    "emailInvalid": "Email invalide",
-    "passwordMin": "8 caractères minimum",
-    "passwordRequired": "Mot de passe requis",
-    "invalidCredentials": "Email ou mot de passe incorrect",
-    "connectedToast": "Connecté !",
-    "emailAlreadyUsed": "Cet email est déjà utilisé. Connectez-vous.",
-    "accountCreated": "Compte créé ! Vous êtes connecté.",
-    "headTitle": "Connexion — HSBC BANK"
+    "signupSuccess": "Compte créé · vérifiez vos emails"
   },
   "dashboard": {
     "title": "Mon tableau de bord",
@@ -621,8 +605,7 @@
     "viewAll": "Tout voir",
     "noTransfersYet": "Aucun virement pour le moment",
     "sessionExpired": "Session expirée pour inactivité",
-    "headTitle": "Mon tableau de bord — HSBC BANK",
-    "recentActivityH": "Activité récente"
+    "headTitle": "Mon tableau de bord — HSBC BANK"
   },
   "transfersPage": {
     "headTitle": "Mes virements — HSBC BANK",
@@ -643,8 +626,7 @@
     "beneficiaryLabel": "Bénéficiaire :",
     "issuedOn": "Émis le {{date}}",
     "refSuffix": " · réf. {{ref}}",
-    "detailsBtn": "Détails",
-    "loading": "Chargement…"
+    "detailsBtn": "Détails"
   },
   "transferDetail": {
     "headTitle": "Détail du virement — HSBC BANK",
@@ -676,8 +658,7 @@
     "rightNow": "À l'instant",
     "receiptAvailable": "Justificatif bancaire disponible",
     "receiptHint": "Téléchargez le récapitulatif officiel de cet ordre de virement.",
-    "downloadPrint": "Télécharger / Imprimer",
-    "loading": "Chargement…"
+    "downloadPrint": "Télécharger / Imprimer"
   },
   "loanDetail": {
     "headTitle": "Détails du prêt — HSBC BANK",
@@ -760,33 +741,5 @@
     "invalidCode": "Code invalide",
     "advanced": "Étape {{p}}% débloquée",
     "successFinal": "Virement effectué avec succès"
-  },
-  "footer": {
-    "tagline": "Votre banque en ligne nouvelle génération.",
-    "products": "Produits",
-    "aboutCol": "À propos",
-    "legalCol": "Légal",
-    "supportCol": "Support",
-    "loans": "Prêts personnels",
-    "transfers": "Virements",
-    "accounts": "Comptes",
-    "cards": "Cartes",
-    "about": "Qui sommes-nous",
-    "careers": "Carrières",
-    "press": "Presse",
-    "blog": "Blog",
-    "legal": "Mentions légales",
-    "privacy": "Politique de confidentialité",
-    "cookies": "Cookies",
-    "terms": "Conditions générales",
-    "gdpr": "RGPD",
-    "help": "Centre d'aide",
-    "contactUs": "Nous contacter",
-    "security": "Sécurité",
-    "rights": "Tous droits réservés.",
-    "regulated": "Établissement de crédit agréé. Soumis au contrôle de l'Autorité de contrôle prudentiel et de résolution (ACPR).",
-    "iban": "IBAN garanti",
-    "ssl": "SSL 256-bit",
-    "fdic": "Fonds garantis"
   }
 }

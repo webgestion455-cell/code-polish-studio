@@ -19,6 +19,17 @@ export const Route = createFileRoute("/auth")({
   }),
 });
 
+const signUpSchema = z.object({
+  fullName: z.string().trim().min(2, "Nom trop court").max(100),
+  phone: z.string().trim().min(6, "Téléphone invalide").max(20),
+  email: z.string().trim().email("Email invalide").max(255),
+  password: z.string().min(8, "8 caractères minimum").max(72),
+});
+
+const signInSchema = z.object({
+  email: z.string().trim().email("Email invalide").max(255),
+  password: z.string().min(1, "Mot de passe requis").max(72),
+});
 
 function AuthPage() {
   const { t } = useTranslation();
@@ -26,17 +37,6 @@ function AuthPage() {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-
-  const signUpSchema = z.object({
-    fullName: z.string().trim().min(2, t("auth.nameShort")).max(100),
-    phone: z.string().trim().min(6, t("auth.phoneInvalid")).max(20),
-    email: z.string().trim().email(t("auth.emailInvalid")).max(255),
-    password: z.string().min(8, t("auth.passwordMin")).max(72),
-  });
-  const signInSchema = z.object({
-    email: z.string().trim().email(t("auth.emailInvalid")).max(255),
-    password: z.string().min(1, t("auth.passwordRequired")).max(72),
-  });
 
   useEffect(() => {
     if (!loading && user) navigate({ to: "/dashboard" });
@@ -54,9 +54,9 @@ function AuthPage() {
     const { error } = await signIn(parsed.data.email, parsed.data.password);
     setSubmitting(false);
     if (error) {
-      toast.error(error.message === "Invalid login credentials" ? t("auth.invalidCredentials") : error.message);
+      toast.error(error.message === "Invalid login credentials" ? "Email ou mot de passe incorrect" : error.message);
     } else {
-      toast.success(t("auth.connectedToast"));
+      toast.success("Connecté !");
       navigate({ to: "/dashboard" });
     }
   }
@@ -79,16 +79,15 @@ function AuthPage() {
     setSubmitting(false);
     if (error) {
       if (error.message.includes("already registered")) {
-        toast.error(t("auth.emailAlreadyUsed"));
+        toast.error("Cet email est déjà utilisé. Connectez-vous.");
       } else {
         toast.error(error.message);
       }
     } else {
-      toast.success(t("auth.accountCreated"));
+      toast.success("Compte créé ! Vous êtes connecté.");
       navigate({ to: "/dashboard" });
     }
   }
-
 
   async function handleGoogleSignIn() {
     setGoogleLoading(true);
@@ -152,18 +151,18 @@ function AuthPage() {
             </Button>
             <Tabs defaultValue="signin">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signin">{t("auth.tabSignin")}</TabsTrigger>
-                <TabsTrigger value="signup">{t("auth.tabSignup")}</TabsTrigger>
+                <TabsTrigger value="signin">Connexion</TabsTrigger>
+                <TabsTrigger value="signup">Inscription</TabsTrigger>
               </TabsList>
 
               <TabsContent value="signin">
                 <form onSubmit={handleSignIn} className="mt-4 space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signin-email">{t("auth.emailLabel")}</Label>
+                    <Label htmlFor="signin-email">Email</Label>
                     <Input id="signin-email" name="email" type="email" required autoComplete="email" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signin-password">{t("auth.passwordLabel")}</Label>
+                    <Label htmlFor="signin-password">Mot de passe</Label>
                     <Input id="signin-password" name="password" type="password" required autoComplete="current-password" />
                   </div>
                   <Button type="submit" className="h-11 w-full shadow-glow" disabled={submitting}>
@@ -175,19 +174,19 @@ function AuthPage() {
               <TabsContent value="signup">
                 <form onSubmit={handleSignUp} className="mt-4 space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="su-fullname">{t("auth.fullNameLabel")}</Label>
+                    <Label htmlFor="su-fullname">Nom complet</Label>
                     <Input id="su-fullname" name="fullName" required autoComplete="name" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="su-phone">{t("auth.phoneLabel")}</Label>
+                    <Label htmlFor="su-phone">Téléphone</Label>
                     <Input id="su-phone" name="phone" type="tel" required autoComplete="tel" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="su-email">{t("auth.emailLabel")}</Label>
+                    <Label htmlFor="su-email">Email</Label>
                     <Input id="su-email" name="email" type="email" required autoComplete="email" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="su-password">{t("auth.passwordLabel")}</Label>
+                    <Label htmlFor="su-password">Mot de passe</Label>
                     <Input id="su-password" name="password" type="password" required autoComplete="new-password" minLength={8} />
                     <p className="text-xs text-muted-foreground">{t("auth.minPasswordHint")}</p>
                   </div>
@@ -197,7 +196,6 @@ function AuthPage() {
                 </form>
               </TabsContent>
             </Tabs>
-
           </div>
 
           <p className="mt-6 text-center text-xs text-muted-foreground">

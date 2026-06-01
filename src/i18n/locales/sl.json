@@ -67,23 +67,7 @@
     "hasAccount": "Že imate račun?",
     "createAccount": "Ustvari račun",
     "loginSuccess": "Uspešna prijava",
-    "signupSuccess": "Račun ustvarjen · preverite e-pošto",
-    "tabSignin": "Prijava",
-    "tabSignup": "Registracija",
-    "emailLabel": "E-pošta",
-    "passwordLabel": "Geslo",
-    "fullNameLabel": "Polno ime",
-    "phoneLabel": "Telefon",
-    "nameShort": "Ime prekratko",
-    "phoneInvalid": "Neveljaven telefon",
-    "emailInvalid": "Neveljavna e-pošta",
-    "passwordMin": "Najmanj 8 znakov",
-    "passwordRequired": "Geslo je obvezno",
-    "invalidCredentials": "Napačna e-pošta ali geslo",
-    "connectedToast": "Prijavljeni!",
-    "emailAlreadyUsed": "Ta e-pošta je že registrirana. Prijavite se.",
-    "accountCreated": "Račun ustvarjen! Prijavljeni ste.",
-    "headTitle": "Prijava — HSBC BANK"
+    "signupSuccess": "Račun ustvarjen · preverite e-pošto"
   },
   "dashboard": {
     "title": "Moja nadzorna plošča",
@@ -621,8 +605,7 @@
     "viewAll": "Prikaži vse",
     "noTransfersYet": "Še ni nakazil",
     "sessionExpired": "Seja je potekla zaradi nedejavnosti",
-    "headTitle": "Moja nadzorna plošča — HSBC BANK",
-    "recentActivityH": "Nedavna dejavnost"
+    "headTitle": "Moja nadzorna plošča — HSBC BANK"
   },
   "transfersPage": {
     "headTitle": "Moja nakazila — HSBC BANK",
@@ -643,8 +626,7 @@
     "beneficiaryLabel": "Prejemnik:",
     "issuedOn": "Izdano {{date}}",
     "refSuffix": " · ref. {{ref}}",
-    "detailsBtn": "Podrobnosti",
-    "loading": "Nalaganje…"
+    "detailsBtn": "Podrobnosti"
   },
   "transferDetail": {
     "headTitle": "Podrobnosti nakazila — HSBC BANK",
@@ -676,8 +658,7 @@
     "rightNow": "Pravkar",
     "receiptAvailable": "Bančno potrdilo na voljo",
     "receiptHint": "Prenesite uradni povzetek tega naloga za nakazilo.",
-    "downloadPrint": "Prenesi / Natisni",
-    "loading": "Nalaganje…"
+    "downloadPrint": "Prenesi / Natisni"
   },
   "loanDetail": {
     "headTitle": "Podrobnosti posojila — HSBC BANK",
@@ -760,33 +741,5 @@
     "invalidCode": "Neveljavna koda",
     "advanced": "Korak {{p}}% odklenjen",
     "successFinal": "Nakazilo uspešno opravljeno"
-  },
-  "footer": {
-    "tagline": "Vaša spletna banka nove generacije.",
-    "products": "Produkti",
-    "aboutCol": "O nas",
-    "legalCol": "Pravno",
-    "supportCol": "Podpora",
-    "loans": "Osebni krediti",
-    "transfers": "Nakazila",
-    "accounts": "Računi",
-    "cards": "Kartice",
-    "about": "O nas",
-    "careers": "Kariera",
-    "press": "Mediji",
-    "blog": "Blog",
-    "legal": "Pravno obvestilo",
-    "privacy": "Zasebnost",
-    "cookies": "Piškotki",
-    "terms": "Pogoji",
-    "gdpr": "GDPR",
-    "help": "Center za pomoč",
-    "contactUs": "Kontakt",
-    "security": "Varnost",
-    "rights": "Vse pravice pridržane.",
-    "regulated": "Pooblaščena kreditna institucija pod nadzorom ACPR.",
-    "iban": "IBAN zajamčen",
-    "ssl": "256-bitni SSL",
-    "fdic": "Sredstva zaščitena"
   }
 }
