@@ -67,7 +67,23 @@
     "hasAccount": "Already have an account?",
     "createAccount": "Create my account",
     "loginSuccess": "Successfully signed in",
-    "signupSuccess": "Account created · check your inbox"
+    "signupSuccess": "Account created · check your inbox",
+    "tabSignin": "Accedi",
+    "tabSignup": "Registrati",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "fullNameLabel": "Nome completo",
+    "phoneLabel": "Telefono",
+    "nameShort": "Nome troppo corto",
+    "phoneInvalid": "Telefono non valido",
+    "emailInvalid": "Email non valida",
+    "passwordMin": "Minimo 8 caratteri",
+    "passwordRequired": "Password richiesta",
+    "invalidCredentials": "Email o password errati",
+    "connectedToast": "Connesso!",
+    "emailAlreadyUsed": "Questa email è già registrata. Accedi.",
+    "accountCreated": "Account creato! Sei connesso.",
+    "headTitle": "Accedi — HSBC BANK"
   },
   "dashboard": {
     "title": "My dashboard",
@@ -605,7 +621,8 @@
     "viewAll": "Vedi tutto",
     "noTransfersYet": "Nessun bonifico ancora",
     "sessionExpired": "Sessione scaduta per inattività",
-    "headTitle": "La mia dashboard — HSBC BANK"
+    "headTitle": "La mia dashboard — HSBC BANK",
+    "recentActivityH": "Attività recente"
   },
   "transfersPage": {
     "headTitle": "I miei bonifici — HSBC BANK",
@@ -626,7 +643,8 @@
     "beneficiaryLabel": "Beneficiario:",
     "issuedOn": "Emesso il {{date}}",
     "refSuffix": " · rif. {{ref}}",
-    "detailsBtn": "Dettagli"
+    "detailsBtn": "Dettagli",
+    "loading": "Caricamento…"
   },
   "transferDetail": {
     "headTitle": "Dettaglio bonifico — HSBC BANK",
@@ -658,7 +676,8 @@
     "rightNow": "Adesso",
     "receiptAvailable": "Ricevuta bancaria disponibile",
     "receiptHint": "Scarica il riepilogo ufficiale di questo ordine di bonifico.",
-    "downloadPrint": "Scarica / Stampa"
+    "downloadPrint": "Scarica / Stampa",
+    "loading": "Caricamento…"
   },
   "loanDetail": {
     "headTitle": "Dettagli del prestito — HSBC BANK",
@@ -741,5 +760,33 @@
     "invalidCode": "Codice non valido",
     "advanced": "Fase {{p}}% sbloccata",
     "successFinal": "Bonifico completato con successo"
+  },
+  "footer": {
+    "tagline": "La tua banca online di nuova generazione.",
+    "products": "Prodotti",
+    "aboutCol": "Chi siamo",
+    "legalCol": "Legale",
+    "supportCol": "Supporto",
+    "loans": "Prestiti personali",
+    "transfers": "Bonifici",
+    "accounts": "Conti",
+    "cards": "Carte",
+    "about": "Chi siamo",
+    "careers": "Lavora con noi",
+    "press": "Stampa",
+    "blog": "Blog",
+    "legal": "Note legali",
+    "privacy": "Privacy",
+    "cookies": "Cookie",
+    "terms": "Termini",
+    "gdpr": "GDPR",
+    "help": "Centro assistenza",
+    "contactUs": "Contattaci",
+    "security": "Sicurezza",
+    "rights": "Tutti i diritti riservati.",
+    "regulated": "Istituto di credito autorizzato, vigilato dall'ACPR.",
+    "iban": "IBAN garantito",
+    "ssl": "SSL 256 bit",
+    "fdic": "Fondi protetti"
   }
 }

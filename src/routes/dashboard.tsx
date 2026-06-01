@@ -378,10 +378,10 @@ function Dashboard() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-serif text-xl font-medium flex items-center gap-2">
-              <History className="h-4 w-4" /> Activité récente
+              <History className="h-4 w-4" /> {t("dashboardPage.recentActivityH")}
             </h2>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/transfers">Tout voir</Link>
+              <Link to="/transfers">{t("dashboardPage.viewAll")}</Link>
             </Button>
           </div>
           <Card>
@@ -389,8 +389,9 @@ function Dashboard() {
               {recentWithdrawals.length === 0 ? (
                 <div className="p-8 text-center text-sm text-muted-foreground">
                   <Wallet className="mx-auto mb-2 h-6 w-6 opacity-40" />
-                  Aucun virement pour le moment
+                  {t("dashboardPage.noTransfersYet")}
                 </div>
+
               ) : (
                 <ul className="divide-y divide-border">
                   {recentWithdrawals.map((w) => {

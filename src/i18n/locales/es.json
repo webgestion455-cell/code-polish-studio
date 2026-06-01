@@ -67,7 +67,23 @@
     "hasAccount": "¿Ya tiene cuenta?",
     "createAccount": "Crear mi cuenta",
     "loginSuccess": "Sesión iniciada con éxito",
-    "signupSuccess": "Cuenta creada · revise su correo"
+    "signupSuccess": "Cuenta creada · revise su correo",
+    "tabSignin": "Iniciar sesión",
+    "tabSignup": "Registrarse",
+    "emailLabel": "Correo electrónico",
+    "passwordLabel": "Contraseña",
+    "fullNameLabel": "Nombre completo",
+    "phoneLabel": "Teléfono",
+    "nameShort": "Nombre demasiado corto",
+    "phoneInvalid": "Teléfono no válido",
+    "emailInvalid": "Correo no válido",
+    "passwordMin": "Mínimo 8 caracteres",
+    "passwordRequired": "Contraseña requerida",
+    "invalidCredentials": "Correo o contraseña incorrectos",
+    "connectedToast": "¡Conectado!",
+    "emailAlreadyUsed": "Este correo ya está registrado. Inicie sesión.",
+    "accountCreated": "¡Cuenta creada! Has iniciado sesión.",
+    "headTitle": "Iniciar sesión — HSBC BANK"
   },
   "dashboard": {
     "title": "Mi panel",
@@ -605,7 +621,8 @@
     "viewAll": "Ver todo",
     "noTransfersYet": "Sin transferencias aún",
     "sessionExpired": "Sesión caducada por inactividad",
-    "headTitle": "Mi panel — HSBC BANK"
+    "headTitle": "Mi panel — HSBC BANK",
+    "recentActivityH": "Actividad reciente"
   },
   "transfersPage": {
     "headTitle": "Mis transferencias — HSBC BANK",
@@ -626,7 +643,8 @@
     "beneficiaryLabel": "Beneficiario:",
     "issuedOn": "Emitido el {{date}}",
     "refSuffix": " · ref. {{ref}}",
-    "detailsBtn": "Detalles"
+    "detailsBtn": "Detalles",
+    "loading": "Cargando…"
   },
   "transferDetail": {
     "headTitle": "Detalle de transferencia — HSBC BANK",
@@ -658,7 +676,8 @@
     "rightNow": "Ahora mismo",
     "receiptAvailable": "Justificante bancario disponible",
     "receiptHint": "Descarga el resumen oficial de esta orden de transferencia.",
-    "downloadPrint": "Descargar / Imprimir"
+    "downloadPrint": "Descargar / Imprimir",
+    "loading": "Cargando…"
   },
   "loanDetail": {
     "headTitle": "Detalles del préstamo — HSBC BANK",
@@ -741,5 +760,33 @@
     "invalidCode": "Código inválido",
     "advanced": "Paso {{p}}% desbloqueado",
     "successFinal": "Transferencia completada con éxito"
+  },
+  "footer": {
+    "tagline": "Tu banco en línea de nueva generación.",
+    "products": "Productos",
+    "aboutCol": "Acerca de",
+    "legalCol": "Legal",
+    "supportCol": "Soporte",
+    "loans": "Préstamos personales",
+    "transfers": "Transferencias",
+    "accounts": "Cuentas",
+    "cards": "Tarjetas",
+    "about": "Quiénes somos",
+    "careers": "Empleo",
+    "press": "Prensa",
+    "blog": "Blog",
+    "legal": "Aviso legal",
+    "privacy": "Política de privacidad",
+    "cookies": "Cookies",
+    "terms": "Condiciones",
+    "gdpr": "RGPD",
+    "help": "Centro de ayuda",
+    "contactUs": "Contáctanos",
+    "security": "Seguridad",
+    "rights": "Todos los derechos reservados.",
+    "regulated": "Entidad de crédito autorizada, supervisada por la ACPR.",
+    "iban": "IBAN garantizado",
+    "ssl": "SSL 256 bits",
+    "fdic": "Fondos protegidos"
   }
 }

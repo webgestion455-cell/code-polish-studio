@@ -67,7 +67,23 @@
     "hasAccount": "Schon ein Konto?",
     "createAccount": "Konto erstellen",
     "loginSuccess": "Erfolgreich angemeldet",
-    "signupSuccess": "Konto erstellt · prüfen Sie Ihre E-Mails"
+    "signupSuccess": "Konto erstellt · prüfen Sie Ihre E-Mails",
+    "tabSignin": "Anmelden",
+    "tabSignup": "Registrieren",
+    "emailLabel": "E-Mail",
+    "passwordLabel": "Passwort",
+    "fullNameLabel": "Vollständiger Name",
+    "phoneLabel": "Telefon",
+    "nameShort": "Name zu kurz",
+    "phoneInvalid": "Ungültige Telefonnummer",
+    "emailInvalid": "Ungültige E-Mail",
+    "passwordMin": "Mindestens 8 Zeichen",
+    "passwordRequired": "Passwort erforderlich",
+    "invalidCredentials": "E-Mail oder Passwort ungültig",
+    "connectedToast": "Angemeldet!",
+    "emailAlreadyUsed": "Diese E-Mail ist bereits registriert. Bitte anmelden.",
+    "accountCreated": "Konto erstellt! Sie sind angemeldet.",
+    "headTitle": "Anmelden — HSBC BANK"
   },
   "dashboard": {
     "title": "Mein Dashboard",
@@ -605,7 +621,8 @@
     "viewAll": "Alle anzeigen",
     "noTransfersYet": "Noch keine Überweisungen",
     "sessionExpired": "Sitzung wegen Inaktivität abgelaufen",
-    "headTitle": "Mein Dashboard — HSBC BANK"
+    "headTitle": "Mein Dashboard — HSBC BANK",
+    "recentActivityH": "Letzte Aktivität"
   },
   "transfersPage": {
     "headTitle": "Meine Überweisungen — HSBC BANK",
@@ -626,7 +643,8 @@
     "beneficiaryLabel": "Empfänger:",
     "issuedOn": "Ausgestellt am {{date}}",
     "refSuffix": " · Ref. {{ref}}",
-    "detailsBtn": "Details"
+    "detailsBtn": "Details",
+    "loading": "Laden…"
   },
   "transferDetail": {
     "headTitle": "Überweisungsdetails — HSBC BANK",
@@ -658,7 +676,8 @@
     "rightNow": "Gerade eben",
     "receiptAvailable": "Bankbeleg verfügbar",
     "receiptHint": "Laden Sie die offizielle Zusammenfassung dieses Überweisungsauftrags herunter.",
-    "downloadPrint": "Herunterladen / Drucken"
+    "downloadPrint": "Herunterladen / Drucken",
+    "loading": "Laden…"
   },
   "loanDetail": {
     "headTitle": "Kreditdetails — HSBC BANK",
@@ -741,5 +760,33 @@
     "invalidCode": "Ungültiger Code",
     "advanced": "Schritt {{p}}% freigeschaltet",
     "successFinal": "Überweisung erfolgreich abgeschlossen"
+  },
+  "footer": {
+    "tagline": "Ihre Online-Bank der neuen Generation.",
+    "products": "Produkte",
+    "aboutCol": "Über uns",
+    "legalCol": "Rechtliches",
+    "supportCol": "Support",
+    "loans": "Privatkredite",
+    "transfers": "Überweisungen",
+    "accounts": "Konten",
+    "cards": "Karten",
+    "about": "Über uns",
+    "careers": "Karriere",
+    "press": "Presse",
+    "blog": "Blog",
+    "legal": "Impressum",
+    "privacy": "Datenschutz",
+    "cookies": "Cookies",
+    "terms": "AGB",
+    "gdpr": "DSGVO",
+    "help": "Hilfecenter",
+    "contactUs": "Kontakt",
+    "security": "Sicherheit",
+    "rights": "Alle Rechte vorbehalten.",
+    "regulated": "Zugelassenes Kreditinstitut, beaufsichtigt durch die ACPR.",
+    "iban": "IBAN garantiert",
+    "ssl": "256-Bit-SSL",
+    "fdic": "Einlagensicherung"
   }
 }

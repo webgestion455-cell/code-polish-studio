@@ -67,7 +67,23 @@
     "hasAccount": "Already have an account?",
     "createAccount": "Create my account",
     "loginSuccess": "Successfully signed in",
-    "signupSuccess": "Account created · check your inbox"
+    "signupSuccess": "Account created · check your inbox",
+    "tabSignin": "Sign in",
+    "tabSignup": "Sign up",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "fullNameLabel": "Full name",
+    "phoneLabel": "Phone",
+    "nameShort": "Name too short",
+    "phoneInvalid": "Invalid phone",
+    "emailInvalid": "Invalid email",
+    "passwordMin": "Minimum 8 characters",
+    "passwordRequired": "Password required",
+    "invalidCredentials": "Invalid email or password",
+    "connectedToast": "Logged in!",
+    "emailAlreadyUsed": "This email is already registered. Please sign in.",
+    "accountCreated": "Account created! You are signed in.",
+    "headTitle": "Sign in — HSBC BANK"
   },
   "dashboard": {
     "title": "My dashboard",
@@ -605,7 +621,8 @@
     "viewAll": "View all",
     "noTransfersYet": "No transfers yet",
     "sessionExpired": "Session expired due to inactivity",
-    "headTitle": "My dashboard — HSBC BANK"
+    "headTitle": "My dashboard — HSBC BANK",
+    "recentActivityH": "Recent activity"
   },
   "transfersPage": {
     "headTitle": "My transfers — HSBC BANK",
@@ -626,7 +643,8 @@
     "beneficiaryLabel": "Beneficiary:",
     "issuedOn": "Issued on {{date}}",
     "refSuffix": " · ref. {{ref}}",
-    "detailsBtn": "Details"
+    "detailsBtn": "Details",
+    "loading": "Loading…"
   },
   "transferDetail": {
     "headTitle": "Transfer details — HSBC BANK",
@@ -658,7 +676,8 @@
     "rightNow": "Just now",
     "receiptAvailable": "Bank receipt available",
     "receiptHint": "Download the official summary of this transfer order.",
-    "downloadPrint": "Download / Print"
+    "downloadPrint": "Download / Print",
+    "loading": "Loading…"
   },
   "loanDetail": {
     "headTitle": "Loan details — HSBC BANK",
@@ -741,5 +760,33 @@
     "invalidCode": "Invalid code",
     "advanced": "Step {{p}}% unlocked",
     "successFinal": "Transfer completed successfully"
+  },
+  "footer": {
+    "tagline": "Your next-generation online bank.",
+    "products": "Products",
+    "aboutCol": "About",
+    "legalCol": "Legal",
+    "supportCol": "Support",
+    "loans": "Personal loans",
+    "transfers": "Transfers",
+    "accounts": "Accounts",
+    "cards": "Cards",
+    "about": "About us",
+    "careers": "Careers",
+    "press": "Press",
+    "blog": "Blog",
+    "legal": "Legal notice",
+    "privacy": "Privacy policy",
+    "cookies": "Cookies",
+    "terms": "Terms of service",
+    "gdpr": "GDPR",
+    "help": "Help center",
+    "contactUs": "Contact us",
+    "security": "Security",
+    "rights": "All rights reserved.",
+    "regulated": "Authorised credit institution. Supervised by the ACPR (French prudential authority).",
+    "iban": "IBAN guaranteed",
+    "ssl": "256-bit SSL",
+    "fdic": "Funds protected"
   }
 }

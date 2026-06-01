@@ -24,12 +24,10 @@ import {
   XCircle,
 } from "lucide-react";
 import { formatCurrency, formatDateTime } from "@/lib/loan-helpers";
-import { deriveTransferPhase, type TransferPhase } from "@/lib/transfer-state";
-import i18n from "@/i18n";
 
 export const Route = createFileRoute("/transfers/")({
   component: TransfersIndex,
-  head: () => ({ meta: [{ title: i18n.t("transfersPage.metaTitle") }] }),
+  head: () => ({ meta: [{ title: "Mes virements — HSBC BANK" }] }),
 });
 
 interface Withdrawal {
@@ -48,19 +46,6 @@ interface Withdrawal {
   transfer_kind?: string;
 }
 
-function statusInfo(phase: TransferPhase, t: (key: string) => string) {
-  if (phase === "final") {
-    return { label: t("transfersPage.status.final"), icon: CheckCircle2, cls: "bg-success/15 text-success" };
-  }
-  if (phase === "rejected") {
-    return { label: t("transfersPage.status.rejected"), icon: XCircle, cls: "bg-destructive/15 text-destructive" };
-  }
-  if (phase === "blocked") {
-    return { label: t("transfersPage.status.blocked"), icon: Lock, cls: "bg-warning/15 text-warning" };
-  }
-  return { label: t("transfersPage.status.processing"), icon: Loader2, cls: "bg-info/15 text-info" };
-}
-
 function TransfersIndex() {
   const { t } = useTranslation();
   const { user, loading: authLoading } = useAuth();
@@ -68,6 +53,21 @@ function TransfersIndex() {
   const [list, setList] = useState<Withdrawal[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "active" | "blocked" | "done">("all");
+
+  function statusInfo(w: Withdrawal) {
+    if (w.status === "envoye" || w.current_step >= 3) {
+      return { label: t("transfersPage.labelValidated"), icon: CheckCircle2, cls: "bg-success/15 text-success", isProcessing: false };
+    }
+    if (w.status === "rejete") {
+      return { label: t("transfersPage.labelRejected"), icon: XCircle, cls: "bg-destructive/15 text-destructive", isProcessing: false };
+    }
+    const targets = [63, 88, 100];
+    const target = targets[w.current_step] ?? 100;
+    if (w.progress >= target && w.current_step < 3) {
+      return { label: t("transfersPage.labelCompliance"), icon: Lock, cls: "bg-warning/15 text-warning", isProcessing: false };
+    }
+    return { label: t("transfersPage.labelProcessing"), icon: Loader2, cls: "bg-info/15 text-info", isProcessing: true };
+  }
 
   useEffect(() => {
     if (!user) return;
@@ -97,27 +97,40 @@ function TransfersIndex() {
   }
 
   if (authLoading || !user) {
-    return <div className="flex h-96 items-center justify-center text-muted-foreground">{t("common.loading")}</div>;
+    return (
+      <div className="flex h-96 items-center justify-center text-muted-foreground">{t("transfersPage.loading")}</div>
+    );
   }
 
   const filtered = list.filter((w) => {
-    const phase = deriveTransferPhase({ status: w.status, progress: w.progress ?? 0, currentStep: w.current_step ?? 0 });
+    const targets = [63, 88, 100];
+    const tgt = targets[w.current_step] ?? 100;
+    const blocked = w.progress >= tgt && w.current_step < 3 && w.status === "en_traitement";
     if (filter === "all") return true;
-    if (filter === "done") return phase === "final";
-    if (filter === "blocked") return phase === "blocked";
-    if (filter === "active") return phase === "animating";
+    if (filter === "done") return w.status === "envoye" || w.current_step >= 3;
+    if (filter === "blocked") return blocked;
+    if (filter === "active") return w.status === "en_traitement" && w.current_step < 3 && !blocked;
     return true;
   });
+
+  const filters: Array<{ k: typeof filter; l: string }> = [
+    { k: "all", l: t("transfersPage.filterAll") },
+    { k: "active", l: t("transfersPage.filterActive") },
+    { k: "blocked", l: t("transfersPage.filterBlocked") },
+    { k: "done", l: t("transfersPage.filterDone") },
+  ];
 
   return (
     <div className="container mx-auto max-w-5xl space-y-6 px-4 pb-28 pt-8 sm:px-6 lg:px-8 lg:pb-10">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm text-muted-foreground">{t("transfersPage.eyebrow")}</p>
+          <p className="text-sm text-muted-foreground">{t("transfersPage.bankingSpace")}</p>
           <h1 className="mt-0.5 font-serif text-3xl font-medium tracking-tight md:text-4xl">
             {t("transfersPage.title")}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">{t("transfersPage.subtitle")}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {t("transfersPage.subtitle")}
+          </p>
         </div>
         <Button asChild className="shadow-glow">
           <Link to="/dashboard">
@@ -127,15 +140,10 @@ function TransfersIndex() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {[
-          { k: "all", l: t("transfersPage.filters.all") },
-          { k: "active", l: t("transfersPage.filters.active") },
-          { k: "blocked", l: t("transfersPage.filters.blocked") },
-          { k: "done", l: t("transfersPage.filters.done") },
-        ].map((f) => (
+        {filters.map((f) => (
           <button
             key={f.k}
-            onClick={() => setFilter(f.k as typeof filter)}
+            onClick={() => setFilter(f.k)}
             className={`rounded-full border px-3 py-1.5 text-xs font-medium transition ${
               filter === f.k
                 ? "border-primary bg-primary text-primary-foreground"
@@ -149,7 +157,7 @@ function TransfersIndex() {
 
       {loading ? (
         <Card>
-          <CardContent className="p-12 text-center text-muted-foreground">{t("common.loading")}</CardContent>
+          <CardContent className="p-12 text-center text-muted-foreground">{t("transfersPage.loading")}</CardContent>
         </Card>
       ) : filtered.length === 0 ? (
         <Empty className="border bg-card shadow-card">
@@ -157,51 +165,53 @@ function TransfersIndex() {
             <EmptyMedia variant="icon" className="bg-accent/10 text-accent">
               <Wallet className="h-6 w-6" />
             </EmptyMedia>
-            <EmptyTitle>{t("transfersPage.emptyTitle")}</EmptyTitle>
-            <EmptyDescription>{t("transfersPage.emptyDesc")}</EmptyDescription>
+            <EmptyTitle>{t("transfersPage.empty")}</EmptyTitle>
+            <EmptyDescription>
+              {t("transfersPage.emptyDesc")}
+            </EmptyDescription>
           </EmptyHeader>
         </Empty>
       ) : (
         <div className="space-y-3">
           {filtered.map((w) => {
-            const phase = deriveTransferPhase({ status: w.status, progress: w.progress ?? 0, currentStep: w.current_step ?? 0 });
-            const s = statusInfo(phase, t);
+            const s = statusInfo(w);
             const Icon = s.icon;
-            const barProgress = phase === "rejected" ? 0 : phase === "final" ? 100 : Math.max(0, Math.min(100, w.progress || 0));
             return (
               <Card
                 key={w.id}
                 className="cursor-pointer transition hover:border-accent/40 hover:shadow-elevated"
-                onClick={() => navigate({ to: "/transfers/$transferId", params: { transferId: w.id } })}
+                onClick={() =>
+                  navigate({ to: "/transfers/$transferId", params: { transferId: w.id } })
+                }
               >
                 <CardContent className="p-5">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-xl font-semibold tabular-nums">
                           {formatCurrency(Number(w.amount))}
                         </span>
                         <Badge className={`${s.cls} border-0 gap-1`}>
-                          <Icon className={`h-3 w-3 ${phase === "animating" ? "animate-spin" : ""}`} />
+                          <Icon className={`h-3 w-3 ${s.isProcessing ? "animate-spin" : ""}`} />
                           {s.label}
                         </Badge>
                       </div>
                       <p className="mt-1 truncate text-sm">
-                        <span className="text-muted-foreground">{t("transfersPage.beneficiary")} </span>
+                        <span className="text-muted-foreground">{t("transfersPage.beneficiaryLabel")} </span>
                         <span className="font-medium">{w.beneficiary}</span>
                       </p>
                       <p className="mt-0.5 truncate text-xs text-muted-foreground">
                         {w.bank_name} · {w.iban}
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {t("transfersPage.issuedAt", { date: formatDateTime(w.created_at) })}
-                        {w.reference ? ` · ${t("transfersPage.reference", { reference: w.reference })}` : ""}
+                        {t("transfersPage.issuedOn", { date: formatDateTime(w.created_at) })}
+                        {w.reference ? t("transfersPage.refSuffix", { ref: w.reference }) : ""}
                       </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
                       <ArrowUpRight className="h-5 w-5 text-muted-foreground" />
                       <Button variant="outline" size="sm">
-                        {t("common.details")} <ArrowRight className="ml-1.5 h-3 w-3" />
+                        {t("transfersPage.detailsBtn")} <ArrowRight className="ml-1.5 h-3 w-3" />
                       </Button>
                     </div>
                   </div>
@@ -209,7 +219,7 @@ function TransfersIndex() {
                   <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-secondary">
                     <div
                       className="h-full bg-gradient-accent transition-all duration-500"
-                      style={{ width: `${barProgress}%` }}
+                      style={{ width: `${Math.max(2, Math.min(100, w.progress || 0))}%` }}
                     />
                   </div>
                 </CardContent>
