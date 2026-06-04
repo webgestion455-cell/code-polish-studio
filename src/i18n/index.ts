@@ -36,7 +36,7 @@ if (!i18n.isInitialized) {
         bg: { translation: bg },
         sk: { translation: sk },
       },
-      lng: "fr",
+      lng: undefined,
       fallbackLng: "fr",
       // Restreint strictement aux langues supportées (sinon -> fallbackLng)
       supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
@@ -46,8 +46,14 @@ if (!i18n.isInitialized) {
       interpolation: { escapeValue: false },
       react: { useSuspense: false },
       detection: {
-        order: ["htmlTag"],
-        caches: [],
+        order: [
+          "localStorage",
+          "navigator",
+          "htmlTag",
+          "path",
+          "subdomain",
+        ],
+        caches: ["localStorage", "cookie"],
         lookupLocalStorage: "hsbc.lang",
       },
     });
