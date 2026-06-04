@@ -18,7 +18,7 @@ export function MobileBottomNav() {
         { to: "/transfers" as const, label: "Virements", icon: ArrowLeftRight },
         { to: "/loans/new" as const, label: "Demande", icon: FilePlus2 },
         { to: "/contact" as const, label: "Contact", icon: Mail },
-        { to: "/settings" as const, label: "Plus", icon: SettingsIcon },
+        { to: "/settings" as const, label: "Paramètres", icon: SettingsIcon },
       ];
 
   return (
