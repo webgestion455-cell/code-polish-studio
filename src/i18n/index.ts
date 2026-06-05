@@ -6,6 +6,8 @@ import fr from "./locales/fr.json";
 import en from "./locales/en.json";
 import de from "./locales/de.json";
 import es from "./locales/es.json";
+import it from "./locales/it.json";
+import nl from "./locales/nl.json";
 import sl from "./locales/sl.json";
 import bg from "./locales/bg.json";
 import sk from "./locales/sk.json";
@@ -15,12 +17,22 @@ export const SUPPORTED_LANGUAGES = [
   { code: "en", label: "English", flag: "🇬🇧" },
   { code: "de", label: "Deutsch", flag: "🇩🇪" },
   { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "it", label: "Italiano", flag: "🇮🇹" },
+  { code: "nl", label: "Nederlands", flag: "🇳🇱" },
   { code: "sl", label: "Slovenščina", flag: "🇸🇮" },
   { code: "bg", label: "Български", flag: "🇧🇬" },
   { code: "sk", label: "Slovenčina", flag: "🇸🇰" },
 ] as const;
 
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number]["code"];
+
+const SUPPORTED_CODES = SUPPORTED_LANGUAGES.map((l) => l.code) as readonly string[];
+
+function pickSupported(raw: string | undefined | null): string | null {
+  if (!raw) return null;
+  const short = raw.toLowerCase().split(/[-_]/)[0];
+  return SUPPORTED_CODES.includes(short) ? short : null;
+}
 
 if (!i18n.isInitialized) {
   void i18n
@@ -32,31 +44,54 @@ if (!i18n.isInitialized) {
         en: { translation: en },
         de: { translation: de },
         es: { translation: es },
+        it: { translation: it },
+        nl: { translation: nl },
         sl: { translation: sl },
         bg: { translation: bg },
         sk: { translation: sk },
       },
       lng: undefined,
       fallbackLng: "fr",
-      // Restreint strictement aux langues supportées (sinon -> fallbackLng)
-      supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
-      nonExplicitSupportedLngs: true, // "fr-FR" -> "fr", "en-US" -> "en"
+      supportedLngs: SUPPORTED_CODES as string[],
+      nonExplicitSupportedLngs: true,
       load: "languageOnly",
       initAsync: false,
       interpolation: { escapeValue: false },
       react: { useSuspense: false },
       detection: {
-        order: [
-          "localStorage",
-          "navigator",
-          "htmlTag",
-          "path",
-          "subdomain",
-        ],
+        order: ["localStorage", "navigator", "htmlTag", "path", "subdomain"],
         caches: ["localStorage", "cookie"],
         lookupLocalStorage: "hsbc.lang",
       },
     });
+
+  // Keep <html lang> in sync + react automatically when the OS/browser changes language
+  if (typeof window !== "undefined") {
+    i18n.on("languageChanged", (lng) => {
+      const short = lng.split("-")[0];
+      try {
+        document.documentElement.lang = short;
+      } catch {
+        /* ignore */
+      }
+    });
+
+    const handleSystemChange = () => {
+      // Only auto-follow system language if the user never explicitly picked one
+      try {
+        const stored = window.localStorage.getItem("hsbc.lang");
+        if (stored) return;
+      } catch {
+        /* ignore */
+      }
+      const next = pickSupported(window.navigator.language);
+      if (next && next !== i18n.resolvedLanguage) {
+        void i18n.changeLanguage(next);
+      }
+    };
+
+    window.addEventListener("languagechange", handleSystemChange);
+  }
 }
 
 export default i18n;

@@ -107,7 +107,7 @@ export function TransferStepDialog({
             progress={snap.progress}
             currentStep={snap.current_step}
             stepStartedAt={snap.step_started_at}
-            status={snap.status}
+            status={snap.status ?? undefined}
             onChanged={() => {
               void refresh();
               onAdvanced?.();

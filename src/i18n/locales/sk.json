@@ -36,7 +36,12 @@
     "new": "Nové",
     "saving": "Saving…",
     "sending": "Sending…",
-    "updating": "Updating…"
+    "updating": "Updating…",
+    "loadError": "Chyba pri načítaní",
+    "sessionExpired": "Relácia vypršala z dôvodu nečinnosti",
+    "notFound": "Stránka sa nenašla",
+    "notFoundDesc": "Hľadaná stránka neexistuje alebo bola presunutá.",
+    "backHome": "Späť na domov"
   },
   "header": {
     "myLoans": "Moje úvery",
@@ -71,15 +76,45 @@
     "hasAccount": "Už máte účet?",
     "createAccount": "Vytvoriť účet",
     "loginSuccess": "Úspešné prihlásenie",
-    "signupSuccess": "Účet vytvorený · skontrolujte e-mail"
+    "signupSuccess": "Účet vytvorený · skontrolujte e-mail",
+    "backHome": "Späť na domov",
+    "brandBadge": "Bezpečná digitálna banka",
+    "creating": "Vytváranie účtu…",
+    "decision": "Rozhodnutie do 24 pracovných hodín",
+    "google": "Pokračovať s Google",
+    "googleError": "Prihlásenie cez Google zlyhalo",
+    "googleLoading": "Prihlasovanie cez Google…",
+    "minPasswordHint": "Minimálne 8 znakov.",
+    "mobileHint": "Prihláste sa alebo si vytvorte účet",
+    "rgpd": "V súlade s GDPR",
+    "signingIn": "Prihlasovanie…",
+    "terms": "Pokračovaním súhlasíte s našimi Podmienkami a Zásadami ochrany osobných údajov.",
+    "tls": "Šifrovanie TLS 1.3",
+    "welcomeDesc": "Bezpečný prístup k vašim úverom, prevodom a prémiovým službám.",
+    "welcomeTitle": "Vitajte v",
+    "nameShort": "Meno je príliš krátke",
+    "phoneInvalid": "Neplatné telefónne číslo",
+    "emailInvalid": "Neplatný e-mail",
+    "passwordMin": "Heslo musí mať aspoň 8 znakov",
+    "passwordRequired": "Heslo je povinné",
+    "invalidCredentials": "Neplatné prihlasovacie údaje",
+    "connectedToast": "Úspešne prihlásený",
+    "emailAlreadyUsed": "E-mail sa už používa",
+    "accountCreated": "Účet úspešne vytvorený",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Heslo",
+    "fullNameLabel": "Celé meno",
+    "phoneLabel": "Telefón",
+    "tabSignin": "Prihlásenie",
+    "tabSignup": "Vytvoriť účet"
   },
   "dashboard": {
     "title": "Môj prehľad",
     "welcome": "Dobrý deň",
     "balance": "Disponibilný zostatok",
-    "showBalance": "Zobraziť",
-    "hideBalance": "Skryť",
-    "newLoan": "Nová žiadosť",
+    "showBalance": "Zobraziť zostatok",
+    "hideBalance": "Skryť zostatok",
+    "newLoan": "Nový úver",
     "withdraw": "Vybrať",
     "transfer": "Vykonať prevod",
     "myLoans": "Moje úvery",
@@ -95,27 +130,37 @@
     "loadError": "Loading error",
     "welcomeNamed": "Welcome, {{name}}",
     "welcomeAnon": "Welcome",
-    "totalAvailable": "Total available balance",
+    "totalAvailable": "Celkový dostupný zostatok",
     "fundedOutOf": "out of {{amount}} funded",
-    "withdrawnAmount": "{{amount}} withdrawn",
-    "newShort": "New",
-    "activeLoans": "Active loans",
-    "totalFunded": "Total funded",
+    "withdrawnAmount": "{{amount}} vybratých",
+    "newShort": "+ Nový",
+    "activeLoans": "Aktívne úvery",
+    "totalFunded": "Celkom financované",
     "transfers": "Transfers",
-    "loading": "Loading…",
-    "firstLoanTitle": "Start your first application",
-    "firstLoanDesc": "Finance your projects in minutes: car, home improvement, cash flow or any personal need.",
+    "loading": "Načítavanie…",
+    "firstLoanTitle": "Začnite prvú žiadosť",
+    "firstLoanDesc": "Financujte projekty za pár minút: auto, rekonštrukcia, likvidita a iné.",
     "apply": "Apply now",
     "loanDurationCreated": "{{months}} months · Requested on {{date}}",
-    "disbursedRemaining": "Disbursed: {{disbursed}} · Remaining: {{remaining}}",
-    "recentActivity": "Recent activity",
-    "viewAll": "View all",
+    "disbursedRemaining": "Vyplatené: {{disbursed}} · Zostatok: {{remaining}}",
+    "recentActivity": "Posledná aktivita",
+    "viewAll": "Zobraziť všetky",
     "noRecentTransfers": "No transfers yet",
     "status": {
-      "en_traitement": "Processing",
-      "envoye": "Sent",
-      "rejete": "Rejected"
-    }
+      "en_traitement": "Spracováva sa",
+      "envoye": "Odoslané",
+      "rejete": "Zamietnuté"
+    },
+    "welcomeShort": "Vitajte",
+    "myDashboard": "Môj prehľad",
+    "newRequest": "Nová žiadosť",
+    "fundedOf": "z {{amount}} financovaných",
+    "makeTransfer": "Vykonať prevod",
+    "transfersKpi": "Prevody",
+    "applyCta": "Podať žiadosť",
+    "monthsSince": "{{months}} mesiacov · Žiadosť z {{date}}",
+    "details": "Detaily",
+    "noTransfersYet": "Zatiaľ žiadne prevody"
   },
   "loanForm": {
     "title": "Nová žiadosť o úver",
@@ -137,7 +182,19 @@
     "doc1": "Platný doklad totožnosti (obe strany)",
     "doc2": "Aktuálne potvrdenie o adrese",
     "doc3": "Posledné tri výplatné pásky alebo potvrdenie o príjme",
-    "doc4": "Posledný bankový výpis alebo IBAN na meno žiadateľa"
+    "doc4": "Posledný bankový výpis alebo IBAN na meno žiadateľa",
+    "back": "Späť",
+    "newRequestShort": "Nová žiadosť",
+    "newRequestDesc": "Podajte žiadosť o úver",
+    "amountMin": "Minimálne 500 €",
+    "amountMax": "Maximálne 100 000 €",
+    "fileTooLarge": "{{name}} presahuje 5 MB",
+    "createError": "Chyba pri vytváraní žiadosti",
+    "uploadFailed": "Nahrávanie zlyhalo: {{name}}",
+    "adminNotifTitle": "Nová žiadosť o úver",
+    "adminNotifMsg": "{{name}} žiada {{amount}} € na {{months}} mesiacov",
+    "successToast": "Vaša žiadosť bola úspešne odoslaná",
+    "loading": "Načítavanie…"
   },
   "transfer": {
     "title": "Vykonať prevod",
@@ -209,7 +266,12 @@
     "emailInvalid": "Invalid email",
     "messageTooShort": "Message too short (10 characters minimum)",
     "defaultNamePlaceholder": "John Smith",
-    "defaultEmailPlaceholder": "you@example.com"
+    "defaultEmailPlaceholder": "you@example.com",
+    "back": "Späť",
+    "phoneTitle": "Zákaznícka podpora",
+    "address": "103 avenue des Champs-Élysées",
+    "addressCity": "75008 Paríž, Francúzsko",
+    "sending": "Odosielanie…"
   },
   "admin": {
     "title": "Admin prehľad",
@@ -288,6 +350,28 @@
       "genAndSend": "Vygenerovať a odoslať",
       "regenAndSend": "Znova vygenerovať a odoslať",
       "savePlan": "Uložiť plán"
+    },
+    "transfer": {
+      "title": "Vykonať klientský prevod",
+      "subtitle": "Vytvorte okamžitý alebo štandardný prevod v mene klienta.",
+      "kind": "Typ prevodu",
+      "instant": "Okamžitý",
+      "instantHint": "Pripísané okamžite 24/7.",
+      "classic": "Štandardný",
+      "classicHint": "Pripísané do 1 pracovného dňa.",
+      "client": "Klient",
+      "selectClient": "Vybrať klienta",
+      "loan": "Zdrojový úver",
+      "selectLoan": "Vybrať úver",
+      "amount": "Suma (€)",
+      "beneficiary": "Príjemca",
+      "bankName": "Banka príjemcu",
+      "iban": "IBAN",
+      "bic": "BIC / SWIFT",
+      "reference": "Referencia",
+      "submit": "Vykonať prevod",
+      "success": "Prevod úspešne vykonaný",
+      "error": "Prevod sa nepodarilo vykonať"
     }
   },
   "blocked": {
@@ -363,7 +447,11 @@
     "notifApprovedTitle": "Potvrdenka schválená — krok {{p}}%",
     "notifApprovedMsg": "Vaša platba bola overená. Kód bude odoslaný.",
     "notifRejectedTitle": "Potvrdenka zamietnutá — krok {{p}}%",
-    "notifRejectedMsg": "Pošlite prosím platnú potvrdenku."
+    "notifRejectedMsg": "Pošlite prosím platnú potvrdenku.",
+    "holder": "Držiteľ účtu",
+    "iban": "IBAN",
+    "bic": "BIC / SWIFT",
+    "description": "Účel / Popis"
   },
   "transferSteps": {
     "title": "Bezpečný prevod",
@@ -394,7 +482,8 @@
     "advanced": "Krok {{p}}% odblokovaný",
     "successFinal": "Prevod úspešne dokončený",
     "notifAdminTitle": "Prijatá potvrdenka — krok {{p}}%",
-    "notifAdminMsg": "Klient nahral potvrdenku na overenie."
+    "notifAdminMsg": "Klient nahral potvrdenku na overenie.",
+    "stepNotReached": "Etapa ešte nedosiahnutá"
   },
   "transfersPage": {
     "metaTitle": "Moje prevody — HSBC BANK",
@@ -702,7 +791,10 @@
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordMismatch": "Passwords do not match",
     "currentPasswordWrong": "Current password is incorrect",
-    "passwordUpdated": "Password updated"
+    "passwordUpdated": "Password updated",
+    "back": "Späť",
+    "accessAdmin": "Otvoriť admin panel",
+    "goBack": "Späť"
   },
   "loanDetail": {
     "metaTitle": "Detail pôžičky — HSBC BANK",
@@ -766,5 +858,11 @@
       "en_traitement": "Processing",
       "fonds_disponibles": "Funds available"
     }
+  },
+  "nav": {
+    "home": "Domov",
+    "transfers": "Prevody",
+    "request": "Žiadosť",
+    "primary": "Hlavná navigácia"
   }
 }

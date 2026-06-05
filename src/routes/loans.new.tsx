@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,55 +10,53 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ArrowLeft, Upload, X, FileCheck2, ShieldCheck } from "lucide-react";
+import i18n from "@/i18n";
 
 export const Route = createFileRoute("/loans/new")({
   component: NewLoan,
-  head: () => ({ meta: [{ title: "Nouvelle demande — HSBC BANK" }] }),
-});
-
-const schema = z.object({
-  fullName: z.string().trim().min(2).max(100),
-  email: z.string().trim().email().max(255),
-  amount: z.number().min(500, "Minimum 500 €").max(100000, "Maximum 100 000 €"),
-  duration_months: z.number().int().min(3).max(120),
-  monthly_income: z.number().min(0).max(1000000),
-  purpose: z.string().trim().max(500).optional(),
+  head: () => ({ meta: [{ title: i18n.t("loanForm.title") + " — HSBC BANK" }] }),
 });
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 function NewLoan() {
   const { user, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [files, setFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [profileName, setProfileName] = useState("");
+
+  const schema = z.object({
+    fullName: z.string().trim().min(2).max(100),
+    email: z.string().trim().email().max(255),
+    amount: z.number().min(500, t("loanForm.amountMin")).max(100000, t("loanForm.amountMax")),
+    duration_months: z.number().int().min(3).max(120),
+    monthly_income: z.number().min(0).max(1000000),
+    purpose: z.string().trim().max(500).optional(),
+  });
 
   useEffect(() => {
     if (!authLoading && !user) navigate({ to: "/auth" });
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
-  if (!user) return;
-
-  void (async () => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("full_name")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (data?.full_name) {
-      setProfileName(data.full_name);
-    }
-  })();
-}, [user]);
+    if (!user) return;
+    void (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (data?.full_name) setProfileName(data.full_name);
+    })();
+  }, [user]);
 
   function onFilesChange(e: React.ChangeEvent<HTMLInputElement>) {
     const list = Array.from(e.target.files ?? []);
     const valid = list.filter((f) => {
       if (f.size > MAX_FILE_SIZE) {
-        toast.error(`${f.name} dépasse 5 Mo`);
+        toast.error(t("loanForm.fileTooLarge", { name: f.name }));
         return false;
       }
       return true;
@@ -89,7 +88,6 @@ function NewLoan() {
 
     setSubmitting(true);
 
-    // 1. Insert loan
     const { data: loan, error: loanErr } = await supabase
       .from("loans")
       .insert({
@@ -106,17 +104,16 @@ function NewLoan() {
 
     if (loanErr || !loan) {
       setSubmitting(false);
-      toast.error("Erreur lors de la création de la demande");
+      toast.error(t("loanForm.createError"));
       return;
     }
 
-    // 2. Upload documents
     for (const file of files) {
       const safe = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
       const path = `${user.id}/${loan.id}/${Date.now()}-${safe}`;
       const { error: upErr } = await supabase.storage.from("loan-documents").upload(path, file);
       if (upErr) {
-        toast.error(`Upload échoué: ${file.name}`);
+        toast.error(t("loanForm.uploadFailed", { name: file.name }));
         continue;
       }
       await supabase.from("loan_documents").insert({
@@ -130,33 +127,35 @@ function NewLoan() {
 
     const { notifyAllAdmins } = await import("@/lib/notifications");
     await notifyAllAdmins({
-      title: "Nouvelle demande de prêt",
-      message: `${parsed.data.fullName} demande ${parsed.data.amount} € sur ${parsed.data.duration_months} mois`,
+      title: t("loanForm.adminNotifTitle"),
+      message: t("loanForm.adminNotifMsg", { name: parsed.data.fullName, amount: parsed.data.amount, months: parsed.data.duration_months }),
       link: "/admin",
       category: "info",
     });
 
     setSubmitting(false);
-    toast.success("Votre demande a été envoyée avec succès");
+    toast.success(t("loanForm.successToast"));
     navigate({ to: "/loans/$loanId", params: { loanId: loan.id } });
   }
 
-  if (authLoading || !user) return <div className="flex items-center justify-center h-96 text-muted-foreground">Chargement...</div>;
+  if (authLoading || !user) return <div className="flex items-center justify-center h-96 text-muted-foreground">{t("loanForm.loading")}</div>;
+
+  const docs = [t("loanForm.doc1"), t("loanForm.doc2"), t("loanForm.doc3"), t("loanForm.doc4")];
 
   return (
     <div className="mx-auto max-w-3xl px-4 pb-28 pt-8 sm:px-6 lg:px-8 lg:pb-10">
       <Button asChild variant="ghost" size="sm" className="mb-6 hidden sm:inline-flex">
-        <Link to="/dashboard"><ArrowLeft className="mr-1.5 h-4 w-4" /> Retour</Link>
+        <Link to="/dashboard"><ArrowLeft className="mr-1.5 h-4 w-4" /> {t("loanForm.back")}</Link>
       </Button>
 
       <div className="mb-6 sm:hidden">
-       <h1 className="text-2xl font-bold tracking-tight">Nouvelle demande</h1>
-       <p className="mt-1 text-sm text-muted-foreground">Effectuez votre demande de prêt</p>
+       <h1 className="text-2xl font-bold tracking-tight">{t("loanForm.newRequestShort")}</h1>
+       <p className="mt-1 text-sm text-muted-foreground">{t("loanForm.newRequestDesc")}</p>
       </div>
 
       <div className="hidden sm:block">
-       <h1 className="text-3xl font-bold">Nouvelle demande de prêt</h1>
-       <p className="mt-2 text-muted-foreground">Remplissez le formulaire et joignez vos justificatifs.</p>
+       <h1 className="text-3xl font-bold">{t("loanForm.title")}</h1>
+       <p className="mt-2 text-muted-foreground">{t("loanForm.subtitle")}</p>
       </div>
 
       <section className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-card">
@@ -165,17 +164,12 @@ function NewLoan() {
             <FileCheck2 className="h-5 w-5" />
           </div>
           <div>
-            <h2 className="font-semibold">Pièces requises pour l'étude</h2>
-            <p className="mt-1 text-sm text-muted-foreground">Déposez des fichiers lisibles au format PDF, JPG ou PNG afin d'accélérer la validation.</p>
+            <h2 className="font-semibold">{t("loanForm.requiredDocs")}</h2>
+            <p className="mt-1 text-sm text-muted-foreground">{t("loanForm.requiredDocsHint")}</p>
           </div>
         </div>
         <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-          {[
-            "Pièce d'identité valide recto-verso",
-            "Justificatif de domicile récent",
-            "Trois derniers bulletins de salaire ou justificatifs de revenus",
-            "Dernier relevé bancaire ou RIB au nom du demandeur",
-          ].map((item) => (
+          {docs.map((item) => (
             <div key={item} className="flex gap-2 rounded-xl bg-secondary px-3 py-2">
               <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-success" />
               <span>{item}</span>
@@ -187,41 +181,41 @@ function NewLoan() {
       <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-card">
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="fullName">Nom complet</Label>
+            <Label htmlFor="fullName">{t("loanForm.fullName")}</Label>
             <Input id="fullName" name="fullName" className="h-11" required defaultValue={profileName} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("loanForm.email")}</Label>
             <Input id="email" name="email" type="email" className="h-11" required defaultValue={user.email ?? ""} />
           </div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="amount">Montant souhaité (€)</Label>
+            <Label htmlFor="amount">{t("loanForm.amount")}</Label>
             <Input id="amount" name="amount" type="number" className="h-11" min={500} max={100000} step={100} required placeholder="5000" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="duration_months">Durée (mois)</Label>
+            <Label htmlFor="duration_months">{t("loanForm.duration")}</Label>
             <Input id="duration_months" name="duration_months" type="number" className="h-11" min={3} max={120} required placeholder="24" />
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="monthly_income">Revenus mensuels nets (€)</Label>
+          <Label htmlFor="monthly_income">{t("loanForm.monthlyIncome")}</Label>
           <Input id="monthly_income" name="monthly_income" type="number" className="h-11" min={0} step={50} required placeholder="2500" />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="purpose">Objet du prêt (optionnel)</Label>
-          <Textarea id="purpose" name="purpose" rows={4} className="min-h-[110px]" maxLength={500} placeholder="Travaux, voiture, projet personnel..." />
+          <Label htmlFor="purpose">{t("loanForm.purpose")}</Label>
+          <Textarea id="purpose" name="purpose" rows={4} className="min-h-[110px]" maxLength={500} placeholder={t("loanForm.purposePlaceholder")} />
         </div>
 
         <div className="space-y-2">
-          <Label>Justificatifs requis (max 5, 5 Mo chacun)</Label>
+          <Label>{t("loanForm.documents")}</Label>
           <label className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-input/30 px-4 py-7 text-sm text-muted-foreground cursor-pointer hover:bg-input/50 transition">
             <Upload className="h-4 w-4" />
-            <span>Cliquez pour ajouter (PDF, JPG, PNG)</span>
+            <span>{t("loanForm.uploadHint")}</span>
             <input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple onChange={onFilesChange} className="hidden" />
           </label>
           {files.length > 0 && (
@@ -239,7 +233,7 @@ function NewLoan() {
         </div>
 
         <Button type="submit" className="h-11 w-full shadow-glow" size="lg" disabled={submitting}>
-          {submitting ? "Envoi..." : "Soumettre la demande"}
+          {submitting ? t("loanForm.submitting") : t("loanForm.submit")}
         </Button>
       </form>
     </div>

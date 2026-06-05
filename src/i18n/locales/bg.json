@@ -36,7 +36,12 @@
     "new": "Ново",
     "saving": "Saving…",
     "sending": "Sending…",
-    "updating": "Updating…"
+    "updating": "Updating…",
+    "loadError": "Грешка при зареждане",
+    "sessionExpired": "Сесията изтече поради неактивност",
+    "notFound": "Страницата не е намерена",
+    "notFoundDesc": "Търсената страница не съществува или е преместена.",
+    "backHome": "Към началото"
   },
   "header": {
     "myLoans": "Моите кредити",
@@ -71,16 +76,46 @@
     "hasAccount": "Вече имате акаунт?",
     "createAccount": "Създай акаунт",
     "loginSuccess": "Успешен вход",
-    "signupSuccess": "Акаунтът е създаден · проверете имейла"
+    "signupSuccess": "Акаунтът е създаден · проверете имейла",
+    "backHome": "Назад към началото",
+    "brandBadge": "Сигурна дигитална банка",
+    "creating": "Създаване на акаунт…",
+    "decision": "Решение в рамките на 24 работни часа",
+    "google": "Продължи с Google",
+    "googleError": "Влизането с Google не успя",
+    "googleLoading": "Влизане с Google…",
+    "minPasswordHint": "Минимум 8 символа.",
+    "mobileHint": "Влезте или създайте своя акаунт",
+    "rgpd": "Съвместимост с GDPR",
+    "signingIn": "Влизане…",
+    "terms": "Продължавайки, приемате нашите Условия и Политика за поверителност.",
+    "tls": "Криптиране TLS 1.3",
+    "welcomeDesc": "Сигурен достъп до вашите кредити, преводи и премиум услуги.",
+    "welcomeTitle": "Добре дошли в",
+    "nameShort": "Името е твърде кратко",
+    "phoneInvalid": "Невалиден телефонен номер",
+    "emailInvalid": "Невалиден имейл",
+    "passwordMin": "Паролата трябва да е поне 8 символа",
+    "passwordRequired": "Изисква се парола",
+    "invalidCredentials": "Невалидни данни за вход",
+    "connectedToast": "Успешно влизане",
+    "emailAlreadyUsed": "Имейлът вече се използва",
+    "accountCreated": "Акаунтът е създаден успешно",
+    "emailLabel": "Имейл",
+    "passwordLabel": "Парола",
+    "fullNameLabel": "Пълно име",
+    "phoneLabel": "Телефон",
+    "tabSignin": "Вход",
+    "tabSignup": "Създай акаунт"
   },
   "dashboard": {
     "title": "Моето табло",
     "welcome": "Здравейте",
     "balance": "Налично салдо",
-    "showBalance": "Покажи",
-    "hideBalance": "Скрий",
-    "newLoan": "Нова заявка",
-    "withdraw": "Тегли",
+    "showBalance": "Покажи баланса",
+    "hideBalance": "Скрий баланса",
+    "newLoan": "Нов кредит",
+    "withdraw": "Изтегли",
     "transfer": "Извърши превод",
     "myLoans": "Моите кредити",
     "transferHistory": "История на преводите",
@@ -89,33 +124,43 @@
     "noTransfers": "Няма преводи",
     "viewLoan": "Виж досие",
     "needHelp": "Нуждаете се от помощ?",
-    "contactSupport": "Свържете се с поддръжка",
+    "contactSupport": "Свържете се с поддръжката",
     "metaTitle": "Моето табло — HSBC BANK",
     "sessionExpired": "Session expired due to inactivity",
     "loadError": "Loading error",
     "welcomeNamed": "Welcome, {{name}}",
     "welcomeAnon": "Welcome",
-    "totalAvailable": "Total available balance",
+    "totalAvailable": "Общ наличен баланс",
     "fundedOutOf": "out of {{amount}} funded",
-    "withdrawnAmount": "{{amount}} withdrawn",
-    "newShort": "New",
-    "activeLoans": "Active loans",
-    "totalFunded": "Total funded",
+    "withdrawnAmount": "{{amount}} изтеглени",
+    "newShort": "+ Нов",
+    "activeLoans": "Активни кредити",
+    "totalFunded": "Общо финансирани",
     "transfers": "Transfers",
-    "loading": "Loading…",
-    "firstLoanTitle": "Start your first application",
-    "firstLoanDesc": "Finance your projects in minutes: car, home improvement, cash flow or any personal need.",
+    "loading": "Зареждане…",
+    "firstLoanTitle": "Започнете първата си заявка",
+    "firstLoanDesc": "Финансирайте проектите си за минути: кола, ремонт, ликвидност и др.",
     "apply": "Apply now",
     "loanDurationCreated": "{{months}} months · Requested on {{date}}",
-    "disbursedRemaining": "Disbursed: {{disbursed}} · Remaining: {{remaining}}",
-    "recentActivity": "Recent activity",
-    "viewAll": "View all",
+    "disbursedRemaining": "Изплатено: {{disbursed}} · Остатък: {{remaining}}",
+    "recentActivity": "Скорошна активност",
+    "viewAll": "Виж всички",
     "noRecentTransfers": "No transfers yet",
     "status": {
-      "en_traitement": "Processing",
-      "envoye": "Sent",
-      "rejete": "Rejected"
-    }
+      "en_traitement": "В обработка",
+      "envoye": "Изпратен",
+      "rejete": "Отказан"
+    },
+    "welcomeShort": "Добре дошли",
+    "myDashboard": "Моето табло",
+    "newRequest": "Нова заявка",
+    "fundedOf": "от {{amount}} финансирани",
+    "makeTransfer": "Направи превод",
+    "transfersKpi": "Преводи",
+    "applyCta": "Кандидатствай",
+    "monthsSince": "{{months}} месеца · Заявка от {{date}}",
+    "details": "Детайли",
+    "noTransfersYet": "Все още няма преводи"
   },
   "loanForm": {
     "title": "Нова заявка за кредит",
@@ -137,7 +182,19 @@
     "doc1": "Валиден документ за самоличност (двете страни)",
     "doc2": "Актуално доказателство за адрес",
     "doc3": "Последните три фиша или доказателство за доход",
-    "doc4": "Последно банково извлечение или IBAN на името на кандидата"
+    "doc4": "Последно банково извлечение или IBAN на името на кандидата",
+    "back": "Назад",
+    "newRequestShort": "Нова заявка",
+    "newRequestDesc": "Подайте заявка за кредит",
+    "amountMin": "Минимум 500 €",
+    "amountMax": "Максимум 100 000 €",
+    "fileTooLarge": "{{name}} надвишава 5 MB",
+    "createError": "Грешка при създаване на заявката",
+    "uploadFailed": "Качването неуспешно: {{name}}",
+    "adminNotifTitle": "Нова заявка за кредит",
+    "adminNotifMsg": "{{name}} иска {{amount}} € за {{months}} месеца",
+    "successToast": "Заявката е изпратена успешно",
+    "loading": "Зареждане…"
   },
   "transfer": {
     "title": "Извърши превод",
@@ -209,7 +266,12 @@
     "emailInvalid": "Invalid email",
     "messageTooShort": "Message too short (10 characters minimum)",
     "defaultNamePlaceholder": "John Smith",
-    "defaultEmailPlaceholder": "you@example.com"
+    "defaultEmailPlaceholder": "you@example.com",
+    "back": "Назад",
+    "phoneTitle": "Обслужване на клиенти",
+    "address": "103 avenue des Champs-Élysées",
+    "addressCity": "75008 Париж, Франция",
+    "sending": "Изпращане…"
   },
   "admin": {
     "title": "Админ табло",
@@ -288,6 +350,28 @@
       "genAndSend": "Генерирай и изпрати",
       "regenAndSend": "Прегенерирай и изпрати",
       "savePlan": "Запази плана"
+    },
+    "transfer": {
+      "title": "Издаване на клиентски превод",
+      "subtitle": "Създайте незабавен или стандартен банков превод от името на клиент.",
+      "kind": "Тип на превода",
+      "instant": "Незабавен",
+      "instantHint": "Кредитиран веднага 24/7.",
+      "classic": "Стандартен",
+      "classicHint": "Кредитиран до 1 работен ден.",
+      "client": "Клиент",
+      "selectClient": "Изберете клиент",
+      "loan": "Източник на кредит",
+      "selectLoan": "Изберете кредит",
+      "amount": "Сума (€)",
+      "beneficiary": "Получател",
+      "bankName": "Банка на получателя",
+      "iban": "IBAN",
+      "bic": "BIC / SWIFT",
+      "reference": "Референция",
+      "submit": "Издай превод",
+      "success": "Преводът е издаден успешно",
+      "error": "Грешка при издаване на превода"
     }
   },
   "blocked": {
@@ -363,7 +447,11 @@
     "notifApprovedTitle": "Разписка одобрена — стъпка {{p}}%",
     "notifApprovedMsg": "Плащането ви е валидирано. Кодът ще бъде изпратен.",
     "notifRejectedTitle": "Разписка отхвърлена — стъпка {{p}}%",
-    "notifRejectedMsg": "Моля, изпратете валидна разписка."
+    "notifRejectedMsg": "Моля, изпратете валидна разписка.",
+    "holder": "Титуляр на сметката",
+    "iban": "IBAN",
+    "bic": "BIC / SWIFT",
+    "description": "Основание / Описание"
   },
   "transferSteps": {
     "title": "Сигурен превод",
@@ -394,7 +482,8 @@
     "advanced": "Стъпка {{p}}% отключена",
     "successFinal": "Преводът е завършен успешно",
     "notifAdminTitle": "Получена разписка — стъпка {{p}}%",
-    "notifAdminMsg": "Клиент е качил разписка за валидация."
+    "notifAdminMsg": "Клиент е качил разписка за валидация.",
+    "stepNotReached": "Етапът все още не е достигнат"
   },
   "transfersPage": {
     "metaTitle": "Моите преводи — HSBC BANK",
@@ -702,7 +791,10 @@
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordMismatch": "Passwords do not match",
     "currentPasswordWrong": "Current password is incorrect",
-    "passwordUpdated": "Password updated"
+    "passwordUpdated": "Password updated",
+    "back": "Назад",
+    "accessAdmin": "Отвори админ панела",
+    "goBack": "Назад"
   },
   "loanDetail": {
     "metaTitle": "Детайли за кредита — HSBC BANK",
@@ -766,5 +858,11 @@
       "en_traitement": "Processing",
       "fonds_disponibles": "Funds available"
     }
+  },
+  "nav": {
+    "home": "Начало",
+    "transfers": "Преводи",
+    "request": "Заявка",
+    "primary": "Основна навигация"
   }
 }

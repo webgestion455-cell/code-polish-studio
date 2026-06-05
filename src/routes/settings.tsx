@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,14 +8,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { ArrowLeft, KeyRound, User as UserIcon, Mail, Phone, ShieldCheck, Loader2 } from "lucide-react";
+import i18n from "@/i18n";
 
 export const Route = createFileRoute("/settings")({
   component: SettingsPage,
-  head: () => ({ meta: [{ title: "Paramètres — HSBC BANK" }] }),
+  head: () => ({ meta: [{ title: i18n.t("settings.metaTitle") }] }),
 });
 
 function SettingsPage() {
   const { user, role, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -48,7 +51,7 @@ function SettingsPage() {
       .eq("user_id", user.id)
       .maybeSingle();
     if (error) {
-      toast.error("Impossible de charger le profil");
+      toast.error(t("settings.loadProfileError"));
     } else if (data) {
       setFullName(data.full_name ?? "");
       setPhone(data.phone ?? "");
@@ -67,8 +70,8 @@ function SettingsPage() {
       .update({ full_name: fullName.trim(), phone: phone.trim() })
       .eq("user_id", user.id);
     setSavingProfile(false);
-    if (error) toast.error("Erreur de sauvegarde");
-    else toast.success("Profil mis à jour");
+    if (error) toast.error(t("settings.saveError"));
+    else toast.success(t("settings.profileUpdated"));
   }
 
   async function handleChangeEmail(e: React.FormEvent) {
@@ -78,21 +81,20 @@ function SettingsPage() {
     const { error } = await supabase.auth.updateUser({ email: newEmail.trim() });
     setSavingEmail(false);
     if (error) toast.error(error.message);
-    else toast.success("Email mis à jour. Vérifiez votre boîte de réception pour confirmer.");
+    else toast.success(t("settings.emailUpdated"));
   }
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
     if (newPassword.length < 8) {
-      toast.error("Le mot de passe doit contenir au moins 8 caractères");
+      toast.error(t("settings.passwordTooShort"));
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast.error("Les mots de passe ne correspondent pas");
+      toast.error(t("settings.passwordMismatch"));
       return;
     }
     setSavingPassword(true);
-    // Re-vérifier l'identité avec le mot de passe actuel
     if (currentPassword && user?.email) {
       const { error: signInErr } = await supabase.auth.signInWithPassword({
         email: user.email,
@@ -100,7 +102,7 @@ function SettingsPage() {
       });
       if (signInErr) {
         setSavingPassword(false);
-        toast.error("Mot de passe actuel incorrect");
+        toast.error(t("settings.currentPasswordWrong"));
         return;
       }
     }
@@ -108,7 +110,7 @@ function SettingsPage() {
     setSavingPassword(false);
     if (error) toast.error(error.message);
     else {
-      toast.success("Mot de passe mis à jour");
+      toast.success(t("settings.passwordUpdated"));
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -118,7 +120,7 @@ function SettingsPage() {
   if (authLoading || loading) {
     return (
       <div className="flex h-96 items-center justify-center text-muted-foreground">
-        <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Chargement...
+        <Loader2 className="mr-2 h-5 w-5 animate-spin" /> {t("common.loading")}
       </div>
     );
   }
@@ -132,55 +134,51 @@ function SettingsPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Paramètres</h1>
-          <p className="text-sm text-muted-foreground">Gérez vos informations personnelles et votre sécurité</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("settings.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("settings.subtitleDesktop")}</p>
         </div>
       </div>
       <div className="mb-6 sm:hidden">
-        <h1 className="text-2xl font-bold tracking-tight">Paramètres</h1>
-        <p className="text-sm text-muted-foreground">
-                                   Gérez votre compte et votre sécurité
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("settings.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("settings.subtitleMobile")}</p>
       </div>
 
-      {/* Profil */}
       <section className="rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
           <UserIcon className="h-4 w-4 text-muted-foreground" />
-          <h2 className="text-base font-semibold tracking-tight">Profil</h2>
+          <h2 className="text-base font-semibold tracking-tight">{t("settings.profile")}</h2>
         </div>
         <form onSubmit={handleSaveProfile} className="grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <Label htmlFor="fullName">Nom complet</Label>
+            <Label htmlFor="fullName">{t("settings.fullName")}</Label>
             <Input id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} className="mt-1.5 h-11" required />
           </div>
           <div>
             <Label htmlFor="phone">
-              <Phone className="mr-1 inline h-3.5 w-3.5" /> Téléphone
+              <Phone className="mr-1 inline h-3.5 w-3.5" /> {t("settings.phone")}
             </Label>
             <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1.5 h-11" placeholder="+33 6 12 34 56 78" />
           </div>
           <div>
-            <Label>Email actuel</Label>
+            <Label>{t("settings.currentEmail")}</Label>
             <Input value={email} disabled className="mt-1.5 h-11 bg-muted/40" />
           </div>
           <div className="sm:col-span-2">
             <Button type="submit" disabled={savingProfile} className="w-full sm:w-auto">
-              {savingProfile ? "Sauvegarde..." : "Enregistrer le profil"}
+              {savingProfile ? t("common.saving") : t("settings.saveProfile")}
             </Button>
           </div>
         </form>
       </section>
 
-      {/* Email */}
       <section className="mt-6 rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
           <Mail className="h-4 w-4 text-muted-foreground" />
-          <h2 className="text-base font-semibold">Adresse email</h2>
+          <h2 className="text-base font-semibold">{t("settings.emailSection")}</h2>
         </div>
         <form onSubmit={handleChangeEmail} className="space-y-4">
           <div>
-            <Label htmlFor="newEmail">Nouvelle adresse email</Label>
+            <Label htmlFor="newEmail">{t("settings.newEmail")}</Label>
             <Input
               id="newEmail"
               type="email"
@@ -189,25 +187,22 @@ function SettingsPage() {
               className="mt-1.5 h-11"
               required
             />
-            <p className="mt-1.5 text-xs text-muted-foreground">
-              Un email de confirmation sera envoyé à la nouvelle adresse.
-            </p>
+            <p className="mt-1.5 text-xs text-muted-foreground">{t("settings.emailHint")}</p>
           </div>
           <Button type="submit" disabled={savingEmail || newEmail === email} className="w-full sm:w-auto" variant="secondary">
-            {savingEmail ? "Envoi..." : "Mettre à jour l'email"}
+            {savingEmail ? t("common.sending") : t("settings.updateEmail")}
           </Button>
         </form>
       </section>
 
-      {/* Mot de passe */}
       <section className="mt-6 rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
           <KeyRound className="h-4 w-4 text-muted-foreground" />
-          <h2 className="text-base font-semibold">Mot de passe</h2>
+          <h2 className="text-base font-semibold">{t("settings.passwordSection")}</h2>
         </div>
         <form onSubmit={handleChangePassword} className="space-y-4">
           <div>
-            <Label htmlFor="currentPassword">Mot de passe actuel</Label>
+            <Label htmlFor="currentPassword">{t("settings.currentPassword")}</Label>
             <Input
               id="currentPassword"
               type="password"
@@ -220,7 +215,7 @@ function SettingsPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label htmlFor="newPassword">Nouveau mot de passe</Label>
+              <Label htmlFor="newPassword">{t("settings.newPassword")}</Label>
               <Input
                 id="newPassword"
                 type="password"
@@ -233,7 +228,7 @@ function SettingsPage() {
               />
             </div>
             <div>
-              <Label htmlFor="confirmPassword">Confirmer</Label>
+              <Label htmlFor="confirmPassword">{t("settings.confirmPassword")}</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -247,7 +242,7 @@ function SettingsPage() {
             </div>
           </div>
           <Button type="submit" disabled={savingPassword} className="w-full sm:w-auto">
-            {savingPassword ? "Mise à jour..." : "Changer le mot de passe"}
+            {savingPassword ? t("common.updating") : t("settings.changePassword")}
           </Button>
         </form>
       </section>
@@ -256,13 +251,11 @@ function SettingsPage() {
         <section className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 p-4 sm:p-6">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-primary" />
-            <h2 className="text-base font-semibold">Compte administrateur</h2>
+            <h2 className="text-base font-semibold">{t("settings.adminAccount")}</h2>
           </div>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Votre accès administrateur est protégé par des mesures de sécurité renforcées et une authentification sécurisée.
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">{t("settings.adminDesc")}</p>
           <Button asChild variant="outline" className="mt-4 w-full sm:w-auto">
-            <Link to="/admin">Accéder au tableau de bord admin</Link>
+            <Link to="/admin">{t("settings.accessAdmin")}</Link>
           </Button>
         </section>
       )}

@@ -36,7 +36,12 @@
     "new": "Nuevo",
     "saving": "Saving…",
     "sending": "Sending…",
-    "updating": "Updating…"
+    "updating": "Updating…",
+    "loadError": "Error de carga",
+    "sessionExpired": "Sesión expirada por inactividad",
+    "notFound": "Página no encontrada",
+    "notFoundDesc": "La página que buscas no existe o ha sido movida.",
+    "backHome": "Volver al inicio"
   },
   "header": {
     "myLoans": "Mis préstamos",
@@ -71,15 +76,45 @@
     "hasAccount": "¿Ya tiene cuenta?",
     "createAccount": "Crear mi cuenta",
     "loginSuccess": "Sesión iniciada con éxito",
-    "signupSuccess": "Cuenta creada · revise su correo"
+    "signupSuccess": "Cuenta creada · revise su correo",
+    "backHome": "Volver al inicio",
+    "brandBadge": "Banca digital segura",
+    "creating": "Creando cuenta…",
+    "decision": "Decisión en 24 horas laborables",
+    "google": "Continuar con Google",
+    "googleError": "No se pudo iniciar sesión con Google",
+    "googleLoading": "Iniciando con Google…",
+    "minPasswordHint": "Al menos 8 caracteres.",
+    "mobileHint": "Inicie sesión o cree su cuenta",
+    "rgpd": "Conforme RGPD",
+    "signingIn": "Iniciando sesión…",
+    "terms": "Al continuar, acepta nuestros Términos y Política de Privacidad.",
+    "tls": "Cifrado TLS 1.3",
+    "welcomeDesc": "Acceda a sus préstamos, transferencias y servicios premium con seguridad.",
+    "welcomeTitle": "Bienvenido a",
+    "nameShort": "Nombre demasiado corto",
+    "phoneInvalid": "Número de teléfono inválido",
+    "emailInvalid": "Email inválido",
+    "passwordMin": "La contraseña debe tener al menos 8 caracteres",
+    "passwordRequired": "Contraseña requerida",
+    "invalidCredentials": "Credenciales inválidas",
+    "connectedToast": "Sesión iniciada con éxito",
+    "emailAlreadyUsed": "Email ya en uso",
+    "accountCreated": "Cuenta creada con éxito",
+    "emailLabel": "Email",
+    "passwordLabel": "Contraseña",
+    "fullNameLabel": "Nombre completo",
+    "phoneLabel": "Teléfono",
+    "tabSignin": "Iniciar sesión",
+    "tabSignup": "Crear cuenta"
   },
   "dashboard": {
     "title": "Mi panel",
     "welcome": "Hola",
     "balance": "Saldo disponible",
-    "showBalance": "Mostrar",
-    "hideBalance": "Ocultar",
-    "newLoan": "Nueva solicitud",
+    "showBalance": "Mostrar saldo",
+    "hideBalance": "Ocultar saldo",
+    "newLoan": "Nuevo préstamo",
     "withdraw": "Retirar",
     "transfer": "Realizar transferencia",
     "myLoans": "Mis préstamos",
@@ -89,33 +124,43 @@
     "noTransfers": "Sin transferencias",
     "viewLoan": "Ver expediente",
     "needHelp": "¿Necesita ayuda?",
-    "contactSupport": "Contactar soporte",
+    "contactSupport": "Contactar al servicio al cliente",
     "metaTitle": "Mi panel — HSBC BANK",
     "sessionExpired": "Session expired due to inactivity",
     "loadError": "Loading error",
     "welcomeNamed": "Welcome, {{name}}",
     "welcomeAnon": "Welcome",
-    "totalAvailable": "Total available balance",
+    "totalAvailable": "Saldo total disponible",
     "fundedOutOf": "out of {{amount}} funded",
-    "withdrawnAmount": "{{amount}} withdrawn",
-    "newShort": "New",
-    "activeLoans": "Active loans",
-    "totalFunded": "Total funded",
+    "withdrawnAmount": "{{amount}} retirados",
+    "newShort": "+ Nuevo",
+    "activeLoans": "Préstamos activos",
+    "totalFunded": "Total financiado",
     "transfers": "Transfers",
-    "loading": "Loading…",
-    "firstLoanTitle": "Start your first application",
-    "firstLoanDesc": "Finance your projects in minutes: car, home improvement, cash flow or any personal need.",
+    "loading": "Cargando…",
+    "firstLoanTitle": "Comience su primera solicitud",
+    "firstLoanDesc": "Financie sus proyectos en minutos: auto, reformas, tesorería u otra necesidad.",
     "apply": "Apply now",
     "loanDurationCreated": "{{months}} months · Requested on {{date}}",
-    "disbursedRemaining": "Disbursed: {{disbursed}} · Remaining: {{remaining}}",
-    "recentActivity": "Recent activity",
-    "viewAll": "View all",
+    "disbursedRemaining": "Desembolsado: {{disbursed}} · Restante: {{remaining}}",
+    "recentActivity": "Actividad reciente",
+    "viewAll": "Ver todo",
     "noRecentTransfers": "No transfers yet",
     "status": {
-      "en_traitement": "Processing",
-      "envoye": "Sent",
-      "rejete": "Rejected"
-    }
+      "en_traitement": "En proceso",
+      "envoye": "Enviado",
+      "rejete": "Rechazado"
+    },
+    "welcomeShort": "Bienvenido",
+    "myDashboard": "Mi panel",
+    "newRequest": "Nueva solicitud",
+    "fundedOf": "de {{amount}} financiados",
+    "makeTransfer": "Hacer una transferencia",
+    "transfersKpi": "Transferencias",
+    "applyCta": "Solicitar",
+    "monthsSince": "{{months}} meses · Solicitud del {{date}}",
+    "details": "Detalles",
+    "noTransfersYet": "Sin transferencias por ahora"
   },
   "loanForm": {
     "title": "Nueva solicitud de préstamo",
@@ -137,7 +182,19 @@
     "doc1": "DNI válido por ambas caras",
     "doc2": "Justificante de domicilio reciente",
     "doc3": "Últimas tres nóminas o justificante de ingresos",
-    "doc4": "Último extracto bancario o IBAN a nombre del solicitante"
+    "doc4": "Último extracto bancario o IBAN a nombre del solicitante",
+    "back": "Volver",
+    "newRequestShort": "Nueva solicitud",
+    "newRequestDesc": "Realice su solicitud de préstamo",
+    "amountMin": "Mínimo 500 €",
+    "amountMax": "Máximo 100 000 €",
+    "fileTooLarge": "{{name}} supera 5 MB",
+    "createError": "Error al crear la solicitud",
+    "uploadFailed": "Subida fallida: {{name}}",
+    "adminNotifTitle": "Nueva solicitud de préstamo",
+    "adminNotifMsg": "{{name}} solicita {{amount}} € a {{months}} meses",
+    "successToast": "Su solicitud se envió con éxito",
+    "loading": "Cargando…"
   },
   "transfer": {
     "title": "Realizar una transferencia",
@@ -209,7 +266,12 @@
     "emailInvalid": "Invalid email",
     "messageTooShort": "Message too short (10 characters minimum)",
     "defaultNamePlaceholder": "John Smith",
-    "defaultEmailPlaceholder": "you@example.com"
+    "defaultEmailPlaceholder": "you@example.com",
+    "back": "Volver",
+    "phoneTitle": "Servicio al cliente",
+    "address": "103 avenue des Champs-Élysées",
+    "addressCity": "75008 París, Francia",
+    "sending": "Enviando…"
   },
   "admin": {
     "title": "Panel de administración",
@@ -288,6 +350,28 @@
       "genAndSend": "Generar y enviar",
       "regenAndSend": "Regenerar y enviar",
       "savePlan": "Guardar plan"
+    },
+    "transfer": {
+      "title": "Emitir transferencia de cliente",
+      "subtitle": "Cree una transferencia instantánea o estándar en nombre de un cliente.",
+      "kind": "Tipo de transferencia",
+      "instant": "Instantánea",
+      "instantHint": "Acreditada inmediatamente 24/7.",
+      "classic": "Estándar",
+      "classicHint": "Acreditada en 1 día laborable.",
+      "client": "Cliente",
+      "selectClient": "Seleccionar cliente",
+      "loan": "Préstamo origen",
+      "selectLoan": "Seleccionar préstamo",
+      "amount": "Importe (€)",
+      "beneficiary": "Beneficiario",
+      "bankName": "Banco beneficiario",
+      "iban": "IBAN",
+      "bic": "BIC / SWIFT",
+      "reference": "Referencia",
+      "submit": "Emitir transferencia",
+      "success": "Transferencia emitida con éxito",
+      "error": "Error al emitir la transferencia"
     }
   },
   "blocked": {
@@ -363,7 +447,11 @@
     "notifApprovedTitle": "Recibo aprobado — paso {{p}}%",
     "notifApprovedMsg": "Tu pago fue validado. Se enviará el código.",
     "notifRejectedTitle": "Recibo rechazado — paso {{p}}%",
-    "notifRejectedMsg": "Vuelve a enviar un recibo válido."
+    "notifRejectedMsg": "Vuelve a enviar un recibo válido.",
+    "holder": "Titular de la cuenta",
+    "iban": "IBAN",
+    "bic": "BIC / SWIFT",
+    "description": "Motivo / Descripción"
   },
   "transferSteps": {
     "title": "Transferencia segura",
@@ -394,7 +482,8 @@
     "advanced": "Paso {{p}}% desbloqueado",
     "successFinal": "Transferencia completada con éxito",
     "notifAdminTitle": "Recibo recibido — paso {{p}}%",
-    "notifAdminMsg": "Un cliente ha subido un recibo para validación."
+    "notifAdminMsg": "Un cliente ha subido un recibo para validación.",
+    "stepNotReached": "Etapa aún no alcanzada"
   },
   "transfersPage": {
     "metaTitle": "Mis transferencias — HSBC BANK",
@@ -702,7 +791,10 @@
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordMismatch": "Passwords do not match",
     "currentPasswordWrong": "Current password is incorrect",
-    "passwordUpdated": "Password updated"
+    "passwordUpdated": "Password updated",
+    "back": "Volver",
+    "accessAdmin": "Abrir panel admin",
+    "goBack": "Volver"
   },
   "loanDetail": {
     "metaTitle": "Detalles del préstamo — HSBC BANK",
@@ -766,5 +858,11 @@
       "en_traitement": "Processing",
       "fonds_disponibles": "Funds available"
     }
+  },
+  "nav": {
+    "home": "Inicio",
+    "transfers": "Transferencias",
+    "request": "Solicitud",
+    "primary": "Navegación principal"
   }
 }

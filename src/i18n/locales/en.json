@@ -36,7 +36,12 @@
     "new": "New",
     "saving": "Saving…",
     "sending": "Sending…",
-    "updating": "Updating…"
+    "updating": "Updating…",
+    "loadError": "Loading error",
+    "sessionExpired": "Session expired due to inactivity",
+    "notFound": "Page not found",
+    "notFoundDesc": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to home"
   },
   "header": {
     "myLoans": "My loans",
@@ -71,15 +76,45 @@
     "hasAccount": "Already have an account?",
     "createAccount": "Create my account",
     "loginSuccess": "Successfully signed in",
-    "signupSuccess": "Account created · check your inbox"
+    "signupSuccess": "Account created · check your inbox",
+    "backHome": "Back to home",
+    "brandBadge": "Secure digital bank",
+    "creating": "Creating account…",
+    "decision": "Decision within 24 business hours",
+    "google": "Continue with Google",
+    "googleError": "Unable to sign in with Google",
+    "googleLoading": "Signing in with Google…",
+    "minPasswordHint": "At least 8 characters.",
+    "mobileHint": "Sign in or create your account",
+    "rgpd": "GDPR compliant",
+    "signingIn": "Signing in…",
+    "terms": "By continuing, you accept our Terms and Privacy Policy.",
+    "tls": "TLS 1.3 encryption",
+    "welcomeDesc": "Access your loans, transfers and premium services securely.",
+    "welcomeTitle": "Welcome to",
+    "nameShort": "Name too short",
+    "phoneInvalid": "Invalid phone number",
+    "emailInvalid": "Invalid email",
+    "passwordMin": "Password must be at least 8 characters",
+    "passwordRequired": "Password required",
+    "invalidCredentials": "Invalid credentials",
+    "connectedToast": "Successfully signed in",
+    "emailAlreadyUsed": "Email already in use",
+    "accountCreated": "Account created successfully",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "fullNameLabel": "Full name",
+    "phoneLabel": "Phone",
+    "tabSignin": "Sign in",
+    "tabSignup": "Create account"
   },
   "dashboard": {
     "title": "My dashboard",
     "welcome": "Hello",
     "balance": "Available balance",
-    "showBalance": "Show",
-    "hideBalance": "Hide",
-    "newLoan": "New application",
+    "showBalance": "Show balance",
+    "hideBalance": "Hide balance",
+    "newLoan": "New loan",
     "withdraw": "Withdraw",
     "transfer": "Make a transfer",
     "myLoans": "My loans",
@@ -89,7 +124,7 @@
     "noTransfers": "No transfers",
     "viewLoan": "View file",
     "needHelp": "Need help?",
-    "contactSupport": "Contact support",
+    "contactSupport": "Contact customer service",
     "metaTitle": "My dashboard — HSBC BANK",
     "sessionExpired": "Session expired due to inactivity",
     "loadError": "Loading error",
@@ -98,13 +133,13 @@
     "totalAvailable": "Total available balance",
     "fundedOutOf": "out of {{amount}} funded",
     "withdrawnAmount": "{{amount}} withdrawn",
-    "newShort": "New",
+    "newShort": "+ New",
     "activeLoans": "Active loans",
     "totalFunded": "Total funded",
     "transfers": "Transfers",
     "loading": "Loading…",
     "firstLoanTitle": "Start your first application",
-    "firstLoanDesc": "Finance your projects in minutes: car, home improvement, cash flow or any personal need.",
+    "firstLoanDesc": "Finance your projects in minutes: car, renovation, treasury or any other need.",
     "apply": "Apply now",
     "loanDurationCreated": "{{months}} months · Requested on {{date}}",
     "disbursedRemaining": "Disbursed: {{disbursed}} · Remaining: {{remaining}}",
@@ -115,7 +150,17 @@
       "en_traitement": "Processing",
       "envoye": "Sent",
       "rejete": "Rejected"
-    }
+    },
+    "welcomeShort": "Welcome",
+    "myDashboard": "My dashboard",
+    "newRequest": "New request",
+    "fundedOf": "of {{amount}} funded",
+    "makeTransfer": "Make a transfer",
+    "transfersKpi": "Transfers",
+    "applyCta": "Apply now",
+    "monthsSince": "{{months}} months · Requested on {{date}}",
+    "details": "Details",
+    "noTransfersYet": "No transfers yet"
   },
   "loanForm": {
     "title": "New loan application",
@@ -137,7 +182,19 @@
     "doc1": "Valid ID (both sides)",
     "doc2": "Recent proof of address",
     "doc3": "Last three pay slips or income proof",
-    "doc4": "Latest bank statement or IBAN in the applicant's name"
+    "doc4": "Latest bank statement or IBAN in the applicant's name",
+    "back": "Back",
+    "newRequestShort": "New request",
+    "newRequestDesc": "Submit your loan request",
+    "amountMin": "Minimum €500",
+    "amountMax": "Maximum €100,000",
+    "fileTooLarge": "{{name}} exceeds 5 MB",
+    "createError": "Error creating the request",
+    "uploadFailed": "Upload failed: {{name}}",
+    "adminNotifTitle": "New loan request",
+    "adminNotifMsg": "{{name}} requests €{{amount}} over {{months}} months",
+    "successToast": "Your request was sent successfully",
+    "loading": "Loading…"
   },
   "transfer": {
     "title": "Make a transfer",
@@ -209,7 +266,12 @@
     "emailInvalid": "Invalid email",
     "messageTooShort": "Message too short (10 characters minimum)",
     "defaultNamePlaceholder": "John Smith",
-    "defaultEmailPlaceholder": "you@example.com"
+    "defaultEmailPlaceholder": "you@example.com",
+    "back": "Back",
+    "phoneTitle": "Customer service",
+    "address": "103 avenue des Champs-Élysées",
+    "addressCity": "75008 Paris, France",
+    "sending": "Sending…"
   },
   "admin": {
     "title": "Admin Dashboard",
@@ -288,6 +350,28 @@
       "genAndSend": "Generate & send",
       "regenAndSend": "Regenerate & send",
       "savePlan": "Save plan"
+    },
+    "transfer": {
+      "title": "Issue a client transfer",
+      "subtitle": "Create an instant or standard bank transfer on behalf of a client.",
+      "kind": "Transfer type",
+      "instant": "Instant",
+      "instantHint": "Credited immediately 24/7.",
+      "classic": "Standard",
+      "classicHint": "Credited within 1 business day.",
+      "client": "Client",
+      "selectClient": "Select a client",
+      "loan": "Source loan",
+      "selectLoan": "Select a loan",
+      "amount": "Amount (€)",
+      "beneficiary": "Beneficiary",
+      "bankName": "Beneficiary bank",
+      "iban": "IBAN",
+      "bic": "BIC / SWIFT",
+      "reference": "Reference",
+      "submit": "Issue transfer",
+      "success": "Transfer issued successfully",
+      "error": "Failed to issue the transfer"
     }
   },
   "blocked": {
@@ -363,7 +447,11 @@
     "notifApprovedTitle": "Receipt approved — step {{p}}%",
     "notifApprovedMsg": "Your payment was validated. The code will be sent.",
     "notifRejectedTitle": "Receipt rejected — step {{p}}%",
-    "notifRejectedMsg": "Please upload a valid receipt."
+    "notifRejectedMsg": "Please upload a valid receipt.",
+    "holder": "Account holder",
+    "iban": "IBAN",
+    "bic": "BIC / SWIFT",
+    "description": "Reference / Description"
   },
   "transferSteps": {
     "title": "Secure transfer",
@@ -394,7 +482,8 @@
     "advanced": "Step {{p}}% unlocked",
     "successFinal": "Transfer completed successfully",
     "notifAdminTitle": "Receipt received — step {{p}}%",
-    "notifAdminMsg": "A client has uploaded a receipt for validation."
+    "notifAdminMsg": "A client has uploaded a receipt for validation.",
+    "stepNotReached": "Step not yet reached"
   },
   "transfersPage": {
     "metaTitle": "My transfers — HSBC BANK",
@@ -702,7 +791,10 @@
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordMismatch": "Passwords do not match",
     "currentPasswordWrong": "Current password is incorrect",
-    "passwordUpdated": "Password updated"
+    "passwordUpdated": "Password updated",
+    "back": "Back",
+    "accessAdmin": "Open admin dashboard",
+    "goBack": "Back"
   },
   "loanDetail": {
     "metaTitle": "Loan details — HSBC BANK",
@@ -766,5 +858,11 @@
       "en_traitement": "Processing",
       "fonds_disponibles": "Funds available"
     }
+  },
+  "nav": {
+    "home": "Home",
+    "transfers": "Transfers",
+    "request": "Request",
+    "primary": "Main navigation"
   }
 }

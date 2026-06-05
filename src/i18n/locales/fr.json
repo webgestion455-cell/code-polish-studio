@@ -36,7 +36,12 @@
     "new": "Nouveau",
     "saving": "Sauvegarde…",
     "sending": "Envoi…",
-    "updating": "Mise à jour…"
+    "updating": "Mise à jour…",
+    "loadError": "Erreur de chargement",
+    "sessionExpired": "Session expirée pour inactivité",
+    "notFound": "Page introuvable",
+    "notFoundDesc": "La page que vous cherchez n'existe pas ou a été déplacée.",
+    "backHome": "Retour à l'accueil"
   },
   "header": {
     "myLoans": "Mes prêts",
@@ -71,15 +76,45 @@
     "hasAccount": "Déjà un compte ?",
     "createAccount": "Créer mon compte",
     "loginSuccess": "Connexion réussie",
-    "signupSuccess": "Compte créé · vérifiez vos emails"
+    "signupSuccess": "Compte créé · vérifiez vos emails",
+    "backHome": "Retour à l'accueil",
+    "brandBadge": "Banque digitale sécurisée",
+    "creating": "Création du compte…",
+    "decision": "Décision sous 24h ouvrées",
+    "google": "Continuer avec Google",
+    "googleError": "Connexion Google impossible",
+    "googleLoading": "Connexion Google…",
+    "minPasswordHint": "Au moins 8 caractères.",
+    "mobileHint": "Connectez-vous ou créez votre compte",
+    "rgpd": "Conformité RGPD",
+    "signingIn": "Connexion…",
+    "terms": "En continuant, vous acceptez nos CGU et notre Politique de confidentialité.",
+    "tls": "Chiffrement TLS 1.3",
+    "welcomeDesc": "Accédez à vos prêts, virements et services premium en toute sécurité.",
+    "welcomeTitle": "Bienvenue sur",
+    "nameShort": "Nom trop court",
+    "phoneInvalid": "Numéro de téléphone invalide",
+    "emailInvalid": "Email invalide",
+    "passwordMin": "Le mot de passe doit contenir au moins 8 caractères",
+    "passwordRequired": "Mot de passe requis",
+    "invalidCredentials": "Identifiants invalides",
+    "connectedToast": "Connecté avec succès",
+    "emailAlreadyUsed": "Email déjà utilisé",
+    "accountCreated": "Compte créé avec succès",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "fullNameLabel": "Nom complet",
+    "phoneLabel": "Téléphone",
+    "tabSignin": "Connexion",
+    "tabSignup": "Créer un compte"
   },
   "dashboard": {
     "title": "Mon tableau de bord",
     "welcome": "Bonjour",
     "balance": "Solde disponible",
-    "showBalance": "Afficher",
-    "hideBalance": "Masquer",
-    "newLoan": "Nouvelle demande",
+    "showBalance": "Afficher le solde",
+    "hideBalance": "Masquer le solde",
+    "newLoan": "Nouveau prêt",
     "withdraw": "Retirer",
     "transfer": "Effectuer un virement",
     "myLoans": "Mes prêts",
@@ -98,7 +133,7 @@
     "totalAvailable": "Solde total disponible",
     "fundedOutOf": "sur {{amount}} financés",
     "withdrawnAmount": "{{amount}} retirés",
-    "newShort": "Nouveau",
+    "newShort": "+ Nouveau",
     "activeLoans": "Prêts actifs",
     "totalFunded": "Total financé",
     "transfers": "Virements",
@@ -115,7 +150,17 @@
       "en_traitement": "En traitement",
       "envoye": "Envoyé",
       "rejete": "Rejeté"
-    }
+    },
+    "welcomeShort": "Bienvenue",
+    "myDashboard": "Mon tableau de bord",
+    "newRequest": "Nouvelle demande",
+    "fundedOf": "sur {{amount}} financés",
+    "makeTransfer": "Effectuer un virement",
+    "transfersKpi": "Virements",
+    "applyCta": "Faire une demande",
+    "monthsSince": "{{months}} mois · Demande du {{date}}",
+    "details": "Détails",
+    "noTransfersYet": "Aucun virement pour le moment"
   },
   "loanForm": {
     "title": "Nouvelle demande de prêt",
@@ -137,7 +182,19 @@
     "doc1": "Pièce d'identité valide recto-verso",
     "doc2": "Justificatif de domicile récent",
     "doc3": "Trois derniers bulletins de salaire ou justificatifs de revenus",
-    "doc4": "Dernier relevé bancaire ou RIB au nom du demandeur"
+    "doc4": "Dernier relevé bancaire ou RIB au nom du demandeur",
+    "back": "Retour",
+    "newRequestShort": "Nouvelle demande",
+    "newRequestDesc": "Effectuez votre demande de prêt",
+    "amountMin": "Minimum 500 €",
+    "amountMax": "Maximum 100 000 €",
+    "fileTooLarge": "{{name}} dépasse 5 Mo",
+    "createError": "Erreur lors de la création de la demande",
+    "uploadFailed": "Upload échoué: {{name}}",
+    "adminNotifTitle": "Nouvelle demande de prêt",
+    "adminNotifMsg": "{{name}} demande {{amount}} € sur {{months}} mois",
+    "successToast": "Votre demande a été envoyée avec succès",
+    "loading": "Chargement…"
   },
   "transfer": {
     "title": "Effectuer un virement",
@@ -209,7 +266,12 @@
     "emailInvalid": "Email invalide",
     "messageTooShort": "Message trop court (10 caractères min)",
     "defaultNamePlaceholder": "Jean Dupont",
-    "defaultEmailPlaceholder": "vous@exemple.fr"
+    "defaultEmailPlaceholder": "vous@exemple.fr",
+    "back": "Retour",
+    "phoneTitle": "Service client",
+    "address": "103 avenue des Champs-Élysées",
+    "addressCity": "75008 Paris, France",
+    "sending": "Envoi…"
   },
   "admin": {
     "title": "Tableau de bord Admin",
@@ -288,6 +350,28 @@
       "genAndSend": "Générer & envoyer",
       "regenAndSend": "Régénérer & envoyer",
       "savePlan": "Enregistrer le plan"
+    },
+    "transfer": {
+      "title": "Émettre un virement client",
+      "subtitle": "Créez un virement bancaire instantané ou classique au nom d'un client.",
+      "kind": "Type de virement",
+      "instant": "Instantané",
+      "instantHint": "Crédit immédiat 24/7.",
+      "classic": "Classique",
+      "classicHint": "Crédit sous 1 jour ouvré.",
+      "client": "Client",
+      "selectClient": "Sélectionner un client",
+      "loan": "Prêt source",
+      "selectLoan": "Sélectionner un prêt",
+      "amount": "Montant (€)",
+      "beneficiary": "Bénéficiaire",
+      "bankName": "Banque du bénéficiaire",
+      "iban": "IBAN",
+      "bic": "BIC / SWIFT",
+      "reference": "Référence",
+      "submit": "Émettre le virement",
+      "success": "Virement émis avec succès",
+      "error": "Échec de l'émission du virement"
     }
   },
   "blocked": {
@@ -363,7 +447,11 @@
     "notifApprovedTitle": "Reçu approuvé — étape {{p}}%",
     "notifApprovedMsg": "Votre paiement a été validé. Le code va être envoyé.",
     "notifRejectedTitle": "Reçu refusé — étape {{p}}%",
-    "notifRejectedMsg": "Veuillez renvoyer un reçu valide."
+    "notifRejectedMsg": "Veuillez renvoyer un reçu valide.",
+    "holder": "Titulaire du compte",
+    "iban": "IBAN",
+    "bic": "BIC / SWIFT",
+    "description": "Motif / Description"
   },
   "transferSteps": {
     "title": "Virement sécurisé",
@@ -394,7 +482,8 @@
     "advanced": "Étape {{p}}% débloquée",
     "successFinal": "Virement complété avec succès",
     "notifAdminTitle": "Reçu reçu — étape {{p}}%",
-    "notifAdminMsg": "Un client a téléversé un reçu pour validation."
+    "notifAdminMsg": "Un client a téléversé un reçu pour validation.",
+    "stepNotReached": "Étape non encore atteinte"
   },
   "transfersPage": {
     "metaTitle": "Mes virements — HSBC BANK",
@@ -702,7 +791,10 @@
     "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
     "passwordMismatch": "Les mots de passe ne correspondent pas",
     "currentPasswordWrong": "Mot de passe actuel incorrect",
-    "passwordUpdated": "Mot de passe mis à jour"
+    "passwordUpdated": "Mot de passe mis à jour",
+    "back": "Retour",
+    "accessAdmin": "Accéder au tableau de bord admin",
+    "goBack": "Retour"
   },
   "loanDetail": {
     "metaTitle": "Détails du prêt — HSBC BANK",
@@ -766,5 +858,11 @@
       "en_traitement": "En traitement",
       "fonds_disponibles": "Fonds disponibles"
     }
+  },
+  "nav": {
+    "home": "Accueil",
+    "transfers": "Virements",
+    "request": "Demande",
+    "primary": "Navigation principale"
   }
 }

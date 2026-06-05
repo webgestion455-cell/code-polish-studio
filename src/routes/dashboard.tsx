@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -16,11 +17,12 @@ import {
 import { toast } from "sonner";
 import { subscribeToPush } from "@/lib/push";
 import { useInactivityLogout } from "@/lib/use-inactivity";
+import i18n from "@/i18n";
 // notifyAllAdmins handled in TransferDialog
 
 export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
-  head: () => ({ meta: [{ title: "Mon tableau de bord — HSBC BANK" }] }),
+  head: () => ({ meta: [{ title: i18n.t("dashboard.metaTitle") }] }),
 });
 
 interface Loan {
@@ -53,14 +55,9 @@ const STATUS_PILL: Record<string, string> = {
   rejete: "bg-destructive/15 text-destructive",
 };
 
-const STATUS_LABEL: Record<string, string> = {
-  en_traitement: "En traitement",
-  envoye: "Envoyé",
-  rejete: "Rejeté",
-};
-
 function Dashboard() {
   const { user, signOut, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [loans, setLoans] = useState<Loan[]>([]);
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
@@ -72,7 +69,7 @@ function Dashboard() {
 
   useInactivityLogout(async () => {
     await signOut();
-    toast.warning("Session expirée pour inactivité");
+    toast.warning(t("common.sessionExpired"));
     navigate({ to: "/auth" });
   });
 
@@ -127,7 +124,7 @@ function Dashboard() {
       supabase.from("withdrawals").select("*").order("created_at", { ascending: false }),
       supabase.from("profiles").select("full_name").eq("user_id", user.id).maybeSingle(),
     ]);
-    if (lRes.error) toast.error("Erreur de chargement");
+    if (lRes.error) toast.error(t("common.loadError"));
     else {
       setLoans(lRes.data as Loan[]);
       setWithdrawals((wRes.data as Withdrawal[]) ?? []);
@@ -167,7 +164,7 @@ function Dashboard() {
   // Virements gérés via TransferDialog
 
   if (authLoading || !user) {
-    return <div className="flex items-center justify-center h-96"><div className="text-muted-foreground">Chargement...</div></div>;
+    return <div className="flex items-center justify-center h-96"><div className="text-muted-foreground">{t("dashboard.loading")}</div></div>;
   }
 
   return (
@@ -175,13 +172,13 @@ function Dashboard() {
       {/* Greeting */}
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-          <p className="text-sm text-muted-foreground">Bienvenue{firstName ? `, ${firstName}` : ""}</p>
-          <h1 className="mt-0.5 font-serif text-3xl font-medium tracking-tight md:text-4xl">Mon tableau de bord</h1>
+          <p className="text-sm text-muted-foreground">{t("dashboard.welcomeShort")}{firstName ? `, ${firstName}` : ""}</p>
+          <h1 className="mt-0.5 font-serif text-3xl font-medium tracking-tight md:text-4xl">{t("dashboard.myDashboard")}</h1>
         </div>
         <Button asChild size="lg" className="shadow-glow">
           <Link to="/loans/new">
             <Plus className="mr-2 h-4 w-4" />
-            Nouvelle demande
+            {t("dashboard.newRequest")}
           </Link>
         </Button>
       </div>
@@ -193,12 +190,12 @@ function Dashboard() {
         <CardContent className="relative p-8 md:p-10">
           <div className="mb-2 flex items-start justify-between">
             <div className="flex items-center gap-2 text-sm font-medium text-white/70">
-              <Wallet className="h-4 w-4" /> Solde total disponible
+              <Wallet className="h-4 w-4" /> {t("dashboard.totalAvailable")}
             </div>
             <button
               onClick={() => setHideBalance(!hideBalance)}
               className="rounded-md p-1 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label={hideBalance ? "Afficher le solde" : "Masquer le solde"}
+              aria-label={hideBalance ? t("dashboard.showBalance") : t("dashboard.hideBalance")}
             >
               {hideBalance ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -207,11 +204,11 @@ function Dashboard() {
             {hideBalance ? "•••••• €" : formatCurrency(totalAvailable)}
           </div>
           <div className="mt-1.5 flex items-center gap-2 text-sm text-white/70">
-            <span>sur {formatCurrency(totalRequested)} financés</span>
+            <span>{t("dashboard.fundedOf", { amount: formatCurrency(totalRequested) })}</span>
             {totalWithdrawn > 0 && (
               <>
                 <span className="opacity-30">•</span>
-                <span>{formatCurrency(totalWithdrawn)} retirés</span>
+                <span>{t("dashboard.withdrawnAmount", { amount: formatCurrency(totalWithdrawn) })}</span>
               </>
             )}
           </div>
@@ -227,19 +224,19 @@ function Dashboard() {
                 className="bg-white font-semibold text-primary shadow-md hover:bg-white/90"
               >
                 <Send className="mr-2 h-4 w-4" />
-                Effectuer un virement
+                {t("dashboard.makeTransfer")}
               </Button>
             )}
             <Button asChild size="lg" variant="ghost" className="border border-white/20 text-white hover:bg-white/10">
               <Link to="/loans/new">
                 <Plus className="mr-2 h-4 w-4" />
-                Nouveau prêt
+                {t("dashboard.newLoan")}
               </Link>
             </Button>
             <Button asChild size="lg" variant="ghost" className="border border-white/20 text-white hover:bg-white/10">
               <Link to="/contact">
                 <Mail className="mr-2 h-4 w-4" />
-                Contacter le service client
+                {t("dashboard.contactSupport")}
               </Link>
             </Button>
           </div>
@@ -248,39 +245,39 @@ function Dashboard() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-        <StatCard icon={<FileText className="h-5 w-5" />} label="Prêts actifs" value={activeLoanCount.toString()} tone="info" />
-        <StatCard icon={<TrendingUp className="h-5 w-5" />} label="Total financé" value={formatCurrency(totalRequested)} tone="primary" />
-        <StatCard icon={<ArrowUpRight className="h-5 w-5" />} label="Virements" value={withdrawals.length.toString()} tone="success" />
+        <StatCard icon={<FileText className="h-5 w-5" />} label={t("dashboard.activeLoans")} value={activeLoanCount.toString()} tone="info" />
+        <StatCard icon={<TrendingUp className="h-5 w-5" />} label={t("dashboard.totalFunded")} value={formatCurrency(totalRequested)} tone="primary" />
+        <StatCard icon={<ArrowUpRight className="h-5 w-5" />} label={t("dashboard.transfersKpi")} value={withdrawals.length.toString()} tone="success" />
       </div>
 
       {/* Loans + Activity */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="font-serif text-xl font-medium">Mes prêts</h2>
+            <h2 className="font-serif text-xl font-medium">{t("dashboard.myLoans")}</h2>
             {loans.length > 0 && (
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/loans/new">+ Nouveau</Link>
+                <Link to="/loans/new">{t("dashboard.newShort")}</Link>
               </Button>
             )}
           </div>
 
           {loading ? (
-            <div className="rounded-2xl border border-border bg-card p-12 text-center text-muted-foreground shadow-card">Chargement...</div>
+            <div className="rounded-2xl border border-border bg-card p-12 text-center text-muted-foreground shadow-card">{t("dashboard.loading")}</div>
           ) : loans.length === 0 ? (
             <Empty className="border bg-card shadow-card">
               <EmptyHeader>
                 <EmptyMedia variant="icon" className="bg-accent/10 text-accent">
                   <Sparkles className="h-6 w-6" />
                 </EmptyMedia>
-                <EmptyTitle>Commencez votre première demande</EmptyTitle>
+                <EmptyTitle>{t("dashboard.firstLoanTitle")}</EmptyTitle>
                 <EmptyDescription>
-                  Financez vos projets en quelques minutes : auto, travaux, trésorerie ou tout autre besoin.
+                  {t("dashboard.firstLoanDesc")}
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
                 <Button asChild className="shadow-glow">
-                  <Link to="/loans/new">Faire une demande</Link>
+                  <Link to="/loans/new">{t("dashboard.applyCta")}</Link>
                 </Button>
               </EmptyContent>
             </Empty>
@@ -299,23 +296,23 @@ function Dashboard() {
                             <StatusBadge status={loan.status} />
                           </div>
                           <p className="mt-1 text-sm text-muted-foreground">
-                            {loan.duration_months} mois · Demande du {formatDate(loan.created_at)}
+                            {t("dashboard.monthsSince", { months: loan.duration_months, date: formatDate(loan.created_at) })}
                           </p>
                           {Number(loan.disbursed_amount ?? 0) > 0 && (
                             <p className="mt-1 text-xs text-muted-foreground">
-                              Décaissé : {formatCurrency(Number(loan.disbursed_amount))} · Restant : {formatCurrency(remaining)}
+                              {t("dashboard.disbursedRemaining", { disbursed: formatCurrency(Number(loan.disbursed_amount)), remaining: formatCurrency(remaining) })}
                             </p>
                           )}
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {canWithdraw && (
                             <Button onClick={() => setWithdrawLoanId(loan.id)} size="sm" className="shadow-glow">
-                              <ArrowUpRight className="mr-1.5 h-4 w-4" /> Retirer
+                              <ArrowUpRight className="mr-1.5 h-4 w-4" /> {t("dashboard.withdraw")}
                             </Button>
                           )}
                           <Button asChild variant="outline" size="sm">
                             <Link to="/loans/$loanId" params={{ loanId: loan.id }}>
-                              Détails <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                              {t("dashboard.details")} <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
                             </Link>
                           </Button>
                         </div>
@@ -341,10 +338,10 @@ function Dashboard() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-serif text-xl font-medium flex items-center gap-2">
-              <History className="h-4 w-4" /> Activité récente
+              <History className="h-4 w-4" /> {t("dashboard.recentActivity")}
             </h2>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/transfers">Tout voir</Link>
+              <Link to="/transfers">{t("dashboard.viewAll")}</Link>
             </Button>
           </div>
           <Card>
@@ -352,7 +349,7 @@ function Dashboard() {
               {recentWithdrawals.length === 0 ? (
                 <div className="p-8 text-center text-sm text-muted-foreground">
                   <Wallet className="mx-auto mb-2 h-6 w-6 opacity-40" />
-                  Aucun virement pour le moment
+                  {t("dashboard.noTransfersYet")}
                 </div>
               ) : (
                 <ul className="divide-y divide-border">
@@ -373,7 +370,7 @@ function Dashboard() {
                           </div>
                           <div className="mt-0.5 flex items-center gap-2 flex-wrap">
                             <span className={`rounded px-1.5 py-0.5 text-[11px] font-medium ${STATUS_PILL[w.status] ?? "bg-secondary"}`}>
-                              {STATUS_LABEL[w.status] ?? w.status}
+                              {t(`dashboard.status.${w.status}`, { defaultValue: w.status })}
                             </span>
                             <span className="text-xs text-muted-foreground">{formatDateTime(w.created_at)}</span>
                           </div>

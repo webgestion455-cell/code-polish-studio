@@ -36,7 +36,12 @@
     "new": "Novo",
     "saving": "Saving…",
     "sending": "Sending…",
-    "updating": "Updating…"
+    "updating": "Updating…",
+    "loadError": "Napaka pri nalaganju",
+    "sessionExpired": "Seja je potekla zaradi neaktivnosti",
+    "notFound": "Stran ni najdena",
+    "notFoundDesc": "Iskane strani ni ali pa je bila premaknjena.",
+    "backHome": "Nazaj domov"
   },
   "header": {
     "myLoans": "Moja posojila",
@@ -71,16 +76,46 @@
     "hasAccount": "Že imate račun?",
     "createAccount": "Ustvari račun",
     "loginSuccess": "Uspešna prijava",
-    "signupSuccess": "Račun ustvarjen · preverite e-pošto"
+    "signupSuccess": "Račun ustvarjen · preverite e-pošto",
+    "backHome": "Nazaj na domačo stran",
+    "brandBadge": "Varna digitalna banka",
+    "creating": "Ustvarjanje računa…",
+    "decision": "Odločitev v 24 delovnih urah",
+    "google": "Nadaljuj z Google",
+    "googleError": "Prijava z Google ni uspela",
+    "googleLoading": "Prijava z Google…",
+    "minPasswordHint": "Najmanj 8 znakov.",
+    "mobileHint": "Prijavite se ali ustvarite račun",
+    "rgpd": "Skladno z GDPR",
+    "signingIn": "Prijavljanje…",
+    "terms": "Z nadaljevanjem sprejemate naše Pogoje in Pravilnik o zasebnosti.",
+    "tls": "Šifriranje TLS 1.3",
+    "welcomeDesc": "Varno dostopajte do svojih kreditov, nakazil in vrhunskih storitev.",
+    "welcomeTitle": "Dobrodošli v",
+    "nameShort": "Ime je prekratko",
+    "phoneInvalid": "Neveljavna telefonska številka",
+    "emailInvalid": "Neveljaven e-naslov",
+    "passwordMin": "Geslo mora imeti vsaj 8 znakov",
+    "passwordRequired": "Geslo je obvezno",
+    "invalidCredentials": "Neveljavni podatki za prijavo",
+    "connectedToast": "Uspešno prijavljeni",
+    "emailAlreadyUsed": "E-naslov je že v uporabi",
+    "accountCreated": "Račun uspešno ustvarjen",
+    "emailLabel": "E-naslov",
+    "passwordLabel": "Geslo",
+    "fullNameLabel": "Polno ime",
+    "phoneLabel": "Telefon",
+    "tabSignin": "Prijava",
+    "tabSignup": "Ustvari račun"
   },
   "dashboard": {
     "title": "Moja nadzorna plošča",
     "welcome": "Pozdravljeni",
     "balance": "Razpoložljivo stanje",
-    "showBalance": "Prikaži",
-    "hideBalance": "Skrij",
-    "newLoan": "Nova vloga",
-    "withdraw": "Dvig",
+    "showBalance": "Pokaži stanje",
+    "hideBalance": "Skrij stanje",
+    "newLoan": "Novo posojilo",
+    "withdraw": "Dvigni",
     "transfer": "Izvedi nakazilo",
     "myLoans": "Moja posojila",
     "transferHistory": "Zgodovina nakazil",
@@ -95,27 +130,37 @@
     "loadError": "Loading error",
     "welcomeNamed": "Welcome, {{name}}",
     "welcomeAnon": "Welcome",
-    "totalAvailable": "Total available balance",
+    "totalAvailable": "Skupno razpoložljivo stanje",
     "fundedOutOf": "out of {{amount}} funded",
-    "withdrawnAmount": "{{amount}} withdrawn",
-    "newShort": "New",
-    "activeLoans": "Active loans",
-    "totalFunded": "Total funded",
+    "withdrawnAmount": "{{amount}} dvignjeno",
+    "newShort": "+ Novo",
+    "activeLoans": "Aktivna posojila",
+    "totalFunded": "Skupno financirano",
     "transfers": "Transfers",
-    "loading": "Loading…",
-    "firstLoanTitle": "Start your first application",
-    "firstLoanDesc": "Finance your projects in minutes: car, home improvement, cash flow or any personal need.",
+    "loading": "Nalaganje…",
+    "firstLoanTitle": "Začnite prvo zahtevo",
+    "firstLoanDesc": "Financirajte projekte v nekaj minutah: avto, prenova, likvidnost ali drugo.",
     "apply": "Apply now",
     "loanDurationCreated": "{{months}} months · Requested on {{date}}",
-    "disbursedRemaining": "Disbursed: {{disbursed}} · Remaining: {{remaining}}",
-    "recentActivity": "Recent activity",
-    "viewAll": "View all",
+    "disbursedRemaining": "Izplačano: {{disbursed}} · Preostanek: {{remaining}}",
+    "recentActivity": "Nedavna aktivnost",
+    "viewAll": "Prikaži vse",
     "noRecentTransfers": "No transfers yet",
     "status": {
-      "en_traitement": "Processing",
-      "envoye": "Sent",
-      "rejete": "Rejected"
-    }
+      "en_traitement": "V obdelavi",
+      "envoye": "Poslano",
+      "rejete": "Zavrnjeno"
+    },
+    "welcomeShort": "Dobrodošli",
+    "myDashboard": "Moja nadzorna plošča",
+    "newRequest": "Nova zahteva",
+    "fundedOf": "od {{amount}} financiranih",
+    "makeTransfer": "Izvedi nakazilo",
+    "transfersKpi": "Nakazila",
+    "applyCta": "Oddaj zahtevo",
+    "monthsSince": "{{months}} mesecev · Zahteva z dne {{date}}",
+    "details": "Podrobnosti",
+    "noTransfersYet": "Še ni nakazil"
   },
   "loanForm": {
     "title": "Nova vloga za posojilo",
@@ -137,7 +182,19 @@
     "doc1": "Veljaven osebni dokument (obe strani)",
     "doc2": "Aktualno potrdilo o naslovu",
     "doc3": "Zadnje tri plačilne liste ali dokazilo o dohodku",
-    "doc4": "Zadnji bančni izpisek ali IBAN na ime prosilca"
+    "doc4": "Zadnji bančni izpisek ali IBAN na ime prosilca",
+    "back": "Nazaj",
+    "newRequestShort": "Nova zahteva",
+    "newRequestDesc": "Oddajte zahtevo za posojilo",
+    "amountMin": "Najmanj 500 €",
+    "amountMax": "Največ 100.000 €",
+    "fileTooLarge": "{{name}} presega 5 MB",
+    "createError": "Napaka pri ustvarjanju zahteve",
+    "uploadFailed": "Nalaganje ni uspelo: {{name}}",
+    "adminNotifTitle": "Nova zahteva za posojilo",
+    "adminNotifMsg": "{{name}} prosi za {{amount}} € na {{months}} mesecev",
+    "successToast": "Zahteva je bila uspešno poslana",
+    "loading": "Nalaganje…"
   },
   "transfer": {
     "title": "Izvedi nakazilo",
@@ -209,7 +266,12 @@
     "emailInvalid": "Invalid email",
     "messageTooShort": "Message too short (10 characters minimum)",
     "defaultNamePlaceholder": "John Smith",
-    "defaultEmailPlaceholder": "you@example.com"
+    "defaultEmailPlaceholder": "you@example.com",
+    "back": "Nazaj",
+    "phoneTitle": "Pomoč strankam",
+    "address": "103 avenue des Champs-Élysées",
+    "addressCity": "75008 Pariz, Francija",
+    "sending": "Pošiljanje…"
   },
   "admin": {
     "title": "Skrbniška nadzorna plošča",
@@ -288,6 +350,28 @@
       "genAndSend": "Ustvari & pošlji",
       "regenAndSend": "Ponovno ustvari & pošlji",
       "savePlan": "Shrani načrt"
+    },
+    "transfer": {
+      "title": "Izvedi prenos za stranko",
+      "subtitle": "Ustvarite takojšen ali standardni bančni nakazilo v imenu stranke.",
+      "kind": "Vrsta nakazila",
+      "instant": "Takojšen",
+      "instantHint": "Pripisano takoj 24/7.",
+      "classic": "Standardni",
+      "classicHint": "Pripisano v 1 delovnem dnevu.",
+      "client": "Stranka",
+      "selectClient": "Izberite stranko",
+      "loan": "Izvorni kredit",
+      "selectLoan": "Izberite kredit",
+      "amount": "Znesek (€)",
+      "beneficiary": "Prejemnik",
+      "bankName": "Banka prejemnika",
+      "iban": "IBAN",
+      "bic": "BIC / SWIFT",
+      "reference": "Sklic",
+      "submit": "Izvedi nakazilo",
+      "success": "Nakazilo uspešno izvedeno",
+      "error": "Nakazila ni bilo mogoče izvesti"
     }
   },
   "blocked": {
@@ -363,7 +447,11 @@
     "notifApprovedTitle": "Potrdilo odobreno — korak {{p}}%",
     "notifApprovedMsg": "Vaše plačilo je bilo potrjeno. Koda bo poslana.",
     "notifRejectedTitle": "Potrdilo zavrnjeno — korak {{p}}%",
-    "notifRejectedMsg": "Pošljite veljavno potrdilo."
+    "notifRejectedMsg": "Pošljite veljavno potrdilo.",
+    "holder": "Imetnik računa",
+    "iban": "IBAN",
+    "bic": "BIC / SWIFT",
+    "description": "Namen / Opis"
   },
   "transferSteps": {
     "title": "Varen prenos",
@@ -394,7 +482,8 @@
     "advanced": "Korak {{p}}% odklenjen",
     "successFinal": "Prenos uspešno zaključen",
     "notifAdminTitle": "Prejeto potrdilo — korak {{p}}%",
-    "notifAdminMsg": "Stranka je naložila potrdilo v potrditev."
+    "notifAdminMsg": "Stranka je naložila potrdilo v potrditev.",
+    "stepNotReached": "Korak še ni dosežen"
   },
   "transfersPage": {
     "metaTitle": "Moja nakazila — HSBC BANK",
@@ -702,7 +791,10 @@
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordMismatch": "Passwords do not match",
     "currentPasswordWrong": "Current password is incorrect",
-    "passwordUpdated": "Password updated"
+    "passwordUpdated": "Password updated",
+    "back": "Nazaj",
+    "accessAdmin": "Odpri skrbniško ploščo",
+    "goBack": "Nazaj"
   },
   "loanDetail": {
     "metaTitle": "Podrobnosti posojila — HSBC BANK",
@@ -766,5 +858,11 @@
       "en_traitement": "Processing",
       "fonds_disponibles": "Funds available"
     }
+  },
+  "nav": {
+    "home": "Domov",
+    "transfers": "Nakazila",
+    "request": "Zahteva",
+    "primary": "Glavna navigacija"
   }
 }
