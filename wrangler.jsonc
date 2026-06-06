@@ -2,9 +2,9 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hsbc-fastloan",
   "compatibility_date": "2025-09-24",
-  "compatibility_flags": ["nodejs_compat"],
 
   "assets": {
-    "directory": "./dist/client"
+    "directory": "./dist/client",
+    "binding": "ASSETS"
   }
 }
