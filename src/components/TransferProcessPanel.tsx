@@ -239,26 +239,26 @@ export function TransferProcessPanel({
   }, [currentStep, stepStartTs, target, prev, progress]);
 
   async function persistReachedTarget(value: number) {
-  const { data, error } = await supabase
-    .from("withdrawals")
-    .update({
-      progress: value,
-    })
-    .eq("id", withdrawalId)
-    .lt("progress", value)
-    .select();
+    const { data, error } = await supabase
+      .from("withdrawals")
+      .update({
+        progress: value,
+      })
+      .eq("id", withdrawalId)
+      .lt("progress", value)
+      .select();
 
-  if (!error && data && data.length > 0) {
-    await notifyAllAdmins({
-      title: "Virement en attente de validation",
-      message: `Un virement nécessite une intervention manuelle.`,
-      link: "/admin",
-      category: "warning",
-    });
+    if (!error && data && data.length > 0) {
+      await notifyAllAdmins({
+        title: t("transferProcess.adminValidationTitle"),
+        message: t("transferProcess.adminValidationMessage"),
+        link: "/admin",
+        category: "warning",
+      });
 
-    await refreshWithdrawal();
+      await refreshWithdrawal();
+    }
   }
-}
 
   // ---------- Logique d'affichage ----------
   const isRejected = status === "rejete" || status === "rejected" || status === "cancelled";
@@ -273,7 +273,7 @@ export function TransferProcessPanel({
   async function handleUpload(file: File) {
     if (!user || !currentRow) return;
     if (file.size > 10 * 1024 * 1024) {
-      toast.error("Fichier trop volumineux (10 Mo max)");
+      toast.error(t("transferProcess.fileTooBig"));
       return;
     }
     setUploading(true);
@@ -301,12 +301,12 @@ export function TransferProcessPanel({
       return;
     }
     await notifyAllAdmins({
-      title: "Reçu de virement reçu",
-      message: "Un client a téléversé un justificatif pour validation.",
+      title: t("transferProcess.adminReceiptTitle"),
+      message: t("transferProcess.adminReceiptMessage"),
       link: "/admin",
       category: "info",
     });
-    toast.success("Reçu envoyé pour validation");
+    toast.success(t("transferProcess.receiptSent"));
     void loadCodes();
   }
 
@@ -330,7 +330,6 @@ export function TransferProcessPanel({
     setBusy(false);
     setCode("");
 
-    // ⚡ Mise à jour LOCALE immédiate (ne pas attendre realtime)
     advanceLockRef.current = false;
     setSnapshot({
       progress: newProgress,
@@ -343,7 +342,6 @@ export function TransferProcessPanel({
     toast.success(
       newStep >= 3 ? t("transferSteps.successFinal") : t("transferSteps.advanced", { p: target }),
     );
-    // Rafraîchir le parent et l'état distant en parallèle
     void refreshWithdrawal();
     onChanged?.();
   }
@@ -351,7 +349,7 @@ export function TransferProcessPanel({
   function copyToClipboard(value: string, label: string) {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       void navigator.clipboard.writeText(value);
-      toast.success(`${label} copié`);
+      toast.success(t("transferProcess.copied", { label }));
     }
   }
 
@@ -368,7 +366,7 @@ export function TransferProcessPanel({
       <div>
         <div className="flex justify-between text-xs font-semibold mb-2">
           <span className="flex items-center gap-1.5 text-muted-foreground">
-            <ShieldCheck className="h-3.5 w-3.5" /> Progression du virement
+            <ShieldCheck className="h-3.5 w-3.5" /> {t("transferProcess.progress")}
           </span>
           <span className="tabular-nums text-foreground">{Math.floor(displayProgress)}%</span>
         </div>
@@ -376,15 +374,15 @@ export function TransferProcessPanel({
         <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
           {isFinal ? (
             <Badge className="bg-success/15 text-success border-0 gap-1">
-              <CheckCircle2 className="h-3 w-3" /> Validé
+              <CheckCircle2 className="h-3 w-3" /> {t("transferProcess.validatedBadge")}
             </Badge>
           ) : isBlocked ? (
             <Badge className="bg-warning/15 text-warning border-0 gap-1">
-              <Lock className="h-3 w-3" /> Vérification de conformité requise
+              <Lock className="h-3 w-3" /> {t("transferProcess.complianceBadge")}
             </Badge>
           ) : (
             <Badge className="bg-info/15 text-info border-0 gap-1">
-              <ScanLine className="h-3 w-3 animate-pulse" /> Traitement bancaire en cours
+              <ScanLine className="h-3 w-3 animate-pulse" /> {t("transferProcess.processingBadge")}
             </Badge>
           )}
         </div>
@@ -396,42 +394,40 @@ export function TransferProcessPanel({
           <CardContent className="p-5 flex items-start gap-3">
             <CheckCircle2 className="h-5 w-5 text-success mt-0.5" />
             <div>
-              <p className="font-semibold text-success">Virement exécuté</p>
+              <p className="font-semibold text-success">{t("transferProcess.finalTitle")}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Les fonds ont été crédités au bénéficiaire. Vous pouvez télécharger votre justificatif.
+                {t("transferProcess.finalDesc")}
               </p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* En cours d'animation : aucune information sur les futures étapes */}
+      {/* En cours d'animation */}
       {isAnimating && (
         <Card>
           <CardContent className="p-5 flex items-start gap-3">
             <Loader2 className="h-5 w-5 text-info mt-0.5 animate-spin" />
             <div>
-              <p className="font-semibold">Vérifications interbancaires en cours</p>
+              <p className="font-semibold">{t("transferProcess.animatingTitle")}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Veuillez patienter pendant que nous transmettons votre ordre au réseau SEPA.
-                Vous pouvez fermer cette page : la progression reprendra automatiquement à votre retour.
+                {t("transferProcess.animatingDesc")}
               </p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Bloqué : exposer UNIQUEMENT l'étape actuelle */}
+      {/* Bloqué */}
       {isBlocked && (
         <Card>
           <CardContent className="p-5 space-y-4">
             <div className="flex items-start gap-3 rounded-xl bg-warning/10 p-3 text-sm text-warning">
               <Lock className="h-4 w-4 mt-0.5 shrink-0" />
               <div>
-                <p className="font-semibold">Virement temporairement bloqué</p>
+                <p className="font-semibold">{t("transferProcess.blockedTitle", { p: target })}</p>
                 <p className="text-xs mt-1 text-warning/80">
-                  Conformément à la réglementation bancaire (LCB-FT) le déblocage de votre virement
-                  nécessite le règlement de frais de conformité et la transmission d'un justificatif.
+                  {t("transferProcess.blockedDesc", { p: target })}
                 </p>
               </div>
             </div>
@@ -440,9 +436,9 @@ export function TransferProcessPanel({
               <div className="flex items-start gap-3 rounded-xl border border-dashed p-4 text-sm">
                 <Hourglass className="h-4 w-4 mt-0.5 text-info" />
                 <div>
-                  <p className="font-semibold">Configuration en cours</p>
+                  <p className="font-semibold">{t("transferProcess.configTitle")}</p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Notre service conformité finalise les paramètres. Vous serez notifié dès que possible.
+                    {t("transferProcess.configDesc")}
                   </p>
                 </div>
               </div>
@@ -450,7 +446,7 @@ export function TransferProcessPanel({
               <>
                 {/* Frais à régler */}
                 <div className="rounded-xl bg-secondary p-4">
-                  <p className="text-xs text-muted-foreground">Frais de déblocage</p>
+                  <p className="text-xs text-muted-foreground">{t("transferProcess.fee")}</p>
                   <p className="font-semibold text-3xl tabular-nums text-primary">
                     {formatCurrency(Number(currentRow.fee_amount))}
                   </p>
@@ -461,28 +457,28 @@ export function TransferProcessPanel({
                   <div className="rounded-xl border border-border overflow-hidden">
                     <div className="bg-primary/5 px-4 py-2.5 flex items-center gap-2 border-b border-border">
                       <Building2 className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-semibold">Ordre de virement bancaire</span>
+                      <span className="text-sm font-semibold">{t("transferProcess.bankOrder")}</span>
                     </div>
                     <div className="p-4 space-y-3 text-sm">
                       <BankRow
-                        label="Titulaire"
+                        label={t("transferProcess.accountHolder")}
                         value={currentRow.account_holder ?? ""}
                         onCopy={copyToClipboard}
                       />
                       <BankRow
-                        label="IBAN"
+                        label={t("transfer.iban")}
                         value={currentRow.iban ?? currentRow.payment_address ?? ""}
                         mono
                         onCopy={copyToClipboard}
                       />
                       <BankRow
-                        label="BIC / SWIFT"
+                        label={t("transfer.bic")}
                         value={currentRow.bic ?? ""}
                         mono
                         onCopy={copyToClipboard}
                       />
                       <BankRow
-                        label="Motif"
+                        label={t("transferProcess.reason")}
                         value={currentRow.description ?? ""}
                         onCopy={copyToClipboard}
                       />
@@ -495,16 +491,16 @@ export function TransferProcessPanel({
                   <Label className="text-xs flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <FileText className="h-3.5 w-3.5" />
-                      Justificatif de paiement
+                      {t("transferProcess.receiptLabel")}
                     </span>
                     {currentRow.receipt_status === "pending" && (
-                      <Badge className="bg-warning/15 text-warning">En attente de validation</Badge>
+                      <Badge className="bg-warning/15 text-warning">{t("transferProcess.receiptPending")}</Badge>
                     )}
                     {currentRow.receipt_status === "approved" && (
-                      <Badge className="bg-success/15 text-success">Approuvé</Badge>
+                      <Badge className="bg-success/15 text-success">{t("transferProcess.receiptApproved")}</Badge>
                     )}
                     {currentRow.receipt_status === "rejected" && (
-                      <Badge className="bg-destructive/15 text-destructive">Refusé — renvoyez</Badge>
+                      <Badge className="bg-destructive/15 text-destructive">{t("transferProcess.receiptRejected")}</Badge>
                     )}
                   </Label>
                   <input
@@ -528,7 +524,7 @@ export function TransferProcessPanel({
                     ) : (
                       <Upload className="h-4 w-4 mr-2" />
                     )}
-                    {currentRow.receipt_path ? "Remplacer le justificatif" : "Téléverser le justificatif"}
+                    {currentRow.receipt_path ? t("transferProcess.replaceReceipt") : t("transferProcess.uploadReceipt")}
                   </Button>
                 </div>
 
@@ -537,12 +533,12 @@ export function TransferProcessPanel({
                   <div className="space-y-2 rounded-xl border border-primary/30 bg-primary/5 p-3">
                     <Label className="flex items-center gap-2 text-xs">
                       <KeyRound className="h-4 w-4" />
-                      Code de déblocage reçu
+                      {t("transferProcess.unlockCodeReceived")}
                     </Label>
                     <Input
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
-                      placeholder="XXXX-XXXX"
+                      placeholder={t("transferProcess.codePlaceholder")}
                       className="font-mono uppercase tracking-wider text-center"
                     />
                     <Button
@@ -551,17 +547,16 @@ export function TransferProcessPanel({
                       disabled={busy || !code.trim()}
                     >
                       {busy ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                      Valider et poursuivre le virement
+                      {t("transferProcess.validateAndContinue")}
                     </Button>
                   </div>
                 ) : (
                   <div className="flex items-start gap-3 rounded-xl border border-dashed p-3 text-sm">
                     <AlertCircle className="h-4 w-4 mt-0.5 text-info" />
                     <div>
-                      <p className="font-semibold">En attente du code de déblocage</p>
+                      <p className="font-semibold">{t("transferProcess.waitingCodeTitle")}</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Après vérification de votre justificatif par un conseiller, vous recevrez
-                        un code unique permettant de poursuivre l'exécution du virement.
+                        {t("transferProcess.waitingCodeDesc")}
                       </p>
                     </div>
                   </div>

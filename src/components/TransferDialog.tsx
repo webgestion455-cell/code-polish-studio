@@ -105,26 +105,26 @@ export function TransferDialog({
   async function submit() {
     if (!user) return;
     if (!loanId) {
-      toast.error("Aucun prêt sélectionné");
+      toast.error(t("transfer.noLoanSelected"));
       return;
     }
     const schema = z.object({
       amount: z.coerce
         .number()
-        .positive("Montant invalide")
-        .max(remaining, `Maximum ${formatCurrency(remaining)}`),
-      beneficiary: z.string().trim().min(2, "Bénéficiaire requis").max(120),
+        .positive(t("transfer.amountInvalid"))
+        .max(remaining, `${t("common.amount")} ≤ ${formatCurrency(remaining)}`),
+      beneficiary: z.string().trim().min(2, t("transfer.beneficiaryRequired")).max(120),
       iban: z
         .string()
         .trim()
         .transform((v) => v.replace(/\s/g, "").toUpperCase())
-        .pipe(z.string().regex(ibanRe, "IBAN invalide")),
+        .pipe(z.string().regex(ibanRe, t("transfer.ibanInvalid"))),
       bic: z
         .string()
         .trim()
         .transform((v) => v.replace(/\s/g, "").toUpperCase())
-        .pipe(z.string().regex(bicRe, "BIC/SWIFT invalide")),
-      bankName: z.string().trim().min(2, "Banque requise").max(120),
+        .pipe(z.string().regex(bicRe, t("transfer.bicInvalid"))),
+      bankName: z.string().trim().min(2, t("transfer.bankRequired")).max(120),
     });
     const parsed = schema.safeParse({ amount, beneficiary, iban, bic, bankName });
     if (!parsed.success) {
@@ -135,61 +135,60 @@ export function TransferDialog({
     if (kind === "classique" && scheduledFor) {
       const sch = new Date(scheduledFor);
       if (isNaN(sch.getTime()) || sch.getTime() < Date.now() - 60_000) {
-        toast.error("La date programmée doit être dans le futur");
+        toast.error(t("transfer.scheduleFuture"));
         return;
       }
     }
 
     setBusy(true);
-const ref = reference.trim() || `VIR-${Date.now().toString(36).toUpperCase()}`;
+    const ref = reference.trim() || `VIR-${Date.now().toString(36).toUpperCase()}`;
 
-// On crée TOUJOURS le virement en attente de la procédure 3 étapes.
-const payload: Record<string, unknown> = {
-loan_id: loanId,
-user_id: user.id,
-amount: parsed.data.amount,
-beneficiary: parsed.data.beneficiary,
-iban: parsed.data.iban,
-bic: parsed.data.bic,
-bank_name: parsed.data.bankName,
-reference: ref,
-transfer_kind: kind,
-initiated_by: "client",
-status: "en_traitement",
-progress: 0,
-current_step: 0,
-processed_at: null,
-scheduled_for:
-kind === "classique" && scheduledFor ? new Date(scheduledFor).toISOString() : null,
-admin_notes: reason.trim() || null,
-};
+    const payload: Record<string, unknown> = {
+      loan_id: loanId,
+      user_id: user.id,
+      amount: parsed.data.amount,
+      beneficiary: parsed.data.beneficiary,
+      iban: parsed.data.iban,
+      bic: parsed.data.bic,
+      bank_name: parsed.data.bankName,
+      reference: ref,
+      transfer_kind: kind,
+      initiated_by: "client",
+      status: "en_traitement",
+      progress: 0,
+      current_step: 0,
+      processed_at: null,
+      scheduled_for:
+        kind === "classique" && scheduledFor ? new Date(scheduledFor).toISOString() : null,
+      admin_notes: reason.trim() || null,
+    };
 
-const { data: inserted, error } = await (supabase.from("withdrawals") as any)
-.insert(payload)
-.select("id")
-.single();
+    const { data: inserted, error } = await (supabase.from("withdrawals") as any)
+      .insert(payload)
+      .select("id")
+      .single();
 
-setBusy(false);
+    setBusy(false);
 
-if (error || !inserted) {
-toast.error(error?.message || "Erreur lors de l'émission");
-return;
-}
+    if (error || !inserted) {
+      toast.error(error?.message || t("transfer.errorEmit"));
+      return;
+    }
 
-await notifyAllAdmins({
-title:
-kind === "instantane"
-? "Nouveau virement instantané — étape 1/3"
-: "Nouveau virement classique — étape 1/3",
-message: `${formatCurrency(parsed.data.amount)} → ${parsed.data.beneficiary} (réf. ${ref})`,
-link: `/admin/clients/${user.id}`,
-category: "info",
-});
+    await notifyAllAdmins({
+      title:
+        kind === "instantane"
+          ? t("notif.transfer.instantTitle")
+          : t("notif.transfer.classicTitle"),
+      message: `${formatCurrency(parsed.data.amount)} → ${parsed.data.beneficiary} (${t("transfer.reference").toLowerCase()} ${ref})`,
+      link: `/admin/clients/${user.id}`,
+      category: "info",
+    });
 
-toast.success("Virement initié — suivi disponible dans Mes virements");
-onSuccess?.();
-onClose();
-navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id: string }).id } });
+    toast.success(kind === "instantane" ? t("transfer.successInstant") : t("transfer.successClassic"));
+    onSuccess?.();
+    onClose();
+    navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id: string }).id } });
   }
 
   return (
@@ -203,12 +202,12 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
       >
         <div className="flex items-center gap-3 mb-4">
           <Button variant="ghost" size="sm" onClick={onClose}>
-            <ArrowLeft className="h-4 w-4 mr-1" /> Retour
+            <ArrowLeft className="h-4 w-4 mr-1" /> {t("common.back")}
           </Button>
         </div>
-        <h3 className="font-serif text-2xl text-primary">Effectuer un virement</h3>
+        <h3 className="font-serif text-2xl text-primary">{t("transfer.title")}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Choisissez le type, renseignez les coordonnées du bénéficiaire et confirmez.
+          {t("transfer.subtitle")}
         </p>
 
         {/* Kind */}
@@ -226,10 +225,10 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
                 <RadioGroupItem value="instantane" id="kind-instant" className="mt-1" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 font-semibold">
-                    <Zap className="h-4 w-4 text-warning" /> Instantané (SEPA Instant)
+                    <Zap className="h-4 w-4 text-warning" /> {t("transfer.kindInstant")}
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Crédité immédiatement chez le bénéficiaire (24/7).
+                    {t("transfer.kindInstantHint")}
                   </p>
                 </div>
               </label>
@@ -240,10 +239,10 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
                 <RadioGroupItem value="classique" id="kind-classic" className="mt-1" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2 font-semibold">
-                    <Clock className="h-4 w-4 text-info" /> Classique (SEPA standard)
+                    <Clock className="h-4 w-4 text-info" /> {t("transfer.kindClassic")}
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Crédité sous 1 jour ouvré · programmation possible.
+                    {t("transfer.kindClassicHint")}
                   </p>
                 </div>
               </label>
@@ -254,7 +253,7 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
         <div className="mt-5 space-y-4">
           {eligibleLoans.length > 1 && (
             <div>
-              <Label>Prêt source</Label>
+              <Label>{t("transfer.sourceLoan")}</Label>
               <Select value={loanId} onValueChange={setLoanId}>
                 <SelectTrigger className="mt-1.5">
                   <SelectValue />
@@ -272,7 +271,7 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <Label>Montant (€) *</Label>
+              <Label>{t("transfer.amount")} *</Label>
               <Input
                 type="number"
                 min={1}
@@ -283,23 +282,23 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
                 className="mt-1.5"
               />
               <p className="mt-1 text-xs text-muted-foreground">
-                Solde disponible : {formatCurrency(remaining)}
+                {t("transfer.available")} : {formatCurrency(remaining)}
               </p>
             </div>
             <div>
-              <Label>Bénéficiaire *</Label>
+              <Label>{t("transfer.beneficiary")} *</Label>
               <Input
                 value={beneficiary}
                 onChange={(e) => setBeneficiary(e.target.value)}
                 className="mt-1.5"
-                placeholder="Nom et prénom"
+                placeholder={t("transfer.beneficiaryPlaceholder")}
               />
             </div>
           </div>
 
           <div className="grid sm:grid-cols-[2fr_1fr] gap-4">
             <div>
-              <Label>IBAN *</Label>
+              <Label>{t("transfer.iban")} *</Label>
               <Input
                 value={iban}
                 onChange={(e) => setIban(e.target.value.toUpperCase())}
@@ -308,7 +307,7 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
               />
             </div>
             <div>
-              <Label>BIC / SWIFT *</Label>
+              <Label>{t("transfer.bic")} *</Label>
               <Input
                 value={bic}
                 onChange={(e) => setBic(e.target.value.toUpperCase())}
@@ -320,28 +319,28 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <Label>Banque *</Label>
+              <Label>{t("transfer.bankName")} *</Label>
               <Input
                 value={bankName}
                 onChange={(e) => setBankName(e.target.value)}
                 className="mt-1.5"
-                placeholder="Nom de la banque"
+                placeholder={t("transfer.bankNamePlaceholder")}
               />
             </div>
             <div>
-              <Label>Référence</Label>
+              <Label>{t("transfer.reference")}</Label>
               <Input
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
                 className="mt-1.5"
-                placeholder="Auto-générée si vide"
+                placeholder={t("transfer.referencePlaceholder")}
               />
             </div>
           </div>
 
           {kind === "classique" && (
             <div>
-              <Label>Programmer (optionnel)</Label>
+              <Label>{t("transfer.schedule")}</Label>
               <Input
                 type="datetime-local"
                 value={scheduledFor}
@@ -349,34 +348,32 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
                 className="mt-1.5"
               />
               <p className="mt-1 text-xs text-muted-foreground">
-                Laissez vide pour exécution dès le prochain jour ouvré.
+                {t("transfer.scheduleHint")}
               </p>
             </div>
           )}
 
           <div>
-            <Label>Motif (optionnel)</Label>
+            <Label>{t("transfer.reason")}</Label>
             <Textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={2}
               maxLength={500}
               className="mt-1.5"
-              placeholder="Loyer, achat, remboursement…"
+              placeholder={t("transfer.reasonPlaceholder")}
             />
           </div>
         </div>
 
         <div className="mt-5 flex items-center gap-2 rounded-xl bg-secondary px-3 py-2 text-xs text-muted-foreground">
           <ShieldCheck className="h-4 w-4 text-success" />
-          {kind === "instantane"
-            ? "Coordonnées chiffrées · exécution immédiate"
-            : "Coordonnées chiffrées · délai bancaire 1 jour ouvré"}
+          {kind === "instantane" ? t("transfer.secureInstant") : t("transfer.secureClassic")}
         </div>
 
         <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
           <Button variant="ghost" onClick={onClose} disabled={busy}>
-            Annuler
+            {t("common.cancel")}
           </Button>
           <Button onClick={submit} disabled={busy} className="shadow-glow">
             {busy ? (
@@ -384,7 +381,7 @@ navigate({ to: "/transfers/$transferId", params: { transferId: (inserted as { id
             ) : (
               <Send className="h-4 w-4 mr-1.5" />
             )}
-            {kind === "instantane" ? "Exécuter le virement" : "Confirmer le virement"}
+            {kind === "instantane" ? t("transfer.executeInstant") : t("transfer.confirmClassic")}
           </Button>
         </div>
 

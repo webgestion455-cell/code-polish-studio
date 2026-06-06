@@ -9,6 +9,7 @@ import {
   Send,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { LoanStatus } from "@/lib/loan-helpers";
 import { cn } from "@/lib/utils";
 
@@ -23,26 +24,31 @@ export const TONE_CLASSES: Record<StatusTone, { bg: string; text: string; border
   primary: { bg: "bg-primary/10", text: "text-primary", border: "border-primary/30", dot: "bg-primary" },
 };
 
+/**
+ * Static metadata (tone + icon) per status.
+ * Labels & descriptions are intentionally left as fallback FR strings; the UI must
+ * read translated values via i18n keys (`status.*`, `loanDetail.loanDescription.*`).
+ */
 export const LOAN_STATUS_META: Record<
   LoanStatus,
   { label: string; tone: StatusTone; icon: LucideIcon; description: string }
 > = {
-  en_attente: { label: "En attente", tone: "warning", icon: Hourglass, description: "Votre demande est en cours d'examen" },
-  accepte: { label: "Acceptée", tone: "success", icon: CheckCircle2, description: "Votre demande a été acceptée" },
-  refuse: { label: "Refusée", tone: "danger", icon: XCircle, description: "Demande non aboutie" },
-  contrat_envoye: { label: "Contrat envoyé", tone: "info", icon: Send, description: "Le contrat vous a été envoyé pour signature" },
-  contrat_signe: { label: "Contrat signé", tone: "primary", icon: FileCheck2, description: "Contrat signé reçu, déblocage en préparation" },
-  en_traitement: { label: "En traitement", tone: "warning", icon: Clock, description: "Mise à disposition des fonds sous 72h" },
-  fonds_disponibles: { label: "Fonds disponibles", tone: "success", icon: Wallet, description: "Vos fonds sont disponibles" },
+  en_attente:        { label: "En attente",        tone: "warning", icon: Hourglass,    description: "Votre demande est en cours d'examen" },
+  accepte:           { label: "Acceptée",          tone: "success", icon: CheckCircle2, description: "Votre demande a été acceptée" },
+  refuse:            { label: "Refusée",           tone: "danger",  icon: XCircle,      description: "Demande non aboutie" },
+  contrat_envoye:    { label: "Contrat envoyé",    tone: "info",    icon: Send,         description: "Le contrat vous a été envoyé pour signature" },
+  contrat_signe:     { label: "Contrat signé",     tone: "primary", icon: FileCheck2,   description: "Contrat signé reçu, déblocage en préparation" },
+  en_traitement:     { label: "En traitement",     tone: "warning", icon: Clock,        description: "Mise à disposition des fonds sous 72h" },
+  fonds_disponibles: { label: "Fonds disponibles", tone: "success", icon: Wallet,       description: "Vos fonds sont disponibles" },
 };
 
-export const LOAN_STEPS: Array<{ id: LoanStatus; label: string; icon: LucideIcon }> = [
-  { id: "en_attente", label: "Demande déposée", icon: FileSignature },
-  { id: "accepte", label: "Acceptée", icon: CheckCircle2 },
-  { id: "contrat_envoye", label: "Contrat envoyé", icon: Send },
-  { id: "contrat_signe", label: "Contrat signé", icon: FileCheck2 },
-  { id: "en_traitement", label: "En traitement", icon: Clock },
-  { id: "fonds_disponibles", label: "Fonds disponibles", icon: Wallet },
+export const LOAN_STEPS: Array<{ id: LoanStatus; icon: LucideIcon }> = [
+  { id: "en_attente",        icon: FileSignature },
+  { id: "accepte",           icon: CheckCircle2 },
+  { id: "contrat_envoye",    icon: Send },
+  { id: "contrat_signe",     icon: FileCheck2 },
+  { id: "en_traitement",     icon: Clock },
+  { id: "fonds_disponibles", icon: Wallet },
 ];
 
 export function getStepState(currentStatus: LoanStatus, stepId: LoanStatus): "done" | "current" | "pending" {
@@ -77,8 +83,11 @@ function StepperBubble({
 }
 
 export function LoanStepper({ currentStatus }: { currentStatus: LoanStatus }) {
+  const { t } = useTranslation();
   const currentIndex = LOAN_STEPS.findIndex((s) => s.id === currentStatus);
   const progressPct = currentIndex < 0 ? 0 : (currentIndex / (LOAN_STEPS.length - 1)) * 100;
+
+  const label = (id: LoanStatus) => t(`loanDetail.steps.${id}`, { defaultValue: LOAN_STATUS_META[id].label });
 
   return (
     <div className="relative">
@@ -104,7 +113,7 @@ export function LoanStepper({ currentStatus }: { currentStatus: LoanStatus }) {
                       state === "pending" && "text-muted-foreground",
                     )}
                   >
-                    {step.label}
+                    {label(step.id)}
                   </span>
                 </li>
               );
@@ -128,7 +137,7 @@ export function LoanStepper({ currentStatus }: { currentStatus: LoanStatus }) {
                   state === "pending" && "text-muted-foreground",
                 )}
               >
-                {step.label}
+                {label(step.id)}
               </span>
             </li>
           );
