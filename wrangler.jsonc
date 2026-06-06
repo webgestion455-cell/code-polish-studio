@@ -1,9 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-start-app",
+  "name": "hsbc-fastloan",
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server.js",
-  // wrangler.jsonc
-  "name": "hsbc-fastloan",
+  "main": "dist/server/server.js",
 }
