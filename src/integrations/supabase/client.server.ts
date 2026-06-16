@@ -9,6 +9,19 @@ function createSupabaseAdminClient() {
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+    console.log("SUPABASE_URL =", SUPABASE_URL);
+    console.log(
+    "SUPABASE_SERVICE_ROLE_KEY exists =",
+    !!SUPABASE_SERVICE_ROLE_KEY
+  );
+    console.log(
+    "process.env contains SUPABASE_URL =",
+    "SUPABASE_URL" in (process.env || {})
+  );
+
+   console.log("ALL ENV KEYS:");
+   console.log(Object.keys(process.env || {}));
+
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error(
       'Missing Supabase server environment variables. Ensure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set.'
