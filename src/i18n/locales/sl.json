@@ -864,5 +864,15 @@
     "transfers": "Nakazila",
     "request": "Zahteva",
     "primary": "Glavna navigacija"
+  },
+  "mobileHome": {
+    "title": "Dobrodošli pri HSBC BANK",
+    "subtitle": "Vaša banka, v vašem žepu.",
+    "description": "Upravljajte svoja posojila, nakazila in račune varno, kjer koli ste.",
+    "cta": "Začni",
+    "tagline": "Evropska bančna varnost",
+    "feature1": "Varno",
+    "feature2": "Šifriranje od konca do konca",
+    "feature3": "Premium izkušnja"
   }
 }

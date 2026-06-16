@@ -864,5 +864,15 @@
     "transfers": "Bonifici",
     "request": "Richiesta",
     "primary": "Navigazione principale"
+  },
+  "mobileHome": {
+    "title": "Benvenuto in HSBC BANK",
+    "subtitle": "La tua banca, in tasca.",
+    "description": "Gestisci i tuoi prestiti, bonifici e conti in totale sicurezza, ovunque tu sia.",
+    "cta": "Inizia",
+    "tagline": "Sicurezza bancaria europea",
+    "feature1": "Sicuro",
+    "feature2": "Crittografia end-to-end",
+    "feature3": "Esperienza premium"
   }
 }

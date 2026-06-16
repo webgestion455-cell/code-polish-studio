@@ -864,5 +864,15 @@
     "transfers": "Transfers",
     "request": "Request",
     "primary": "Main navigation"
+  },
+  "mobileHome": {
+    "title": "Welcome to HSBC BANK",
+    "subtitle": "Your bank, in your pocket.",
+    "description": "Manage your loans, transfers and accounts securely, wherever you are.",
+    "cta": "Get started",
+    "tagline": "European banking security",
+    "feature1": "Secure",
+    "feature2": "End-to-end encryption",
+    "feature3": "Premium experience"
   }
 }

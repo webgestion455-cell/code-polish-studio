@@ -154,7 +154,7 @@ function LoanDetail() {
       const { data: sessionData } = await supabase.auth.getSession();
       const accessToken = sessionData.session?.access_token;
       if (!accessToken) throw new Error(t("loanDetail.sessionExpired"));
-      const { base64, filename } = await generateContractPdf({ data: { loanId: loan.id, accessToken } });
+      const { base64, filename } = await generateContractPdf({ data: { loanId: loan.id, accessToken, locale: i18n.language } });
       const binary = atob(base64);
       const bytes = new Uint8Array(binary.length);
       for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);

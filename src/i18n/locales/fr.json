@@ -864,5 +864,15 @@
     "transfers": "Virements",
     "request": "Demande",
     "primary": "Navigation principale"
+  },
+  "mobileHome": {
+    "title": "Bienvenue chez HSBC BANK",
+    "subtitle": "Votre banque, dans votre poche.",
+    "description": "Gérez vos prêts, virements et comptes en toute sécurité, où que vous soyez.",
+    "cta": "Démarrer",
+    "tagline": "Sécurité bancaire européenne",
+    "feature1": "Sécurisé",
+    "feature2": "Chiffrement de bout en bout",
+    "feature3": "Expérience premium"
   }
 }

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouter } from "@tanstack/react-router";
 import { Capacitor } from "@capacitor/core";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { SplashScreen } from "@capacitor/splash-screen";
@@ -94,9 +94,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
 
   const location = useLocation();
+  const router = useRouter();
 
   const hideLayout = [
     "/auth",
+    "/mobile-home",
   ].includes(location.pathname);
 
   useEffect(() => {
@@ -110,6 +112,16 @@ function RootComponent() {
 
     SplashScreen.hide();
 
+    // First-launch onboarding for the APK only — never affects the web site.
+    try {
+      const seen = localStorage.getItem("hsbc.mobileOnboarding.seen");
+      if (!seen && location.pathname === "/") {
+        router.navigate({ to: "/mobile-home", replace: true });
+      }
+    } catch {
+      /* ignore */
+    }
+
     App.addListener("backButton", ({ canGoBack }: { canGoBack: boolean }) => {
       if (!canGoBack) {
         App.exitApp();
@@ -118,7 +130,7 @@ function RootComponent() {
       }
     });
   }
-}, []);
+}, [location.pathname, router]);
 
   return (
     <ThemeProvider>

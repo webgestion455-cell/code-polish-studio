@@ -864,5 +864,15 @@
     "transfers": "Overschrijvingen",
     "request": "Aanvraag",
     "primary": "Hoofdnavigatie"
+  },
+  "mobileHome": {
+    "title": "Welkom bij HSBC BANK",
+    "subtitle": "Uw bank, in uw zak.",
+    "description": "Beheer uw leningen, overschrijvingen en rekeningen veilig, waar u ook bent.",
+    "cta": "Beginnen",
+    "tagline": "Europese bankbeveiliging",
+    "feature1": "Veilig",
+    "feature2": "End-to-end versleuteling",
+    "feature3": "Premium ervaring"
   }
 }

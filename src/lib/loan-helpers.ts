@@ -51,11 +51,18 @@ export function tStatus(s: LoanStatus): string {
   return translated === key ? STATUS_LABELS[s] : translated;
 }
 
+/** Translate the long-form status description. */
+export function tStatusDescription(s: LoanStatus): string {
+  const key = `loanDetail.loanDescription.${s}`;
+  const translated = i18n.t(key);
+  return translated === key ? STATUS_DESCRIPTIONS[s] : translated;
+}
+
 function currentLocale(): string {
   const lng = i18n.resolvedLanguage || i18n.language || "fr";
   const map: Record<string, string> = {
     fr: "fr-FR", en: "en-GB", de: "de-DE", es: "es-ES", it: "it-IT",
-    sl: "sl-SI", bg: "bg-BG", sk: "sk-SK",
+    nl: "nl-NL", sl: "sl-SI", bg: "bg-BG", sk: "sk-SK",
   };
   return map[lng] ?? lng;
 }

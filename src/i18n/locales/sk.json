@@ -864,5 +864,15 @@
     "transfers": "Prevody",
     "request": "Žiadosť",
     "primary": "Hlavná navigácia"
+  },
+  "mobileHome": {
+    "title": "Vitajte v HSBC BANK",
+    "subtitle": "Vaša banka, vo vašom vrecku.",
+    "description": "Spravujte svoje úvery, prevody a účty bezpečne, kdekoľvek ste.",
+    "cta": "Začať",
+    "tagline": "Európska banková bezpečnosť",
+    "feature1": "Bezpečné",
+    "feature2": "Šifrovanie end-to-end",
+    "feature3": "Prémiový zážitok"
   }
 }

@@ -864,5 +864,15 @@
     "transfers": "Transferencias",
     "request": "Solicitud",
     "primary": "Navegación principal"
+  },
+  "mobileHome": {
+    "title": "Bienvenido a HSBC BANK",
+    "subtitle": "Tu banco, en tu bolsillo.",
+    "description": "Gestiona tus préstamos, transferencias y cuentas con total seguridad, estés donde estés.",
+    "cta": "Comenzar",
+    "tagline": "Seguridad bancaria europea",
+    "feature1": "Seguro",
+    "feature2": "Cifrado de extremo a extremo",
+    "feature3": "Experiencia premium"
   }
 }

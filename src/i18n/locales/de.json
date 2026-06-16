@@ -864,5 +864,15 @@
     "transfers": "Überweisungen",
     "request": "Antrag",
     "primary": "Hauptnavigation"
+  },
+  "mobileHome": {
+    "title": "Willkommen bei HSBC BANK",
+    "subtitle": "Ihre Bank, in Ihrer Tasche.",
+    "description": "Verwalten Sie Ihre Kredite, Überweisungen und Konten sicher, wo immer Sie sind.",
+    "cta": "Loslegen",
+    "tagline": "Europäische Banksicherheit",
+    "feature1": "Sicher",
+    "feature2": "Ende-zu-Ende-Verschlüsselung",
+    "feature3": "Premium-Erlebnis"
   }
 }

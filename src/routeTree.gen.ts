@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransfersRouteImport } from './routes/transfers'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MobileHomeRouteImport } from './routes/mobile-home'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -42,6 +43,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MobileHomeRoute = MobileHomeRouteImport.update({
+  id: '/mobile-home',
+  path: '/mobile-home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/mobile-home': typeof MobileHomeRoute
   '/notifications': typeof NotificationsRoute
   '/settings': typeof SettingsRoute
   '/transfers': typeof TransfersRouteWithChildren
@@ -152,6 +159,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/mobile-home': typeof MobileHomeRoute
   '/notifications': typeof NotificationsRoute
   '/settings': typeof SettingsRoute
   '/admin/loans': typeof AdminLoansRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/mobile-home': typeof MobileHomeRoute
   '/notifications': typeof NotificationsRoute
   '/settings': typeof SettingsRoute
   '/transfers': typeof TransfersRouteWithChildren
@@ -196,6 +205,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/dashboard'
+    | '/mobile-home'
     | '/notifications'
     | '/settings'
     | '/transfers'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/dashboard'
+    | '/mobile-home'
     | '/notifications'
     | '/settings'
     | '/admin/loans'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/dashboard'
+    | '/mobile-home'
     | '/notifications'
     | '/settings'
     | '/transfers'
@@ -259,6 +271,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
+  MobileHomeRoute: typeof MobileHomeRoute
   NotificationsRoute: typeof NotificationsRoute
   SettingsRoute: typeof SettingsRoute
   TransfersRoute: typeof TransfersRouteWithChildren
@@ -294,6 +307,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mobile-home': {
+      id: '/mobile-home'
+      path: '/mobile-home'
+      fullPath: '/mobile-home'
+      preLoaderRoute: typeof MobileHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -441,6 +461,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
+  MobileHomeRoute: MobileHomeRoute,
   NotificationsRoute: NotificationsRoute,
   SettingsRoute: SettingsRoute,
   TransfersRoute: TransfersRouteWithChildren,
