@@ -10,11 +10,9 @@ function createSupabaseAdminClient() {
   const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error(
+    throw new Error(
     JSON.stringify({
-      hasUrl: !!SUPABASE_URL,
-      hasKey: !!SUPABASE_SERVICE_ROLE_KEY,
-      url: SUPABASE_URL?.slice(0, 30),
+      allKeys: Object.keys(process.env || {}).slice(0, 50),
     })
   );
 }
