@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription, EmptyContent } from "@/components/ui/empty";
 import { StatusBadge } from "@/components/StatusBadge";
 import { TransferDialog } from "@/components/TransferDialog";
-import { formatCurrency, formatDate, formatDateTime, STATUS_DESCRIPTIONS, STATUS_PROGRESS, type LoanStatus } from "@/lib/loan-helpers";
+import { formatCurrency, formatDate, formatDateTime, STATUS_PROGRESS, type LoanStatus } from "@/lib/loan-helpers";
 import {
   Plus, Wallet, ArrowUpRight, FileText, History,
   Eye, EyeOff, Sparkles, Send, TrendingUp, ArrowRight, Mail,
@@ -324,7 +324,7 @@ function Dashboard() {
                             style={{ width: `${STATUS_PROGRESS[loan.status]}%` }}
                           />
                         </div>
-                        <p className="mt-2 text-xs text-muted-foreground">{STATUS_DESCRIPTIONS[loan.status]}</p>
+                        <p className="mt-2 text-xs text-muted-foreground">{t(`loanDetail.loanDescription.${loan.status}`)}</p>
                       </div>
                     </CardContent>
                   </Card>
