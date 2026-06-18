@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { ArrowLeft, ShieldCheck, Lock, Sparkles } from "lucide-react";
 import hsbcLogo from "@/assets/hsbc-logo.png";
 import i18n from "@/i18n";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -92,18 +93,21 @@ function AuthPage() {
   }
 
   async function handleGoogleSignIn() {
-    setGoogleLoading(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/dashboard`,
-      extraParams: { prompt: "select_account" },
-    });
-    setGoogleLoading(false);
-    if (result.error) {
-      toast.error(t("auth.googleError"));
-      return;
-    }
-    if (!result.redirected) navigate({ to: "/dashboard" });
+  setGoogleLoading(true);
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+
+  setGoogleLoading(false);
+
+  if (error) {
+    toast.error(t("auth.googleError"));
   }
+}
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-hero px-4 py-12">

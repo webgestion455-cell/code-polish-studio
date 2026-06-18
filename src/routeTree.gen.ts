@@ -23,6 +23,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as TransfersTransferIdRouteImport } from './routes/transfers.$transferId'
 import { Route as LoansNewRouteImport } from './routes/loans.new'
 import { Route as LoansLoanIdRouteImport } from './routes/loans.$loanId'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AdminVerifyRouteImport } from './routes/admin.verify'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminLoansRouteImport } from './routes/admin.loans'
@@ -101,6 +102,11 @@ const LoansLoanIdRoute = LoansLoanIdRouteImport.update({
   path: '/loans/$loanId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AdminVerifyRoute = AdminVerifyRouteImport.update({
   id: '/admin/verify',
   path: '/admin/verify',
@@ -140,7 +146,7 @@ const AdminClientsUserIdRoute = AdminClientsUserIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/auth-pending': typeof AuthPendingRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/admin/loans': typeof AdminLoansRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/verify': typeof AdminVerifyRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
   '/transfers/$transferId': typeof TransfersTransferIdRouteWithChildren
@@ -163,7 +170,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/auth-pending': typeof AuthPendingRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/admin/loans': typeof AdminLoansRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/verify': typeof AdminVerifyRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
   '/transfers/$transferId': typeof TransfersTransferIdRouteWithChildren
@@ -186,7 +194,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/auth-pending': typeof AuthPendingRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/admin/loans': typeof AdminLoansRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/verify': typeof AdminVerifyRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
   '/transfers/$transferId': typeof TransfersTransferIdRouteWithChildren
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/admin/loans'
     | '/admin/notifications'
     | '/admin/verify'
+    | '/auth/callback'
     | '/loans/$loanId'
     | '/loans/new'
     | '/transfers/$transferId'
@@ -244,6 +254,7 @@ export interface FileRouteTypes {
     | '/admin/loans'
     | '/admin/notifications'
     | '/admin/verify'
+    | '/auth/callback'
     | '/loans/$loanId'
     | '/loans/new'
     | '/transfers/$transferId'
@@ -267,6 +278,7 @@ export interface FileRouteTypes {
     | '/admin/loans'
     | '/admin/notifications'
     | '/admin/verify'
+    | '/auth/callback'
     | '/loans/$loanId'
     | '/loans/new'
     | '/transfers/$transferId'
@@ -280,7 +292,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   AuthPendingRoute: typeof AuthPendingRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
@@ -399,6 +411,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoansLoanIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/admin/verify': {
       id: '/admin/verify'
       path: '/admin/verify'
@@ -451,6 +470,16 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 interface TransfersTransferIdRouteChildren {
   TransfersTransferIdReceiptRoute: typeof TransfersTransferIdReceiptRoute
 }
@@ -478,7 +507,7 @@ const TransfersRouteWithChildren = TransfersRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   AuthPendingRoute: AuthPendingRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
