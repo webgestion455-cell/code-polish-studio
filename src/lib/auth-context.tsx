@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import i18n from "i18next";
 
 type Role = "admin" | "user";
 
@@ -96,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: {
         emailRedirectTo: redirectUrl,
-        data: { full_name: fullName, phone, lang },
+        data: { full_name: fullName, phone, lang: i18n.language, },
       },
     });
     return { error };
