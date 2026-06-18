@@ -874,5 +874,13 @@
     "feature1": "Sicuro",
     "feature2": "Crittografia end-to-end",
     "feature3": "Esperienza premium"
-  }
+  },
+
+  "authPending": {
+  "title": "Controlla la tua email",
+  "description": "Ti abbiamo inviato un link di conferma.",
+  "instruction": "Clicca sul link per attivare il tuo account.",
+  "loading": "In attesa di conferma...",
+  "footer": "Non condividere mai le tue credenziali."
+}
 }

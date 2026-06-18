@@ -87,7 +87,7 @@ function AuthPage() {
       }
     } else {
       toast.success(t("auth.accountCreated"));
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/auth-pending" });
     }
   }
 

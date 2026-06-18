@@ -24,57 +24,85 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let active = true;
-    const failSafe = window.setTimeout(() => {
-      if (active) setLoading(false);
-    }, 2500);
+  let active = true;
+  const failSafe = window.setTimeout(() => {
+    if (active) setLoading(false);
+  }, 2500);
 
-    // Set up listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
-      if (!active) return;
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-      if (newSession?.user) {
-        setRole(null);
-        // defer role fetch to avoid deadlock
-        setTimeout(() => {
-          void fetchRole(newSession.user.id);
-        }, 0);
-      } else {
-        setRole(null);
-      }
+  // IMPORTANT: CAPTURE SUBSCRIPTION
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    if (!active) return;
+
+    setSession(newSession);
+    setUser(newSession?.user ?? null);
+
+    // NO USER
+    if (!newSession?.user) {
+      setRole(null);
       setLoading(false);
-    });
+      return;
+    }
 
-    // Then check existing session
-    supabase.auth.getSession().then(({ data: { session: existing } }) => {
+    // EMAIL NON CONFIRMÉ
+    if (!newSession.user.email_confirmed_at) {
+      setRole(null);
+      setLoading(false);
+      return;
+    }
+
+    setRole(null);
+
+    setTimeout(() => {
+      void fetchRole(newSession.user.id);
+    }, 0);
+
+    setLoading(false);
+  });
+
+  // CHECK SESSION INITIALE
+  supabase.auth
+    .getSession()
+    .then(({ data: { session: existing } }) => {
       if (!active) return;
+
       setSession(existing);
       setUser(existing?.user ?? null);
-      if (!existing) {setLoading(false);}
-      if (existing?.user) {
+
+      if (!existing?.user) {
         setRole(null);
-        void fetchRole(existing.user.id);
-      } else {
-        setRole(null);
+        setLoading(false);
+        return;
       }
-    }).catch(() => {
+
+      if (!existing.user.email_confirmed_at) {
+        setRole(null);
+        setLoading(false);
+        return;
+      }
+
+      setRole(null);
+      void fetchRole(existing.user.id);
+    })
+    .catch(() => {
       if (!active) return;
       setSession(null);
       setUser(null);
       setRole(null);
-    }).finally(() => {
+    })
+    .finally(() => {
       if (!active) return;
       window.clearTimeout(failSafe);
       setLoading(false);
     });
 
-    return () => {
-      active = false;
-      window.clearTimeout(failSafe);
-      subscription.unsubscribe();
-    };
-  }, []);
+  return () => {
+    active = false;
+    window.clearTimeout(failSafe);
+    subscription.unsubscribe();
+  };
+}, []);
 
   async function fetchRole(userId: string) {
     const { data } = await supabase

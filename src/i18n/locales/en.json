@@ -874,5 +874,13 @@
     "feature1": "Secure",
     "feature2": "End-to-end encryption",
     "feature3": "Premium experience"
-  }
+  },
+
+  "authPending": {
+  "title": "Check your email",
+  "description": "We have sent a confirmation link to your email address.",
+  "instruction": "Click the link in your inbox to activate your account.",
+  "loading": "Waiting for confirmation...",
+  "footer": "For your security, never share your credentials. HSBC-Finance will never ask for your password."
+}
 }

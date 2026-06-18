@@ -874,5 +874,13 @@
     "feature1": "Sécurisé",
     "feature2": "Chiffrement de bout en bout",
     "feature3": "Expérience premium"
-  }
+  },
+
+  "authPending": {
+  "title": "Vérifiez votre email",
+  "description": "Nous avons envoyé un lien de confirmation à votre adresse email.",
+  "instruction": "Cliquez sur le lien dans votre boîte mail pour activer votre compte.",
+  "loading": "En attente de confirmation...",
+  "footer": "Pour votre sécurité, ne partagez jamais vos identifiants. HSBC-Finance ne vous demandera jamais votre mot de passe."
+}
 }

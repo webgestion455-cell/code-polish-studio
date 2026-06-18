@@ -874,5 +874,13 @@
     "feature1": "Seguro",
     "feature2": "Cifrado de extremo a extremo",
     "feature3": "Experiencia premium"
-  }
+  },
+
+  "authPending": {
+  "title": "Verifica tu correo",
+  "description": "Hemos enviado un enlace de confirmación a tu correo electrónico.",
+  "instruction": "Haz clic en el enlace para activar tu cuenta.",
+  "loading": "Esperando confirmación...",
+  "footer": "Por tu seguridad, nunca compartas tus credenciales."
+}
 }

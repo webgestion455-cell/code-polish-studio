@@ -15,6 +15,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MobileHomeRouteImport } from './routes/mobile-home'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AuthPendingRouteImport } from './routes/auth-pending'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TransfersIndexRouteImport } from './routes/transfers.index'
@@ -58,6 +59,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthPendingRoute = AuthPendingRouteImport.update({
+  id: '/auth-pending',
+  path: '/auth-pending',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -135,6 +141,7 @@ const AdminClientsUserIdRoute = AdminClientsUserIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/auth-pending': typeof AuthPendingRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/mobile-home': typeof MobileHomeRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/auth-pending': typeof AuthPendingRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/mobile-home': typeof MobileHomeRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/auth-pending': typeof AuthPendingRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/mobile-home': typeof MobileHomeRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/auth-pending'
     | '/contact'
     | '/dashboard'
     | '/mobile-home'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/auth-pending'
     | '/contact'
     | '/dashboard'
     | '/mobile-home'
@@ -246,6 +257,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/auth-pending'
     | '/contact'
     | '/dashboard'
     | '/mobile-home'
@@ -269,6 +281,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  AuthPendingRoute: typeof AuthPendingRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   MobileHomeRoute: typeof MobileHomeRoute
@@ -328,6 +341,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth-pending': {
+      id: '/auth-pending'
+      path: '/auth-pending'
+      fullPath: '/auth-pending'
+      preLoaderRoute: typeof AuthPendingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -459,6 +479,7 @@ const TransfersRouteWithChildren = TransfersRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  AuthPendingRoute: AuthPendingRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   MobileHomeRoute: MobileHomeRoute,

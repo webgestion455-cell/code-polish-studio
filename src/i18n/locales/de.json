@@ -874,5 +874,13 @@
     "feature1": "Sicher",
     "feature2": "Ende-zu-Ende-Verschlüsselung",
     "feature3": "Premium-Erlebnis"
-  }
+  },
+
+  "authPending": {
+  "title": "E-Mail überprüfen",
+  "description": "Wir haben einen Bestätigungslink an Ihre E-Mail gesendet.",
+  "instruction": "Klicken Sie auf den Link, um Ihr Konto zu aktivieren.",
+  "loading": "Warten auf Bestätigung...",
+  "footer": "Teilen Sie niemals Ihre Zugangsdaten."
+}
 }

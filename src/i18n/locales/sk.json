@@ -874,5 +874,13 @@
     "feature1": "Bezpečné",
     "feature2": "Šifrovanie end-to-end",
     "feature3": "Prémiový zážitok"
-  }
+  },
+
+  "authPending": {
+  "title": "Skontrolujte e-mail",
+  "description": "Odoslali sme potvrdzovací odkaz.",
+  "instruction": "Kliknite na odkaz na aktiváciu účtu.",
+  "loading": "Čakanie na potvrdenie...",
+  "footer": "Nikdy nezdieľajte svoje údaje."
+}
 }

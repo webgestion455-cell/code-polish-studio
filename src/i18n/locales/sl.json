@@ -874,5 +874,13 @@
     "feature1": "Varno",
     "feature2": "Šifriranje od konca do konca",
     "feature3": "Premium izkušnja"
-  }
+  },
+
+  "authPending": {
+  "title": "Preverite e-pošto",
+  "description": "Poslali smo potrditveno povezavo.",
+  "instruction": "Kliknite povezavo za aktivacijo računa.",
+  "loading": "Čakanje na potrditev...",
+  "footer": "Nikoli ne delite svojih podatkov."
+}
 }

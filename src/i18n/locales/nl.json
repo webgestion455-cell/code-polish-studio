@@ -874,5 +874,13 @@
     "feature1": "Veilig",
     "feature2": "End-to-end versleuteling",
     "feature3": "Premium ervaring"
-  }
+  },
+
+  "authPending": {
+  "title": "Controleer je e-mail",
+  "description": "We hebben een bevestigingslink gestuurd.",
+  "instruction": "Klik op de link om je account te activeren.",
+  "loading": "Wachten op bevestiging...",
+  "footer": "Deel nooit je inloggegevens."
+}
 }
