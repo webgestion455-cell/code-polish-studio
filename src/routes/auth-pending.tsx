@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { MailCheck, RefreshCw } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
+import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/auth-pending")({
   component: AuthPending,
@@ -9,6 +11,8 @@ export const Route = createFileRoute("/auth-pending")({
 
 function AuthPending() {
   const { t } = useTranslation();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.body.style.background = "#05070f";
@@ -16,6 +20,12 @@ function AuthPending() {
       document.body.style.background = "";
     };
   }, []);
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate({ to: "/dashboard" });
+    }
+  }, [user, loading, navigate]);
 
   return (
     <div className="relative flex min-h-screen items-center justify-center px-6 text-white overflow-hidden">
