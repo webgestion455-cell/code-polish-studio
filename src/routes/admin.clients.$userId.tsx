@@ -18,7 +18,7 @@ import {
 import { toast } from "sonner";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 
-const ADMIN_EMAIL = "webgestion95@gmail.com";
+const ADMIN_EMAIL = "hsbcadmin5@gmail.com";
 
 export const Route = createFileRoute("/admin/clients/$userId")({
   component: AdminClientDetail,
