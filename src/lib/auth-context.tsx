@@ -9,7 +9,7 @@ interface AuthContextValue {
   session: Session | null;
   role: Role | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName: string, phone: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName: string, phone: string, lang: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
@@ -50,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!active) return;
       setSession(existing);
       setUser(existing?.user ?? null);
+      if (!existing) {setLoading(false);}
       if (existing?.user) {
         setRole(null);
         void fetchRole(existing.user.id);
@@ -88,14 +89,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function signUp(email: string, password: string, fullName: string, phone: string) {
+  async function signUp(email: string, password: string, fullName: string, phone: string, lang: string) {
     const redirectUrl = `${window.location.origin}/dashboard`;
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: redirectUrl,
-        data: { full_name: fullName, phone },
+        data: { full_name: fullName, phone, lang },
       },
     });
     return { error };

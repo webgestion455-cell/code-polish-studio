@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { ArrowLeft, ShieldCheck, Lock, Sparkles } from "lucide-react";
 import hsbcLogo from "@/assets/hsbc-logo.png";
+import i18n from "@/i18n";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -75,7 +76,8 @@ function AuthPage() {
       return;
     }
     setSubmitting(true);
-    const { error } = await signUp(parsed.data.email, parsed.data.password, parsed.data.fullName, parsed.data.phone);
+    const lang = i18n.language || navigator.language?.split("-")[0] || "fr";
+    const { error } = await signUp(parsed.data.email, parsed.data.password, parsed.data.fullName, parsed.data.phone,lang);
     setSubmitting(false);
     if (error) {
       if (error.message.includes("already registered")) {
