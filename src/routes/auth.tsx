@@ -77,7 +77,7 @@ function AuthPage() {
     }
     setSubmitting(true);
     const lang = i18n.language || navigator.language?.split("-")[0] || "fr";
-    const { error } = await signUp(parsed.data.email, parsed.data.password, parsed.data.fullName, parsed.data.phone,i18n.language);
+    const { error } = await signUp(parsed.data.email, parsed.data.password, parsed.data.fullName, parsed.data.phone,lang);
     setSubmitting(false);
     if (error) {
       if (error.message.includes("already registered")) {

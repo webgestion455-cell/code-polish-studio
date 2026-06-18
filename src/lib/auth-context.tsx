@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: {
         emailRedirectTo: redirectUrl,
-        data: { full_name: fullName, phone, lang: i18n.language, },
+        data: { full_name: fullName, phone, lang: lang.substring(0,2).toLowerCase(), },
       },
     });
     return { error };
