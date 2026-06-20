@@ -174,8 +174,9 @@ function AdminDashboard() {
     if (loan) {
       await notifyUser({
         userId: loan.user_id,
-        title: "Statut de votre demande mis à jour",
-        message: `Votre demande de ${formatCurrency(Number(loan.amount))} est désormais : ${STATUS_LABELS[editStatus]}`,
+        titleKey: "notif.loan.statusTitle",
+        messageKey: "notif.loan.statusMsg",
+        params: { amount: formatCurrency(Number(loan.amount)), statusKey: editStatus },
         link: `/loans/${loan.id}`,
         category: editStatus === "refuse" ? "warning" : editStatus === "fonds_disponibles" ? "success" : "info",
       });
@@ -202,8 +203,9 @@ function AdminDashboard() {
     }
     await notifyUser({
       userId: loan.user_id,
-      title: "Statut de votre demande mis à jour",
-      message: `Votre demande de ${formatCurrency(Number(loan.amount))} est désormais : ${STATUS_LABELS[nextStatus]}`,
+      titleKey: "notif.loan.statusTitle",
+      messageKey: "notif.loan.statusMsg",
+      params: { amount: formatCurrency(Number(loan.amount)), statusKey: nextStatus },
       link: `/loans/${loan.id}`,
       category: nextStatus === "refuse" ? "warning" : nextStatus === "fonds_disponibles" ? "success" : "info",
     });
@@ -237,10 +239,14 @@ function AdminDashboard() {
     }
     await notifyUser({
       userId: w.user_id,
-      title: status === "envoye" ? "Virement exécuté" : "Virement rejeté · fonds recrédités",
-      message: status === "envoye"
-        ? `${formatCurrency(Number(w.amount))} ont été envoyés sur ${w.iban.slice(0, 4)}…${w.iban.slice(-4)} (réf. ${w.reference})`
-        : `Votre virement de ${formatCurrency(Number(w.amount))} a été rejeté. Le solde a été recrédité automatiquement.`,
+      titleKey: status === "envoye" ? "notif.withdrawal.sentTitle" : "notif.withdrawal.rejectedTitle",
+      messageKey: status === "envoye" ? "notif.withdrawal.sentMsg" : "notif.withdrawal.rejectedMsg",
+      params: {
+        amount: formatCurrency(Number(w.amount)),
+        iban4: w.iban.slice(0, 4),
+        ibanLast: w.iban.slice(-4),
+        ref: w.reference ?? "",
+      },
       category: status === "envoye" ? "success" : "warning",
       link: `/transfers/${w.id}`,
     });

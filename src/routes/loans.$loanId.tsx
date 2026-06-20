@@ -200,11 +200,9 @@ function LoanDetail() {
       toast.success(t("loanDetail.signedSent"));
       const { notifyAllAdmins } = await import("@/lib/notifications");
       await notifyAllAdmins({
-        title: t("loanDetail.signedReceivedTitle"),
-        message: t("loanDetail.signedReceivedMessage", {
-          name: loan.full_name ?? "—",
-          id: loan.id.slice(0, 8),
-        }),
+        titleKey: "notif.loan.signedReceivedTitle",
+        messageKey: "notif.loan.signedReceivedMsg",
+        params: { name: loan.full_name ?? "—", id: loan.id.slice(0, 8) },
         link: "/admin",
         category: "success",
       });

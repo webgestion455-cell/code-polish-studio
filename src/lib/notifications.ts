@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import i18n from "@/i18n";
 
 export interface AppNotification {
   id: string;
@@ -11,52 +12,127 @@ export interface AppNotification {
   created_at: string;
 }
 
-export async function notifyUser(params: {
-  userId: string;
-  title: string;
-  message: string;
-  link?: string;
-  category?: "info" | "success" | "warning" | "danger";
-}) {
+type Category = "info" | "success" | "warning" | "danger";
+type Params = Record<string, string | number>;
+
+/**
+ * notifyUser : envoie une notification dans la langue du DESTINATAIRE.
+ *
+ * Deux signatures :
+ *  - Recommandée : { userId, titleKey, messageKey, params, ... }
+ *    -> la langue est lue depuis profiles.language et le rendu i18n
+ *       est effectué avec cette langue, indépendamment de la langue
+ *       de l'utilisateur qui déclenche l'action.
+ *  - Compatibilité : { userId, title, message, ... } -> texte brut.
+ */
+export type NotifyUserInput =
+  | {
+      userId: string;
+      titleKey: string;
+      messageKey: string;
+      params?: Params;
+      link?: string;
+      category?: Category;
+    }
+  | {
+      userId: string;
+      title: string;
+      message: string;
+      link?: string;
+      category?: Category;
+    };
+
+async function getUserLanguage(userId: string): Promise<string> {
+  try {
+    const { data } = await supabase
+      .from("profiles")
+      .select("language")
+      .eq("user_id", userId)
+      .maybeSingle();
+    const lang = (data as { language?: string } | null)?.language;
+    return lang && lang.length > 0 ? lang : "fr";
+  } catch {
+    return "fr";
+  }
+}
+
+function renderForLang(
+  lng: string,
+  titleKey: string,
+  messageKey: string,
+  params?: Params,
+): { title: string; message: string } {
+  const title = i18n.t(titleKey, { lng, ...(params ?? {}) }) as string;
+  const message = i18n.t(messageKey, { lng, ...(params ?? {}) }) as string;
+  return { title, message };
+}
+
+export async function notifyUser(input: NotifyUserInput) {
+  let title: string;
+  let message: string;
+  if ("titleKey" in input) {
+    const lng = await getUserLanguage(input.userId);
+    const rendered = renderForLang(lng, input.titleKey, input.messageKey, input.params);
+    title = rendered.title;
+    message = rendered.message;
+  } else {
+    title = input.title;
+    message = input.message;
+  }
+
   const { error } = await supabase.from("notifications").insert({
-    user_id: params.userId,
-    title: params.title,
-    message: params.message,
-    link: params.link ?? null,
-    category: params.category ?? "info",
+    user_id: input.userId,
+    title,
+    message,
+    link: input.link ?? null,
+    category: input.category ?? "info",
     read: false,
   });
-
   if (error) {
     console.error("Notification insert error:", error);
   }
 
-  await sendPush({
-    userId: params.userId,
-    title: params.title,
-    message: params.message,
-    link: params.link,
-  });
+  await sendPush({ userId: input.userId, title, message, link: input.link });
 }
 
-export async function notifyAllAdmins(params: {
-  title: string;
-  message: string;
-  link?: string;
-  category?: "info" | "success" | "warning" | "danger";
-}) {
+export type NotifyAdminsInput =
+  | {
+      titleKey: string;
+      messageKey: string;
+      params?: Params;
+      link?: string;
+      category?: Category;
+    }
+  | {
+      title: string;
+      message: string;
+      link?: string;
+      category?: Category;
+    };
+
+export async function notifyAllAdmins(input: NotifyAdminsInput) {
   const { data: admins } = await supabase.from("user_roles").select("user_id").eq("role", "admin");
   if (!admins) return;
   await Promise.all(
-    admins.map((a) =>
-      notifyUser({
+    admins.map((a) => {
+      if ("titleKey" in input) {
+        return notifyUser({
+          userId: a.user_id,
+          titleKey: input.titleKey,
+          messageKey: input.messageKey,
+          params: input.params,
+          link: input.link,
+          category: input.category,
+        });
+      }
+      return notifyUser({
         userId: a.user_id,
-        title: params.title,
-        message: params.message,
-        link: params.link,
-        category: params.category,
-      }),
-    ),
+        title: input.title,
+        message: input.message,
+        link: input.link,
+        category: input.category,
+      });
+    }),
   );
 }
 
@@ -66,9 +142,11 @@ export async function sendPush(params: {
   message: string;
   link?: string;
 }) {
-  await supabase.functions.invoke("send-push", {
-    body: params,
-  });
+  try {
+    await supabase.functions.invoke("send-push", { body: params });
+  } catch {
+    // push optionnel — ignore en cas d'absence d'edge function
+  }
 }
 
 export function ensureBrowserPermission() {
@@ -95,32 +173,16 @@ export function showBrowserNotification(n: Pick<AppNotification, "title" | "mess
       };
     }
   } catch {
-    // ignore
+    /* ignore */
   }
-}
-
-/**
- * Joue un son de notification bancaire discret (sinusoïdal généré via WebAudio,
- * aucune dépendance externe, fonctionne immédiatement après une 1re interaction).
- */
-let _audioCtx: AudioContext | null = null;
-function getCtx(): AudioContext | null {
-  if (typeof window === "undefined") return null;
-  const W = window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext };
-  const Ctor = W.AudioContext ?? W.webkitAudioContext;
-  if (!Ctor) return null;
-  if (!_audioCtx) _audioCtx = new Ctor();
-  return _audioCtx;
 }
 
 export function playNotificationSound() {
   try {
     const audio = new Audio("/notification.mp3");
-
     audio.volume = 1.0;
-
     audio.play().catch(() => {});
   } catch {
-    // ignore
+    /* ignore */
   }
 }

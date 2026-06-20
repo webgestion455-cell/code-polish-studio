@@ -760,7 +760,37 @@
       "instantTitle": "Sofortüberweisung eingegangen",
       "classicTitle": "Überweisung läuft",
       "instantMsg": "{{amount}} auf Konto {{iban4}}…{{ibanLast}} gutgeschrieben (Ref. {{ref}})",
-      "classicMsg": "Eine Standardüberweisung über {{amount}} wurde eingeleitet (Gutschrift innerhalb von 1 Werktag, Ref. {{ref}})"
+      "classicMsg": "Eine Standardüberweisung über {{amount}} wurde eingeleitet (Gutschrift innerhalb von 1 Werktag, Ref. {{ref}})",
+      "adminInitTitle": "Neue Überweisung initiiert",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (Ref. {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Beleg zu validieren",
+      "adminValidationMsg": "Ein Kunde hat einen Zahlungsbeleg zur Validierung hochgeladen.",
+      "adminReceiptTitle": "Neuer Beleg eingegangen",
+      "adminReceiptMsg": "Ein neuer Gebührenbeleg wurde hochgeladen."
+    },
+    "adminCodes": {
+      "codeTitle": "Freischaltcode {{p}}%",
+      "codeMsg": "Ihr Code: {{code}} (Gebühr {{fee}})",
+      "rejectedTitle": "Beleg abgelehnt",
+      "rejectedMsg": "Bitte einen gültigen Beleg hochladen.",
+      "manualCodeTitle": "Freischaltcode {{p}}%",
+      "manualCodeMsg": "Ihr Freischaltcode lautet: {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "Neuer Kreditantrag",
+      "newRequestAdminMsg": "{{name}} beantragt {{amount}} € über {{months}} Monate",
+      "statusTitle": "Status Ihres Antrags aktualisiert",
+      "statusMsg": "Ihr Antrag über {{amount}} ist jetzt: $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Unterzeichneter Vertrag erhalten",
+      "signedReceivedMsg": "{{name}} hat den Vertrag unterschrieben (Antrag {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Überweisung ausgeführt",
+      "sentMsg": "{{amount}} wurden an {{iban4}}…{{ibanLast}} gesendet (Ref. {{ref}})",
+      "rejectedTitle": "Überweisung abgelehnt · Guthaben gutgeschrieben",
+      "rejectedMsg": "Ihre Überweisung über {{amount}} wurde abgelehnt. Der Saldo wurde automatisch gutgeschrieben."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "Ende-zu-Ende-Verschlüsselung",
     "feature3": "Premium-Erlebnis"
   },
-
   "authPending": {
-  "title": "E-Mail überprüfen",
-  "description": "Wir haben einen Bestätigungslink an Ihre E-Mail gesendet.",
-  "instruction": "Klicken Sie auf den Link, um Ihr Konto zu aktivieren.",
-  "loading": "Warten auf Bestätigung...",
-  "footer": "Teilen Sie niemals Ihre Zugangsdaten."
-}
+    "title": "E-Mail überprüfen",
+    "description": "Wir haben einen Bestätigungslink an Ihre E-Mail gesendet.",
+    "instruction": "Klicken Sie auf den Link, um Ihr Konto zu aktivieren.",
+    "loading": "Warten auf Bestätigung...",
+    "footer": "Teilen Sie niemals Ihre Zugangsdaten."
+  }
 }

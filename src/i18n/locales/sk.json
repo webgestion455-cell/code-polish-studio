@@ -760,7 +760,37 @@
       "instantTitle": "Prijatý okamžitý prevod",
       "classicTitle": "Prevod prebieha",
       "instantMsg": "{{amount}} pripísané na účet {{iban4}}…{{ibanLast}} (ref. {{ref}})",
-      "classicMsg": "Bol spustený štandardný prevod {{amount}} (pripísanie do 1 pracovného dňa, ref. {{ref}})"
+      "classicMsg": "Bol spustený štandardný prevod {{amount}} (pripísanie do 1 pracovného dňa, ref. {{ref}})",
+      "adminInitTitle": "Nový prevod spustený",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (ref. {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Potvrdenie na overenie",
+      "adminValidationMsg": "Klient nahral potvrdenie o platbe na overenie.",
+      "adminReceiptTitle": "Prijaté nové potvrdenie",
+      "adminReceiptMsg": "Bolo nahrané nové potvrdenie o platbe poplatku."
+    },
+    "adminCodes": {
+      "codeTitle": "Odblokovací kód {{p}}%",
+      "codeMsg": "Váš kód: {{code}} (poplatok {{fee}})",
+      "rejectedTitle": "Potvrdenie zamietnuté",
+      "rejectedMsg": "Nahrajte platné potvrdenie.",
+      "manualCodeTitle": "Odblokovací kód {{p}}%",
+      "manualCodeMsg": "Váš odblokovací kód je: {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "Nová žiadosť o úver",
+      "newRequestAdminMsg": "{{name}} žiada {{amount}} € na {{months}} mesiacov",
+      "statusTitle": "Stav vašej žiadosti bol aktualizovaný",
+      "statusMsg": "Vaša žiadosť o {{amount}} je teraz: $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Prijatá podpísaná zmluva",
+      "signedReceivedMsg": "{{name}} podpísal zmluvu (žiadosť {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Prevod vykonaný",
+      "sentMsg": "{{amount}} bolo odoslaných na {{iban4}}…{{ibanLast}} (ref. {{ref}})",
+      "rejectedTitle": "Prevod zamietnutý · prostriedky vrátené",
+      "rejectedMsg": "Váš prevod {{amount}} bol zamietnutý. Zostatok bol automaticky vrátený."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "Šifrovanie end-to-end",
     "feature3": "Prémiový zážitok"
   },
-
   "authPending": {
-  "title": "Skontrolujte e-mail",
-  "description": "Odoslali sme potvrdzovací odkaz.",
-  "instruction": "Kliknite na odkaz na aktiváciu účtu.",
-  "loading": "Čakanie na potvrdenie...",
-  "footer": "Nikdy nezdieľajte svoje údaje."
-}
+    "title": "Skontrolujte e-mail",
+    "description": "Odoslali sme potvrdzovací odkaz.",
+    "instruction": "Kliknite na odkaz na aktiváciu účtu.",
+    "loading": "Čakanie na potvrdenie...",
+    "footer": "Nikdy nezdieľajte svoje údaje."
+  }
 }

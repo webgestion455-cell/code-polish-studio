@@ -760,7 +760,37 @@
       "instantTitle": "Directe overboeking ontvangen",
       "classicTitle": "Overboeking lopend",
       "instantMsg": "{{amount}} bijgeschreven op rekening {{iban4}}…{{ibanLast}} (ref. {{ref}})",
-      "classicMsg": "Een standaard overboeking van {{amount}} is gestart (bijschrijving binnen 1 werkdag, ref. {{ref}})"
+      "classicMsg": "Een standaard overboeking van {{amount}} is gestart (bijschrijving binnen 1 werkdag, ref. {{ref}})",
+      "adminInitTitle": "Nieuwe overboeking gestart",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (ref. {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Bewijs te valideren",
+      "adminValidationMsg": "Een klant heeft een betalingsbewijs geüpload ter validatie.",
+      "adminReceiptTitle": "Nieuw bewijs ontvangen",
+      "adminReceiptMsg": "Er is een nieuw kostenbewijs geüpload."
+    },
+    "adminCodes": {
+      "codeTitle": "Ontgrendelcode {{p}}%",
+      "codeMsg": "Uw code: {{code}} (kosten {{fee}})",
+      "rejectedTitle": "Bewijs geweigerd",
+      "rejectedMsg": "Upload een geldig bewijs.",
+      "manualCodeTitle": "Ontgrendelcode {{p}}%",
+      "manualCodeMsg": "Uw ontgrendelcode is: {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "Nieuwe leningaanvraag",
+      "newRequestAdminMsg": "{{name}} vraagt {{amount}} € over {{months}} maanden aan",
+      "statusTitle": "Status van uw aanvraag bijgewerkt",
+      "statusMsg": "Uw aanvraag van {{amount}} is nu: $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Ondertekend contract ontvangen",
+      "signedReceivedMsg": "{{name}} heeft het contract ondertekend (aanvraag {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Overboeking uitgevoerd",
+      "sentMsg": "{{amount}} is verzonden naar {{iban4}}…{{ibanLast}} (ref. {{ref}})",
+      "rejectedTitle": "Overboeking geweigerd · saldo teruggestort",
+      "rejectedMsg": "Uw overboeking van {{amount}} is geweigerd. Het saldo is automatisch teruggestort."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "End-to-end versleuteling",
     "feature3": "Premium ervaring"
   },
-
   "authPending": {
-  "title": "Controleer je e-mail",
-  "description": "We hebben een bevestigingslink gestuurd.",
-  "instruction": "Klik op de link om je account te activeren.",
-  "loading": "Wachten op bevestiging...",
-  "footer": "Deel nooit je inloggegevens."
-}
+    "title": "Controleer je e-mail",
+    "description": "We hebben een bevestigingslink gestuurd.",
+    "instruction": "Klik op de link om je account te activeren.",
+    "loading": "Wachten op bevestiging...",
+    "footer": "Deel nooit je inloggegevens."
+  }
 }

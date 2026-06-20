@@ -236,11 +236,9 @@ export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
     }
     await notifyUser({
       userId: loan.user_id,
-      title: t("adminCodes.notifTitle", "Code de déblocage {{p}}%", { p: step }),
-      message: t("adminCodes.notifMsg", "Votre code : {{code}} (frais {{fee}})", {
-        code: newCode,
-        fee: formatCurrency(fee),
-      }),
+      titleKey: "notif.adminCodes.codeTitle",
+      messageKey: "notif.adminCodes.codeMsg",
+      params: { p: step, code: newCode, fee: formatCurrency(fee) },
       link: "/transfers",
       category: "success",
     });
@@ -266,8 +264,8 @@ export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
 
     await notifyUser({
       userId: loan.user_id,
-      title: t("adminCodes.notifRejectedTitle", "Reçu refusé"),
-      message: t("adminCodes.notifRejectedMsg", "Veuillez renvoyer un reçu valide."),
+      titleKey: "notif.adminCodes.rejectedTitle",
+      messageKey: "notif.adminCodes.rejectedMsg",
       link: "/transfers",
       category: "warning",
     });
@@ -308,8 +306,9 @@ export function AdminUnlockCodes({ loan }: { loan: LoanLite }) {
 
   await notifyUser({
     userId: loan.user_id,
-    title: `Code de déblocage ${row.step}%`,
-    message: `Votre code de déblocage est : ${generatedCode}`,
+    titleKey: "notif.adminCodes.manualCodeTitle",
+    messageKey: "notif.adminCodes.manualCodeMsg",
+    params: { p: row.step, code: generatedCode },
     link: "/transfers",
     category: "success",
   });

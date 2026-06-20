@@ -110,13 +110,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .select("role")
       .eq("user_id", userId);
     if (data && data.length > 0) {
-      // admin wins if both
       const isAdmin = data.some((r) => r.role === "admin");
       setRole(isAdmin ? "admin" : "user");
     } else {
       setRole("user");
     }
+    // Synchronise la langue préférée du profil avec i18n
+    try {
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("language")
+        .eq("user_id", userId)
+        .maybeSingle();
+      const lang = (prof as { language?: string } | null)?.language;
+      if (lang && i18n.resolvedLanguage?.split("-")[0] !== lang) {
+        void i18n.changeLanguage(lang);
+      } else {
+        // Pas de langue serveur → persiste la langue courante côté serveur
+        const cur = (i18n.resolvedLanguage || i18n.language || "fr").split("-")[0];
+        await supabase.from("profiles").update({ language: cur }).eq("user_id", userId);
+      }
+    } catch {
+      /* ignore */
+    }
   }
+
+  // Persiste la langue choisie côté profil dès qu'elle change
+  useEffect(() => {
+    const handler = (lng: string) => {
+      const short = (lng || "fr").split("-")[0];
+      const uid = user?.id;
+      if (!uid) return;
+      void supabase.from("profiles").update({ language: short }).eq("user_id", uid);
+    };
+    i18n.on("languageChanged", handler);
+    return () => {
+      i18n.off("languageChanged", handler);
+    };
+  }, [user?.id]);
 
   async function signUp(email: string, password: string, fullName: string, phone: string, lang: string) {
     const redirectUrl = `${window.location.origin}/dashboard`;

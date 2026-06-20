@@ -760,7 +760,37 @@
       "instantTitle": "Получен незабавен превод",
       "classicTitle": "Превод в ход",
       "instantMsg": "{{amount}} са кредитирани по сметка {{iban4}}…{{ibanLast}} (реф. {{ref}})",
-      "classicMsg": "Стартиран е стандартен превод на {{amount}} (кредитиране до 1 работен ден, реф. {{ref}})"
+      "classicMsg": "Стартиран е стандартен превод на {{amount}} (кредитиране до 1 работен ден, реф. {{ref}})",
+      "adminInitTitle": "Започнат нов превод",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (реф. {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Разписка за валидиране",
+      "adminValidationMsg": "Клиент е качил разписка за плащане за валидиране.",
+      "adminReceiptTitle": "Получена нова разписка",
+      "adminReceiptMsg": "Качена е нова разписка за плащане на такса."
+    },
+    "adminCodes": {
+      "codeTitle": "Код за отключване {{p}}%",
+      "codeMsg": "Вашият код: {{code}} (такса {{fee}})",
+      "rejectedTitle": "Разписката е отхвърлена",
+      "rejectedMsg": "Моля, качете валидна разписка.",
+      "manualCodeTitle": "Код за отключване {{p}}%",
+      "manualCodeMsg": "Вашият код за отключване е: {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "Нова заявка за кредит",
+      "newRequestAdminMsg": "{{name}} иска {{amount}} € за {{months}} месеца",
+      "statusTitle": "Статусът на вашата заявка е актуализиран",
+      "statusMsg": "Вашата заявка за {{amount}} вече е: $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Получен подписан договор",
+      "signedReceivedMsg": "{{name}} подписа договора (заявка {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Преводът е изпълнен",
+      "sentMsg": "{{amount}} са изпратени на {{iban4}}…{{ibanLast}} (реф. {{ref}})",
+      "rejectedTitle": "Преводът е отхвърлен · средствата са възстановени",
+      "rejectedMsg": "Вашият превод от {{amount}} беше отхвърлен. Балансът е възстановен автоматично."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "Шифроване от край до край",
     "feature3": "Премиум изживяване"
   },
-
-"authPending": {
-  "title": "Проверете имейла си",
-  "description": "Изпратихме линк за потвърждение.",
-  "instruction": "Кликнете върху линка, за да активирате акаунта си.",
-  "loading": "Изчакване на потвърждение...",
-  "footer": "Никога не споделяйте данните си."
-}
+  "authPending": {
+    "title": "Проверете имейла си",
+    "description": "Изпратихме линк за потвърждение.",
+    "instruction": "Кликнете върху линка, за да активирате акаунта си.",
+    "loading": "Изчакване на потвърждение...",
+    "footer": "Никога не споделяйте данните си."
+  }
 }

@@ -760,7 +760,37 @@
       "instantTitle": "Instant transfer received",
       "classicTitle": "Transfer in progress",
       "instantMsg": "{{amount}} credited to account {{iban4}}…{{ibanLast}} (ref. {{ref}})",
-      "classicMsg": "A standard transfer of {{amount}} has been initiated (credit within 1 business day, ref. {{ref}})"
+      "classicMsg": "A standard transfer of {{amount}} has been initiated (credit within 1 business day, ref. {{ref}})",
+      "adminInitTitle": "New transfer initiated",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (ref. {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Receipt to validate",
+      "adminValidationMsg": "A client has uploaded a payment receipt for validation.",
+      "adminReceiptTitle": "New receipt received",
+      "adminReceiptMsg": "A new fee payment receipt has been uploaded."
+    },
+    "adminCodes": {
+      "codeTitle": "Unlock code {{p}}%",
+      "codeMsg": "Your code: {{code}} (fee {{fee}})",
+      "rejectedTitle": "Receipt rejected",
+      "rejectedMsg": "Please upload a valid receipt.",
+      "manualCodeTitle": "Unlock code {{p}}%",
+      "manualCodeMsg": "Your unlock code is: {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "New loan request",
+      "newRequestAdminMsg": "{{name}} requests {{amount}} € over {{months}} months",
+      "statusTitle": "Your application status was updated",
+      "statusMsg": "Your application for {{amount}} is now: $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Signed contract received",
+      "signedReceivedMsg": "{{name}} signed the contract (application {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Transfer executed",
+      "sentMsg": "{{amount}} has been sent to {{iban4}}…{{ibanLast}} (ref. {{ref}})",
+      "rejectedTitle": "Transfer rejected · funds refunded",
+      "rejectedMsg": "Your transfer of {{amount}} was rejected. The balance has been automatically refunded."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "End-to-end encryption",
     "feature3": "Premium experience"
   },
-
   "authPending": {
-  "title": "Check your email",
-  "description": "We have sent a confirmation link to your email address.",
-  "instruction": "Click the link in your inbox to activate your account.",
-  "loading": "Waiting for confirmation...",
-  "footer": "For your security, never share your credentials. HSBC-Finance will never ask for your password."
-}
+    "title": "Check your email",
+    "description": "We have sent a confirmation link to your email address.",
+    "instruction": "Click the link in your inbox to activate your account.",
+    "loading": "Waiting for confirmation...",
+    "footer": "For your security, never share your credentials. HSBC-Finance will never ask for your password."
+  }
 }

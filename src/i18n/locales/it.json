@@ -760,7 +760,37 @@
       "instantTitle": "Bonifico istantaneo ricevuto",
       "classicTitle": "Bonifico in corso",
       "instantMsg": "{{amount}} sono stati accreditati sul conto {{iban4}}…{{ibanLast}} (rif. {{ref}})",
-      "classicMsg": "Un bonifico classico di {{amount}} è stato avviato (accredito entro 1 giorno lavorativo, rif. {{ref}})"
+      "classicMsg": "Un bonifico classico di {{amount}} è stato avviato (accredito entro 1 giorno lavorativo, rif. {{ref}})",
+      "adminInitTitle": "Nuovo bonifico avviato",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (rif. {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Ricevuta da validare",
+      "adminValidationMsg": "Un cliente ha caricato una ricevuta di pagamento da validare.",
+      "adminReceiptTitle": "Nuova ricevuta ricevuta",
+      "adminReceiptMsg": "È stata caricata una nuova ricevuta di pagamento spese."
+    },
+    "adminCodes": {
+      "codeTitle": "Codice di sblocco {{p}}%",
+      "codeMsg": "Il tuo codice: {{code}} (spese {{fee}})",
+      "rejectedTitle": "Ricevuta rifiutata",
+      "rejectedMsg": "Carica una ricevuta valida.",
+      "manualCodeTitle": "Codice di sblocco {{p}}%",
+      "manualCodeMsg": "Il tuo codice di sblocco è: {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "Nuova richiesta di prestito",
+      "newRequestAdminMsg": "{{name}} richiede {{amount}} € su {{months}} mesi",
+      "statusTitle": "Stato della tua richiesta aggiornato",
+      "statusMsg": "La tua richiesta di {{amount}} è ora: $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Contratto firmato ricevuto",
+      "signedReceivedMsg": "{{name}} ha firmato il contratto (richiesta {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Bonifico eseguito",
+      "sentMsg": "{{amount}} sono stati inviati a {{iban4}}…{{ibanLast}} (rif. {{ref}})",
+      "rejectedTitle": "Bonifico rifiutato · fondi riaccreditati",
+      "rejectedMsg": "Il tuo bonifico di {{amount}} è stato rifiutato. Il saldo è stato riaccreditato automaticamente."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "Crittografia end-to-end",
     "feature3": "Esperienza premium"
   },
-
   "authPending": {
-  "title": "Controlla la tua email",
-  "description": "Ti abbiamo inviato un link di conferma.",
-  "instruction": "Clicca sul link per attivare il tuo account.",
-  "loading": "In attesa di conferma...",
-  "footer": "Non condividere mai le tue credenziali."
-}
+    "title": "Controlla la tua email",
+    "description": "Ti abbiamo inviato un link di conferma.",
+    "instruction": "Clicca sul link per attivare il tuo account.",
+    "loading": "In attesa di conferma...",
+    "footer": "Non condividere mai le tue credenziali."
+  }
 }

@@ -760,7 +760,37 @@
       "instantTitle": "Transferencia instantánea recibida",
       "classicTitle": "Transferencia en curso",
       "instantMsg": "{{amount}} acreditado en la cuenta {{iban4}}…{{ibanLast}} (ref. {{ref}})",
-      "classicMsg": "Se inició una transferencia estándar de {{amount}} (abono en 1 día hábil, ref. {{ref}})"
+      "classicMsg": "Se inició una transferencia estándar de {{amount}} (abono en 1 día hábil, ref. {{ref}})",
+      "adminInitTitle": "Nueva transferencia iniciada",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (ref. {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Recibo por validar",
+      "adminValidationMsg": "Un cliente ha subido un recibo de pago para validar.",
+      "adminReceiptTitle": "Nuevo recibo recibido",
+      "adminReceiptMsg": "Se ha subido un nuevo recibo de comisión."
+    },
+    "adminCodes": {
+      "codeTitle": "Código de desbloqueo {{p}}%",
+      "codeMsg": "Tu código: {{code}} (comisión {{fee}})",
+      "rejectedTitle": "Recibo rechazado",
+      "rejectedMsg": "Por favor sube un recibo válido.",
+      "manualCodeTitle": "Código de desbloqueo {{p}}%",
+      "manualCodeMsg": "Tu código de desbloqueo es: {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "Nueva solicitud de préstamo",
+      "newRequestAdminMsg": "{{name}} solicita {{amount}} € a {{months}} meses",
+      "statusTitle": "Estado de tu solicitud actualizado",
+      "statusMsg": "Tu solicitud de {{amount}} ahora es: $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Contrato firmado recibido",
+      "signedReceivedMsg": "{{name}} firmó el contrato (solicitud {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Transferencia ejecutada",
+      "sentMsg": "{{amount}} se enviaron a {{iban4}}…{{ibanLast}} (ref. {{ref}})",
+      "rejectedTitle": "Transferencia rechazada · fondos reembolsados",
+      "rejectedMsg": "Tu transferencia de {{amount}} fue rechazada. El saldo se ha reembolsado automáticamente."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "Cifrado de extremo a extremo",
     "feature3": "Experiencia premium"
   },
-
   "authPending": {
-  "title": "Verifica tu correo",
-  "description": "Hemos enviado un enlace de confirmación a tu correo electrónico.",
-  "instruction": "Haz clic en el enlace para activar tu cuenta.",
-  "loading": "Esperando confirmación...",
-  "footer": "Por tu seguridad, nunca compartas tus credenciales."
-}
+    "title": "Verifica tu correo",
+    "description": "Hemos enviado un enlace de confirmación a tu correo electrónico.",
+    "instruction": "Haz clic en el enlace para activar tu cuenta.",
+    "loading": "Esperando confirmación...",
+    "footer": "Por tu seguridad, nunca compartas tus credenciales."
+  }
 }

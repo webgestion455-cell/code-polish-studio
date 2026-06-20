@@ -146,10 +146,14 @@ function AdminNewTransfer() {
     // Notification au client — redirige vers le détail du virement
     await notifyUser({
       userId,
-      title: kind === "instantane" ? t("notif.transfer.instantTitle") : t("notif.transfer.classicTitle"),
-      message: kind === "instantane"
-        ? t("notif.transfer.instantMsg", { amount: formatCurrency(amt), iban4: iban.slice(0, 4), ibanLast: iban.slice(-4), ref })
-        : t("notif.transfer.classicMsg", { amount: formatCurrency(amt), ref }),
+      titleKey: kind === "instantane" ? "notif.transfer.instantTitle" : "notif.transfer.classicTitle",
+      messageKey: kind === "instantane" ? "notif.transfer.instantMsg" : "notif.transfer.classicMsg",
+      params: {
+        amount: formatCurrency(amt),
+        iban4: iban.slice(0, 4),
+        ibanLast: iban.slice(-4),
+        ref,
+      },
       category: "success",
       link: newId ? `/transfers/${newId}` : "/transfers",
     });

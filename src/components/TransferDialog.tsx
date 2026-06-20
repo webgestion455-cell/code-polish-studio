@@ -176,11 +176,13 @@ export function TransferDialog({
     }
 
     await notifyAllAdmins({
-      title:
-        kind === "instantane"
-          ? t("notif.transfer.instantTitle")
-          : t("notif.transfer.classicTitle"),
-      message: `${formatCurrency(parsed.data.amount)} → ${parsed.data.beneficiary} (${t("transfer.reference").toLowerCase()} ${ref})`,
+      titleKey: "notif.transfer.adminInitTitle",
+      messageKey: "notif.transfer.adminInitMsg",
+      params: {
+        amount: formatCurrency(parsed.data.amount),
+        beneficiary: parsed.data.beneficiary,
+        ref,
+      },
       link: `/admin/clients/${user.id}`,
       category: "info",
     });

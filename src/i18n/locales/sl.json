@@ -760,7 +760,37 @@
       "instantTitle": "Takojšnje nakazilo prejeto",
       "classicTitle": "Nakazilo v teku",
       "instantMsg": "{{amount}} knjiženo na račun {{iban4}}…{{ibanLast}} (sklic {{ref}})",
-      "classicMsg": "Standardno nakazilo {{amount}} je bilo sproženo (knjiženje v 1 delovnem dnevu, sklic {{ref}})"
+      "classicMsg": "Standardno nakazilo {{amount}} je bilo sproženo (knjiženje v 1 delovnem dnevu, sklic {{ref}})",
+      "adminInitTitle": "Novo nakazilo sproženo",
+      "adminInitMsg": "{{amount}} → {{beneficiary}} (sklic {{ref}})"
+    },
+    "transferProcess": {
+      "adminValidationTitle": "Potrdilo za validacijo",
+      "adminValidationMsg": "Stranka je naložila potrdilo o plačilu za validacijo.",
+      "adminReceiptTitle": "Prejeto novo potrdilo",
+      "adminReceiptMsg": "Naloženo je bilo novo potrdilo o plačilu stroškov."
+    },
+    "adminCodes": {
+      "codeTitle": "Koda za odklepanje {{p}}%",
+      "codeMsg": "Vaša koda: {{code}} (stroški {{fee}})",
+      "rejectedTitle": "Potrdilo zavrnjeno",
+      "rejectedMsg": "Naložite veljavno potrdilo.",
+      "manualCodeTitle": "Koda za odklepanje {{p}}%",
+      "manualCodeMsg": "Vaša koda za odklepanje je: {{code}}"
+    },
+    "loan": {
+      "newRequestAdminTitle": "Nova prošnja za posojilo",
+      "newRequestAdminMsg": "{{name}} prosi za {{amount}} € na {{months}} mesecev",
+      "statusTitle": "Status vaše vloge je posodobljen",
+      "statusMsg": "Vaša vloga za {{amount}} je zdaj: $t(status.{{statusKey}})",
+      "signedReceivedTitle": "Prejeta podpisana pogodba",
+      "signedReceivedMsg": "{{name}} je podpisal pogodbo (vloga {{id}})"
+    },
+    "withdrawal": {
+      "sentTitle": "Nakazilo izvedeno",
+      "sentMsg": "{{amount}} je bilo poslano na {{iban4}}…{{ibanLast}} (sklic {{ref}})",
+      "rejectedTitle": "Nakazilo zavrnjeno · sredstva vrnjena",
+      "rejectedMsg": "Vaše nakazilo {{amount}} je bilo zavrnjeno. Stanje je bilo samodejno vrnjeno."
     }
   },
   "settings": {
@@ -875,12 +905,11 @@
     "feature2": "Šifriranje od konca do konca",
     "feature3": "Premium izkušnja"
   },
-
   "authPending": {
-  "title": "Preverite e-pošto",
-  "description": "Poslali smo potrditveno povezavo.",
-  "instruction": "Kliknite povezavo za aktivacijo računa.",
-  "loading": "Čakanje na potrditev...",
-  "footer": "Nikoli ne delite svojih podatkov."
-}
+    "title": "Preverite e-pošto",
+    "description": "Poslali smo potrditveno povezavo.",
+    "instruction": "Kliknite povezavo za aktivacijo računa.",
+    "loading": "Čakanje na potrditev...",
+    "footer": "Nikoli ne delite svojih podatkov."
+  }
 }

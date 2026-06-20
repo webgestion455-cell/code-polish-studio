@@ -127,8 +127,13 @@ function NewLoan() {
 
     const { notifyAllAdmins } = await import("@/lib/notifications");
     await notifyAllAdmins({
-      title: t("loanForm.adminNotifTitle"),
-      message: t("loanForm.adminNotifMsg", { name: parsed.data.fullName, amount: parsed.data.amount, months: parsed.data.duration_months }),
+      titleKey: "notif.loan.newRequestAdminTitle",
+      messageKey: "notif.loan.newRequestAdminMsg",
+      params: {
+        name: parsed.data.fullName,
+        amount: parsed.data.amount,
+        months: parsed.data.duration_months,
+      },
       link: "/admin",
       category: "info",
     });

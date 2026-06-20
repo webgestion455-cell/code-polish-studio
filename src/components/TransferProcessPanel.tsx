@@ -250,8 +250,8 @@ export function TransferProcessPanel({
 
     if (!error && data && data.length > 0) {
       await notifyAllAdmins({
-        title: t("transferProcess.adminValidationTitle"),
-        message: t("transferProcess.adminValidationMessage"),
+        titleKey: "notif.transferProcess.adminValidationTitle",
+        messageKey: "notif.transferProcess.adminValidationMsg",
         link: "/admin",
         category: "warning",
       });
@@ -301,8 +301,8 @@ export function TransferProcessPanel({
       return;
     }
     await notifyAllAdmins({
-      title: t("transferProcess.adminReceiptTitle"),
-      message: t("transferProcess.adminReceiptMessage"),
+      titleKey: "notif.transferProcess.adminReceiptTitle",
+      messageKey: "notif.transferProcess.adminReceiptMsg",
       link: "/admin",
       category: "info",
     });
