@@ -106,7 +106,18 @@
     "fullNameLabel": "Nom complet",
     "phoneLabel": "Téléphone",
     "tabSignin": "Connexion",
-    "tabSignup": "Créer un compte"
+    "tabSignup": "Créer un compte",
+    "forgotLink": "Mot de passe oublié ?",
+    "forgotTitle": "Réinitialiser le mot de passe",
+    "forgotDesc": "Saisissez votre adresse e-mail. Nous vous enverrons un lien sécurisé pour définir un nouveau mot de passe.",
+    "forgotSend": "Envoyer le lien",
+    "forgotSent": "Si un compte existe, un e-mail vient d'être envoyé.",
+    "resetTitle": "Définir un nouveau mot de passe",
+    "resetWaiting": "Vérification du lien de réinitialisation…",
+    "resetSuccess": "Mot de passe mis à jour avec succès.",
+    "newPassword": "Nouveau mot de passe",
+    "confirmNewPassword": "Confirmer le mot de passe",
+    "updatePassword": "Mettre à jour le mot de passe"
   },
   "dashboard": {
     "title": "Mon tableau de bord",
@@ -194,7 +205,9 @@
     "adminNotifTitle": "Nouvelle demande de prêt",
     "adminNotifMsg": "{{name}} demande {{amount}} € sur {{months}} mois",
     "successToast": "Votre demande a été envoyée avec succès",
-    "loading": "Chargement…"
+    "loading": "Chargement…",
+    "docsRequiredExact": "Vous devez fournir exactement {{count}} documents pour valider votre demande.",
+    "uploadHintExact": "Téléversez exactement {{count}} documents (PDF, JPG, PNG — 5 Mo max chacun)"
   },
   "transfer": {
     "title": "Effectuer un virement",
@@ -271,7 +284,8 @@
     "phoneTitle": "Service client",
     "address": "103 avenue des Champs-Élysées",
     "addressCity": "75008 Paris, France",
-    "sending": "Envoi…"
+    "sending": "Envoi…",
+    "successQueued": "Votre message a bien été enregistré. Notre équipe vous répondra rapidement."
   },
   "admin": {
     "title": "Tableau de bord Admin",
@@ -911,5 +925,37 @@
     "instruction": "Cliquez sur le lien dans votre boîte mail pour activer votre compte.",
     "loading": "En attente de confirmation...",
     "footer": "Pour votre sécurité, ne partagez jamais vos identifiants. HSBC-Finance ne vous demandera jamais votre mot de passe."
+  },
+  "password": {
+    "show": "Afficher le mot de passe",
+    "hide": "Masquer le mot de passe",
+    "veryWeak": "Très faible",
+    "weak": "Faible",
+    "fair": "Moyen",
+    "good": "Bon",
+    "strong": "Fort",
+    "excellent": "Excellent",
+    "ruleLength": "Au moins 10 caractères",
+    "ruleUpper": "Une lettre majuscule",
+    "ruleLower": "Une lettre minuscule",
+    "ruleDigit": "Un chiffre",
+    "ruleSpecial": "Un caractère spécial",
+    "notStrong": "Le mot de passe ne respecte pas toutes les règles de sécurité."
+  },
+  "livechat": {
+    "open": "Ouvrir le chat",
+    "close": "Fermer",
+    "title": "Conseiller HSBC",
+    "online": "En ligne",
+    "placeholder": "Écrivez votre message…",
+    "greeting": "Bonjour 👋 ! Comment puis-je vous aider aujourd'hui ?",
+    "faq": {
+      "loan": "Pour une demande de prêt, allez dans « Nouveau prêt » depuis votre tableau de bord. Décision sous 24 h, fonds disponibles sous 72 h.",
+      "password": "Vous pouvez réinitialiser votre mot de passe depuis la page de connexion via « Mot de passe oublié ? ».",
+      "transfer": "Vos virements sont visibles dans la section « Virements » de votre tableau de bord.",
+      "contact": "Notre équipe est joignable au +44 7529 529674 ou via la page Contact.",
+      "thanks": "Avec plaisir ! N'hésitez pas si vous avez d'autres questions.",
+      "default": "Un conseiller HSBC reviendra vers vous très rapidement. Vous pouvez aussi nous contacter via la page Contact."
+    }
   }
 }

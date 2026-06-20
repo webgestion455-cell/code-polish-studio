@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useAuth } from "@/lib/auth-context";
@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Honeypot } from "@/components/Honeypot";
+import { submitContactMessage } from "@/lib/contact.functions";
 import {
   Select,
   SelectContent,
@@ -41,6 +43,8 @@ function ContactPage() {
   const [subjectKey, setSubjectKey] = useState<(typeof SUBJECT_KEYS)[number]>("account");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const honeypotRef = useRef<HTMLInputElement>(null);
+  const startTsRef = useRef<number>(Date.now());
 
   useEffect(() => {
     if (!user) return;
@@ -56,6 +60,10 @@ function ContactPage() {
   }, [user]);
 
   async function submit() {
+    // Anti-bot: honeypot + min interaction time
+    if (honeypotRef.current?.value) return;
+    if (Date.now() - startTsRef.current < 1200) return;
+
     const schema = z.object({
       full_name: z.string().trim().min(2, t("contact.nameRequired")).max(120),
       email: z.string().trim().email(t("contact.emailInvalid")).max(180),
@@ -69,20 +77,24 @@ function ContactPage() {
       return;
     }
     setBusy(true);
-    const { error } = await ((supabase as any).from("contact_messages")).insert({
-      user_id: user?.id ?? null,
-      full_name: parsed.data.full_name,
-      email: parsed.data.email,
-      subject: parsed.data.subject,
-      message: parsed.data.message,
-    });
-    setBusy(false);
-    if (error) {
-      toast.error(error.message || t("contact.error"));
-      return;
+    try {
+      const res = await submitContactMessage({
+        data: {
+          full_name: parsed.data.full_name,
+          email: parsed.data.email,
+          subject: parsed.data.subject,
+          message: parsed.data.message,
+          user_id: user?.id ?? null,
+          website: "",
+        },
+      });
+      toast.success(res?.emailSent ? t("contact.success") : t("contact.successQueued"));
+      setMessage("");
+    } catch (err) {
+      toast.error((err as Error).message || t("contact.error"));
+    } finally {
+      setBusy(false);
     }
-    toast.success(t("contact.success"));
-    setMessage("");
   }
 
   return (
@@ -153,6 +165,7 @@ function ContactPage() {
             <CardTitle className="text-base">{t("contact.formTitle")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <Honeypot ref={honeypotRef} />
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <Label>{t("contact.fullName")} *</Label>

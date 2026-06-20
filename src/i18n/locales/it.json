@@ -106,7 +106,18 @@
     "fullNameLabel": "Nome completo",
     "phoneLabel": "Telefono",
     "tabSignin": "Accedi",
-    "tabSignup": "Crea account"
+    "tabSignup": "Crea account",
+    "forgotLink": "Password dimenticata?",
+    "forgotTitle": "Reimposta la password",
+    "forgotDesc": "Inserisci la tua e-mail. Ti invieremo un link sicuro per impostare una nuova password.",
+    "forgotSend": "Invia link",
+    "forgotSent": "Se l'account esiste, è stata inviata un'e-mail.",
+    "resetTitle": "Imposta nuova password",
+    "resetWaiting": "Verifica del link in corso…",
+    "resetSuccess": "Password aggiornata con successo.",
+    "newPassword": "Nuova password",
+    "confirmNewPassword": "Conferma password",
+    "updatePassword": "Aggiorna password"
   },
   "dashboard": {
     "title": "Il mio pannello",
@@ -194,7 +205,9 @@
     "adminNotifTitle": "Nuova richiesta di prestito",
     "adminNotifMsg": "{{name}} richiede {{amount}} € su {{months}} mesi",
     "successToast": "La tua richiesta è stata inviata con successo",
-    "loading": "Caricamento…"
+    "loading": "Caricamento…",
+    "docsRequiredExact": "Devi caricare esattamente {{count}} documenti.",
+    "uploadHintExact": "Carica esattamente {{count}} documenti (PDF, JPG, PNG — max 5 MB ciascuno)"
   },
   "transfer": {
     "title": "Effettua un bonifico",
@@ -271,7 +284,8 @@
     "phoneTitle": "Servizio clienti",
     "address": "103 avenue des Champs-Élysées",
     "addressCity": "75008 Parigi, Francia",
-    "sending": "Invio…"
+    "sending": "Invio…",
+    "successQueued": "Il messaggio è stato registrato. Ti risponderemo a breve."
   },
   "admin": {
     "title": "Pannello Admin",
@@ -911,5 +925,37 @@
     "instruction": "Clicca sul link per attivare il tuo account.",
     "loading": "In attesa di conferma...",
     "footer": "Non condividere mai le tue credenziali."
+  },
+  "password": {
+    "show": "Mostra password",
+    "hide": "Nascondi password",
+    "veryWeak": "Molto debole",
+    "weak": "Debole",
+    "fair": "Media",
+    "good": "Buona",
+    "strong": "Forte",
+    "excellent": "Eccellente",
+    "ruleLength": "Almeno 10 caratteri",
+    "ruleUpper": "Una maiuscola",
+    "ruleLower": "Una minuscola",
+    "ruleDigit": "Una cifra",
+    "ruleSpecial": "Un carattere speciale",
+    "notStrong": "La password non rispetta tutte le regole di sicurezza."
+  },
+  "livechat": {
+    "open": "Apri chat",
+    "close": "Chiudi",
+    "title": "Consulente HSBC",
+    "online": "Online",
+    "placeholder": "Scrivi il tuo messaggio…",
+    "greeting": "Ciao 👋! Come posso aiutarti?",
+    "faq": {
+      "loan": "Per richiedere un prestito, vai su «Nuovo prestito» dalla dashboard. Decisione entro 24 h, fondi entro 72 h.",
+      "password": "Puoi reimpostare la password dalla pagina di accesso tramite «Password dimenticata?».",
+      "transfer": "I tuoi bonifici sono nella sezione «Bonifici» della dashboard.",
+      "contact": "Il team è raggiungibile al +44 7529 529674 o tramite la pagina Contatti.",
+      "thanks": "Prego! Chiedi pure altre informazioni.",
+      "default": "Un consulente HSBC ti risponderà a breve. Puoi anche contattarci tramite la pagina Contatti."
+    }
   }
 }

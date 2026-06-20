@@ -106,7 +106,18 @@
     "fullNameLabel": "Celé meno",
     "phoneLabel": "Telefón",
     "tabSignin": "Prihlásenie",
-    "tabSignup": "Vytvoriť účet"
+    "tabSignup": "Vytvoriť účet",
+    "forgotLink": "Zabudli ste heslo?",
+    "forgotTitle": "Obnoviť heslo",
+    "forgotDesc": "Zadajte e-mail. Pošleme vám bezpečný odkaz na nastavenie nového hesla.",
+    "forgotSend": "Odoslať odkaz",
+    "forgotSent": "Ak účet existuje, e-mail bol odoslaný.",
+    "resetTitle": "Nastaviť nové heslo",
+    "resetWaiting": "Overovanie odkazu…",
+    "resetSuccess": "Heslo bolo aktualizované.",
+    "newPassword": "Nové heslo",
+    "confirmNewPassword": "Potvrdiť heslo",
+    "updatePassword": "Aktualizovať heslo"
   },
   "dashboard": {
     "title": "Môj prehľad",
@@ -194,7 +205,9 @@
     "adminNotifTitle": "Nová žiadosť o úver",
     "adminNotifMsg": "{{name}} žiada {{amount}} € na {{months}} mesiacov",
     "successToast": "Vaša žiadosť bola úspešne odoslaná",
-    "loading": "Načítavanie…"
+    "loading": "Načítavanie…",
+    "docsRequiredExact": "Musíte nahrať presne {{count}} dokumentov.",
+    "uploadHintExact": "Nahrajte presne {{count}} dokumentov (PDF, JPG, PNG — max. 5 MB)."
   },
   "transfer": {
     "title": "Vykonať prevod",
@@ -271,7 +284,8 @@
     "phoneTitle": "Zákaznícka podpora",
     "address": "103 avenue des Champs-Élysées",
     "addressCity": "75008 Paríž, Francúzsko",
-    "sending": "Odosielanie…"
+    "sending": "Odosielanie…",
+    "successQueued": "Správa bola uložená. Ozveme sa čoskoro."
   },
   "admin": {
     "title": "Admin prehľad",
@@ -911,5 +925,37 @@
     "instruction": "Kliknite na odkaz na aktiváciu účtu.",
     "loading": "Čakanie na potvrdenie...",
     "footer": "Nikdy nezdieľajte svoje údaje."
+  },
+  "password": {
+    "show": "Zobraziť heslo",
+    "hide": "Skryť heslo",
+    "veryWeak": "Veľmi slabé",
+    "weak": "Slabé",
+    "fair": "Priemerné",
+    "good": "Dobré",
+    "strong": "Silné",
+    "excellent": "Vynikajúce",
+    "ruleLength": "Aspoň 10 znakov",
+    "ruleUpper": "Veľké písmeno",
+    "ruleLower": "Malé písmeno",
+    "ruleDigit": "Číslica",
+    "ruleSpecial": "Špeciálny znak",
+    "notStrong": "Heslo nespĺňa všetky bezpečnostné pravidlá."
+  },
+  "livechat": {
+    "open": "Otvoriť chat",
+    "close": "Zavrieť",
+    "title": "HSBC poradca",
+    "online": "Online",
+    "placeholder": "Napíšte správu…",
+    "greeting": "Dobrý deň 👋! Ako vám môžem pomôcť?",
+    "faq": {
+      "loan": "Pre žiadosť o úver vyberte „Nový úver\" na nástenke. Rozhodnutie do 24 h, prostriedky do 72 h.",
+      "password": "Heslo môžete obnoviť na prihlasovacej stránke cez „Zabudli ste heslo?\".",
+      "transfer": "Vaše prevody nájdete v sekcii „Prevody\" na nástenke.",
+      "contact": "Tím je dostupný na +44 7529 529674 alebo cez stránku Kontakt.",
+      "thanks": "Rado sa stalo! Pokojne sa pýtajte ďalej.",
+      "default": "Poradca HSBC sa vám čoskoro ozve. Kontaktovať nás môžete aj cez stránku Kontakt."
+    }
   }
 }

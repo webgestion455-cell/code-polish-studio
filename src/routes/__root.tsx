@@ -10,6 +10,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AppHeader } from "@/components/AppHeader";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { BlockedAccountGuard } from "@/components/BlockedAccountGuard";
+import { LiveChat } from "@/components/LiveChat";
 import "@/i18n";
 import { useLocation } from "@tanstack/react-router";
 
@@ -60,6 +61,8 @@ export const Route = createRootRoute({
       { property: "og:description", content: "Demandez votre prêt en ligne en 3 minutes. Décision rapide, fonds disponibles sous 72h." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { name: "referrer", content: "strict-origin-when-cross-origin" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -147,6 +150,7 @@ function RootComponent() {
           {!hideLayout && <MobileBottomNav />}
         </div>
 
+        {!hideLayout && <LiveChat />}
         <Toaster richColors closeButton />
       </AuthProvider>
     </ThemeProvider>

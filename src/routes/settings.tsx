@@ -6,6 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/PasswordInput";
+import { PasswordStrength } from "@/components/PasswordStrength";
+import { Honeypot } from "@/components/Honeypot";
+import { isPasswordStrong } from "@/lib/password";
 import { toast } from "sonner";
 import { ArrowLeft, KeyRound, User as UserIcon, Mail, Phone, ShieldCheck, Loader2 } from "lucide-react";
 import i18n from "@/i18n";
@@ -84,10 +88,11 @@ function SettingsPage() {
     else toast.success(t("settings.emailUpdated"));
   }
 
-  async function handleChangePassword(e: React.FormEvent) {
+  async function handleChangePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (newPassword.length < 8) {
-      toast.error(t("settings.passwordTooShort"));
+    if (((new FormData(e.currentTarget).get("website") as string) || "").length) return;
+    if (!isPasswordStrong(newPassword)) {
+      toast.error(t("password.notStrong"));
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -201,47 +206,49 @@ function SettingsPage() {
           <h2 className="text-base font-semibold">{t("settings.passwordSection")}</h2>
         </div>
         <form onSubmit={handleChangePassword} className="space-y-4">
+          <Honeypot />
           <div>
             <Label htmlFor="currentPassword">{t("settings.currentPassword")}</Label>
-            <Input
+            <PasswordInput
               id="currentPassword"
-              type="password"
               value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
+              onChange={(e) => setCurrentPassword(e.currentTarget.value)}
               className="mt-1.5 h-11"
               autoComplete="current-password"
               required
+              showToggleLabel={{ show: t("password.show"), hide: t("password.hide") }}
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="newPassword">{t("settings.newPassword")}</Label>
-              <Input
+              <PasswordInput
                 id="newPassword"
-                type="password"
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={(e) => setNewPassword(e.currentTarget.value)}
                 className="mt-1.5 h-11"
-                minLength={8}
+                minLength={10}
                 autoComplete="new-password"
                 required
+                showToggleLabel={{ show: t("password.show"), hide: t("password.hide") }}
               />
+              <PasswordStrength password={newPassword} />
             </div>
             <div>
               <Label htmlFor="confirmPassword">{t("settings.confirmPassword")}</Label>
-              <Input
+              <PasswordInput
                 id="confirmPassword"
-                type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => setConfirmPassword(e.currentTarget.value)}
                 className="mt-1.5 h-11"
-                minLength={8}
+                minLength={10}
                 autoComplete="new-password"
                 required
+                showToggleLabel={{ show: t("password.show"), hide: t("password.hide") }}
               />
             </div>
           </div>
-          <Button type="submit" disabled={savingPassword} className="w-full sm:w-auto">
+          <Button type="submit" disabled={savingPassword || !isPasswordStrong(newPassword)} className="w-full sm:w-auto">
             {savingPassword ? t("common.updating") : t("settings.changePassword")}
           </Button>
         </form>

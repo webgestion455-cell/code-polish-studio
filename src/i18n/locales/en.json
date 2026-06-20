@@ -106,7 +106,18 @@
     "fullNameLabel": "Full name",
     "phoneLabel": "Phone",
     "tabSignin": "Sign in",
-    "tabSignup": "Create account"
+    "tabSignup": "Create account",
+    "forgotLink": "Forgot password?",
+    "forgotTitle": "Reset your password",
+    "forgotDesc": "Enter your email address. We'll send you a secure link to set a new password.",
+    "forgotSend": "Send link",
+    "forgotSent": "If an account exists, an email has been sent.",
+    "resetTitle": "Set a new password",
+    "resetWaiting": "Verifying the reset link…",
+    "resetSuccess": "Password updated successfully.",
+    "newPassword": "New password",
+    "confirmNewPassword": "Confirm password",
+    "updatePassword": "Update password"
   },
   "dashboard": {
     "title": "My dashboard",
@@ -194,7 +205,9 @@
     "adminNotifTitle": "New loan request",
     "adminNotifMsg": "{{name}} requests €{{amount}} over {{months}} months",
     "successToast": "Your request was sent successfully",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "docsRequiredExact": "You must upload exactly {{count}} documents to submit your request.",
+    "uploadHintExact": "Upload exactly {{count}} documents (PDF, JPG, PNG — 5 MB max each)"
   },
   "transfer": {
     "title": "Make a transfer",
@@ -271,7 +284,8 @@
     "phoneTitle": "Customer service",
     "address": "103 avenue des Champs-Élysées",
     "addressCity": "75008 Paris, France",
-    "sending": "Sending…"
+    "sending": "Sending…",
+    "successQueued": "Your message has been recorded. Our team will reply shortly."
   },
   "admin": {
     "title": "Admin Dashboard",
@@ -911,5 +925,37 @@
     "instruction": "Click the link in your inbox to activate your account.",
     "loading": "Waiting for confirmation...",
     "footer": "For your security, never share your credentials. HSBC-Finance will never ask for your password."
+  },
+  "password": {
+    "show": "Show password",
+    "hide": "Hide password",
+    "veryWeak": "Very weak",
+    "weak": "Weak",
+    "fair": "Fair",
+    "good": "Good",
+    "strong": "Strong",
+    "excellent": "Excellent",
+    "ruleLength": "At least 10 characters",
+    "ruleUpper": "One uppercase letter",
+    "ruleLower": "One lowercase letter",
+    "ruleDigit": "One digit",
+    "ruleSpecial": "One special character",
+    "notStrong": "The password does not meet all security rules."
+  },
+  "livechat": {
+    "open": "Open chat",
+    "close": "Close",
+    "title": "HSBC Adviser",
+    "online": "Online",
+    "placeholder": "Write your message…",
+    "greeting": "Hello 👋! How can I help you today?",
+    "faq": {
+      "loan": "To request a loan, go to \"New loan\" from your dashboard. Decision within 24h, funds within 72h.",
+      "password": "You can reset your password from the sign-in page using \"Forgot password?\".",
+      "transfer": "Your transfers are listed in the \"Transfers\" section of your dashboard.",
+      "contact": "Our team is reachable at +44 7529 529674 or via the Contact page.",
+      "thanks": "You're welcome! Feel free to ask anything else.",
+      "default": "An HSBC adviser will get back to you shortly. You can also reach us via the Contact page."
+    }
   }
 }

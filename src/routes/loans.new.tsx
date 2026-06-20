@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { ArrowLeft, Upload, X, FileCheck2, ShieldCheck } from "lucide-react";
+import { Honeypot } from "@/components/Honeypot";
 import i18n from "@/i18n";
 
 export const Route = createFileRoute("/loans/new")({
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/loans/new")({
 });
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const REQUIRED_DOCS = 4;
 
 function NewLoan() {
   const { user, loading: authLoading } = useAuth();
@@ -61,7 +63,7 @@ function NewLoan() {
       }
       return true;
     });
-    setFiles((prev) => [...prev, ...valid].slice(0, 5));
+    setFiles((prev) => [...prev, ...valid].slice(0, REQUIRED_DOCS));
     e.target.value = "";
   }
 
@@ -73,6 +75,8 @@ function NewLoan() {
     e.preventDefault();
     if (!user) return;
     const fd = new FormData(e.currentTarget);
+    // Anti-bot honeypot
+    if (((fd.get("website") as string) || "").length) return;
     const parsed = schema.safeParse({
       fullName: fd.get("fullName"),
       email: fd.get("email"),
@@ -85,8 +89,13 @@ function NewLoan() {
       toast.error(parsed.error.issues[0].message);
       return;
     }
+    if (files.length !== REQUIRED_DOCS) {
+      toast.error(t("loanForm.docsRequiredExact", { count: REQUIRED_DOCS }));
+      return;
+    }
 
     setSubmitting(true);
+
 
     const { data: loan, error: loanErr } = await supabase
       .from("loans")
@@ -184,6 +193,7 @@ function NewLoan() {
       </section>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5 rounded-2xl border border-border bg-card p-4 sm:p-6 shadow-card">
+        <Honeypot />
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="fullName">{t("loanForm.fullName")}</Label>
@@ -217,11 +227,23 @@ function NewLoan() {
         </div>
 
         <div className="space-y-2">
-          <Label>{t("loanForm.documents")}</Label>
+          <div className="flex items-center justify-between">
+            <Label>{t("loanForm.documents")}</Label>
+            <span className={`text-xs font-medium ${files.length === REQUIRED_DOCS ? "text-success" : "text-muted-foreground"}`}>
+              {files.length}/{REQUIRED_DOCS}
+            </span>
+          </div>
           <label className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-input/30 px-4 py-7 text-sm text-muted-foreground cursor-pointer hover:bg-input/50 transition">
             <Upload className="h-4 w-4" />
-            <span>{t("loanForm.uploadHint")}</span>
-            <input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple onChange={onFilesChange} className="hidden" />
+            <span>{t("loanForm.uploadHintExact", { count: REQUIRED_DOCS })}</span>
+            <input
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              multiple
+              onChange={onFilesChange}
+              className="hidden"
+              disabled={files.length >= REQUIRED_DOCS}
+            />
           </label>
           {files.length > 0 && (
             <ul className="mt-2 space-y-1.5">
@@ -237,7 +259,12 @@ function NewLoan() {
           )}
         </div>
 
-        <Button type="submit" className="h-11 w-full shadow-glow" size="lg" disabled={submitting}>
+        <Button
+          type="submit"
+          className="h-11 w-full shadow-glow"
+          size="lg"
+          disabled={submitting || files.length !== REQUIRED_DOCS}
+        >
           {submitting ? t("loanForm.submitting") : t("loanForm.submit")}
         </Button>
       </form>

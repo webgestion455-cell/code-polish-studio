@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TransfersRouteImport } from './routes/transfers'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MobileHomeRouteImport } from './routes/mobile-home'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -40,6 +41,11 @@ const TransfersRoute = TransfersRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/mobile-home': typeof MobileHomeRoute
   '/notifications': typeof NotificationsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/transfers': typeof TransfersRouteWithChildren
   '/admin/loans': typeof AdminLoansRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/mobile-home': typeof MobileHomeRoute
   '/notifications': typeof NotificationsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/admin/loans': typeof AdminLoansRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -200,6 +208,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/mobile-home': typeof MobileHomeRoute
   '/notifications': typeof NotificationsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/transfers': typeof TransfersRouteWithChildren
   '/admin/loans': typeof AdminLoansRoute
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/mobile-home'
     | '/notifications'
+    | '/reset-password'
     | '/settings'
     | '/transfers'
     | '/admin/loans'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/mobile-home'
     | '/notifications'
+    | '/reset-password'
     | '/settings'
     | '/admin/loans'
     | '/admin/notifications'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/mobile-home'
     | '/notifications'
+    | '/reset-password'
     | '/settings'
     | '/transfers'
     | '/admin/loans'
@@ -298,6 +310,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   MobileHomeRoute: typeof MobileHomeRoute
   NotificationsRoute: typeof NotificationsRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   TransfersRoute: typeof TransfersRouteWithChildren
   AdminLoansRoute: typeof AdminLoansRoute
@@ -325,6 +338,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -513,6 +533,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   MobileHomeRoute: MobileHomeRoute,
   NotificationsRoute: NotificationsRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   TransfersRoute: TransfersRouteWithChildren,
   AdminLoansRoute: AdminLoansRoute,

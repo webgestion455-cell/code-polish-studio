@@ -106,7 +106,18 @@
     "fullNameLabel": "Nombre completo",
     "phoneLabel": "Teléfono",
     "tabSignin": "Iniciar sesión",
-    "tabSignup": "Crear cuenta"
+    "tabSignup": "Crear cuenta",
+    "forgotLink": "¿Olvidaste tu contraseña?",
+    "forgotTitle": "Restablecer contraseña",
+    "forgotDesc": "Introduzca su correo. Le enviaremos un enlace seguro para establecer una nueva contraseña.",
+    "forgotSend": "Enviar enlace",
+    "forgotSent": "Si la cuenta existe, se ha enviado un correo.",
+    "resetTitle": "Definir nueva contraseña",
+    "resetWaiting": "Verificando el enlace…",
+    "resetSuccess": "Contraseña actualizada correctamente.",
+    "newPassword": "Nueva contraseña",
+    "confirmNewPassword": "Confirmar contraseña",
+    "updatePassword": "Actualizar contraseña"
   },
   "dashboard": {
     "title": "Mi panel",
@@ -194,7 +205,9 @@
     "adminNotifTitle": "Nueva solicitud de préstamo",
     "adminNotifMsg": "{{name}} solicita {{amount}} € a {{months}} meses",
     "successToast": "Su solicitud se envió con éxito",
-    "loading": "Cargando…"
+    "loading": "Cargando…",
+    "docsRequiredExact": "Debe subir exactamente {{count}} documentos.",
+    "uploadHintExact": "Suba exactamente {{count}} documentos (PDF, JPG, PNG — máx. 5 MB cada uno)"
   },
   "transfer": {
     "title": "Realizar una transferencia",
@@ -271,7 +284,8 @@
     "phoneTitle": "Servicio al cliente",
     "address": "103 avenue des Champs-Élysées",
     "addressCity": "75008 París, Francia",
-    "sending": "Enviando…"
+    "sending": "Enviando…",
+    "successQueued": "Su mensaje se ha registrado. Nuestro equipo responderá pronto."
   },
   "admin": {
     "title": "Panel de administración",
@@ -911,5 +925,37 @@
     "instruction": "Haz clic en el enlace para activar tu cuenta.",
     "loading": "Esperando confirmación...",
     "footer": "Por tu seguridad, nunca compartas tus credenciales."
+  },
+  "password": {
+    "show": "Mostrar contraseña",
+    "hide": "Ocultar contraseña",
+    "veryWeak": "Muy débil",
+    "weak": "Débil",
+    "fair": "Media",
+    "good": "Buena",
+    "strong": "Fuerte",
+    "excellent": "Excelente",
+    "ruleLength": "Al menos 10 caracteres",
+    "ruleUpper": "Una mayúscula",
+    "ruleLower": "Una minúscula",
+    "ruleDigit": "Un dígito",
+    "ruleSpecial": "Un carácter especial",
+    "notStrong": "La contraseña no cumple todas las reglas de seguridad."
+  },
+  "livechat": {
+    "open": "Abrir chat",
+    "close": "Cerrar",
+    "title": "Asesor HSBC",
+    "online": "En línea",
+    "placeholder": "Escribe tu mensaje…",
+    "greeting": "¡Hola 👋! ¿Cómo puedo ayudarte hoy?",
+    "faq": {
+      "loan": "Para solicitar un préstamo, vaya a «Nuevo préstamo» desde su panel. Decisión en 24 h, fondos en 72 h.",
+      "password": "Puede restablecer su contraseña desde la página de inicio de sesión con «¿Olvidaste tu contraseña?».",
+      "transfer": "Sus transferencias están en la sección «Transferencias» de su panel.",
+      "contact": "Nuestro equipo está disponible al +44 7529 529674 o vía la página de Contacto.",
+      "thanks": "¡De nada! Pregunte lo que necesite.",
+      "default": "Un asesor HSBC le responderá pronto. También puede contactarnos en la página de Contacto."
+    }
   }
 }

@@ -106,7 +106,18 @@
     "fullNameLabel": "Vollständiger Name",
     "phoneLabel": "Telefon",
     "tabSignin": "Anmelden",
-    "tabSignup": "Konto erstellen"
+    "tabSignup": "Konto erstellen",
+    "forgotLink": "Passwort vergessen?",
+    "forgotTitle": "Passwort zurücksetzen",
+    "forgotDesc": "Geben Sie Ihre E-Mail-Adresse ein. Wir senden Ihnen einen sicheren Link zum Festlegen eines neuen Passworts.",
+    "forgotSend": "Link senden",
+    "forgotSent": "Wenn ein Konto existiert, wurde eine E-Mail gesendet.",
+    "resetTitle": "Neues Passwort festlegen",
+    "resetWaiting": "Reset-Link wird überprüft…",
+    "resetSuccess": "Passwort erfolgreich aktualisiert.",
+    "newPassword": "Neues Passwort",
+    "confirmNewPassword": "Passwort bestätigen",
+    "updatePassword": "Passwort aktualisieren"
   },
   "dashboard": {
     "title": "Mein Dashboard",
@@ -194,7 +205,9 @@
     "adminNotifTitle": "Neuer Kreditantrag",
     "adminNotifMsg": "{{name}} beantragt {{amount}} € über {{months}} Monate",
     "successToast": "Ihr Antrag wurde erfolgreich gesendet",
-    "loading": "Laden…"
+    "loading": "Laden…",
+    "docsRequiredExact": "Sie müssen genau {{count}} Dokumente hochladen.",
+    "uploadHintExact": "Laden Sie genau {{count}} Dokumente hoch (PDF, JPG, PNG — max. 5 MB pro Datei)"
   },
   "transfer": {
     "title": "Überweisung tätigen",
@@ -271,7 +284,8 @@
     "phoneTitle": "Kundenservice",
     "address": "103 avenue des Champs-Élysées",
     "addressCity": "75008 Paris, Frankreich",
-    "sending": "Senden…"
+    "sending": "Senden…",
+    "successQueued": "Ihre Nachricht wurde gespeichert. Unser Team meldet sich bald."
   },
   "admin": {
     "title": "Admin-Dashboard",
@@ -911,5 +925,37 @@
     "instruction": "Klicken Sie auf den Link, um Ihr Konto zu aktivieren.",
     "loading": "Warten auf Bestätigung...",
     "footer": "Teilen Sie niemals Ihre Zugangsdaten."
+  },
+  "password": {
+    "show": "Passwort anzeigen",
+    "hide": "Passwort verbergen",
+    "veryWeak": "Sehr schwach",
+    "weak": "Schwach",
+    "fair": "Mittel",
+    "good": "Gut",
+    "strong": "Stark",
+    "excellent": "Hervorragend",
+    "ruleLength": "Mindestens 10 Zeichen",
+    "ruleUpper": "Ein Großbuchstabe",
+    "ruleLower": "Ein Kleinbuchstabe",
+    "ruleDigit": "Eine Ziffer",
+    "ruleSpecial": "Ein Sonderzeichen",
+    "notStrong": "Das Passwort erfüllt nicht alle Sicherheitsregeln."
+  },
+  "livechat": {
+    "open": "Chat öffnen",
+    "close": "Schließen",
+    "title": "HSBC Berater",
+    "online": "Online",
+    "placeholder": "Nachricht schreiben…",
+    "greeting": "Hallo 👋! Wie kann ich Ihnen heute helfen?",
+    "faq": {
+      "loan": "Für einen Kreditantrag wählen Sie „Neuer Kredit\" im Dashboard. Entscheidung innerhalb von 24 Std., Auszahlung innerhalb von 72 Std.",
+      "password": "Sie können Ihr Passwort über „Passwort vergessen?\" auf der Anmeldeseite zurücksetzen.",
+      "transfer": "Ihre Überweisungen sehen Sie im Bereich „Überweisungen\" Ihres Dashboards.",
+      "contact": "Unser Team erreichen Sie unter +44 7529 529674 oder über die Kontaktseite.",
+      "thanks": "Gern geschehen! Stellen Sie gerne weitere Fragen.",
+      "default": "Ein HSBC-Berater meldet sich in Kürze. Sie können uns auch über die Kontaktseite erreichen."
+    }
   }
 }

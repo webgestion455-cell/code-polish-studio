@@ -106,7 +106,18 @@
     "fullNameLabel": "Volledige naam",
     "phoneLabel": "Telefoon",
     "tabSignin": "Inloggen",
-    "tabSignup": "Account aanmaken"
+    "tabSignup": "Account aanmaken",
+    "forgotLink": "Wachtwoord vergeten?",
+    "forgotTitle": "Wachtwoord opnieuw instellen",
+    "forgotDesc": "Voer uw e-mailadres in. We sturen u een veilige link om een nieuw wachtwoord in te stellen.",
+    "forgotSend": "Link verzenden",
+    "forgotSent": "Als het account bestaat, is een e-mail verzonden.",
+    "resetTitle": "Nieuw wachtwoord instellen",
+    "resetWaiting": "Reset-link wordt gecontroleerd…",
+    "resetSuccess": "Wachtwoord bijgewerkt.",
+    "newPassword": "Nieuw wachtwoord",
+    "confirmNewPassword": "Bevestig wachtwoord",
+    "updatePassword": "Wachtwoord bijwerken"
   },
   "dashboard": {
     "title": "Mijn dashboard",
@@ -194,7 +205,9 @@
     "adminNotifTitle": "Nieuwe leningaanvraag",
     "adminNotifMsg": "{{name}} vraagt € {{amount}} aan over {{months}} maanden",
     "successToast": "Uw aanvraag is succesvol verzonden",
-    "loading": "Laden…"
+    "loading": "Laden…",
+    "docsRequiredExact": "U moet precies {{count}} documenten uploaden.",
+    "uploadHintExact": "Upload precies {{count}} documenten (PDF, JPG, PNG — max. 5 MB elk)"
   },
   "transfer": {
     "title": "Overboeking uitvoeren",
@@ -271,7 +284,8 @@
     "phoneTitle": "Klantenservice",
     "address": "103 avenue des Champs-Élysées",
     "addressCity": "75008 Parijs, Frankrijk",
-    "sending": "Verzenden…"
+    "sending": "Verzenden…",
+    "successQueued": "Uw bericht is geregistreerd. Ons team antwoordt snel."
   },
   "admin": {
     "title": "Admin dashboard",
@@ -911,5 +925,37 @@
     "instruction": "Klik op de link om je account te activeren.",
     "loading": "Wachten op bevestiging...",
     "footer": "Deel nooit je inloggegevens."
+  },
+  "password": {
+    "show": "Wachtwoord tonen",
+    "hide": "Wachtwoord verbergen",
+    "veryWeak": "Zeer zwak",
+    "weak": "Zwak",
+    "fair": "Matig",
+    "good": "Goed",
+    "strong": "Sterk",
+    "excellent": "Uitstekend",
+    "ruleLength": "Minstens 10 tekens",
+    "ruleUpper": "Een hoofdletter",
+    "ruleLower": "Een kleine letter",
+    "ruleDigit": "Een cijfer",
+    "ruleSpecial": "Een speciaal teken",
+    "notStrong": "Het wachtwoord voldoet niet aan alle beveiligingsregels."
+  },
+  "livechat": {
+    "open": "Chat openen",
+    "close": "Sluiten",
+    "title": "HSBC-adviseur",
+    "online": "Online",
+    "placeholder": "Typ uw bericht…",
+    "greeting": "Hallo 👋! Hoe kan ik u helpen?",
+    "faq": {
+      "loan": "Voor een lening klikt u op \"Nieuwe lening\" in uw dashboard. Beslissing binnen 24 u, geld binnen 72 u.",
+      "password": "U kunt uw wachtwoord opnieuw instellen via \"Wachtwoord vergeten?\".",
+      "transfer": "Uw overboekingen vindt u in de sectie \"Overboekingen\".",
+      "contact": "Ons team is bereikbaar op +44 7529 529674 of via de contactpagina.",
+      "thanks": "Graag gedaan! Stel gerust andere vragen.",
+      "default": "Een HSBC-adviseur neemt spoedig contact op. U kunt ons ook bereiken via de contactpagina."
+    }
   }
 }
