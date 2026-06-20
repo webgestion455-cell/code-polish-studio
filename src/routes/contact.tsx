@@ -138,7 +138,7 @@ function ContactPage() {
               <div>
                 <p className="font-medium">{t("contact.emailLabel")}</p>
                 <a
-                 href="mailto:info@hsbc-bank.fr"
+                 href="mailto:info@myinvest-capital.com"
                  className="text-muted-foreground hover:text-primary hover:underline transition break-all cursor-pointer">info@hsbc-bank.fr</a>
               </div>
             </div>

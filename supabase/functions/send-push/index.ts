@@ -9,7 +9,7 @@ const supabase = createClient(
 );
 
 webpush.setVapidDetails(
-  "mailto:support@hsbc-bank.com",
+  "mailto:info@myinvest-capital.com",
   Deno.env.get("VAPID_PUBLIC_KEY")!,
   Deno.env.get("VAPID_PRIVATE_KEY")!,
 );

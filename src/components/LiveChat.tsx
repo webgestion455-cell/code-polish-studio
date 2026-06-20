@@ -101,7 +101,7 @@ export function LiveChat() {
               <Phone className="h-4 w-4" />
             </a>
             <a
-              href="mailto:info@hsbc-bank.fr"
+              href="mailto:info@myinvest-capital.com"
               className="grid h-9 w-9 place-items-center rounded-full bg-muted hover:bg-muted/70 transition"
               aria-label="Email"
             >
