@@ -12,7 +12,7 @@ const ContactInput = z.object({
 });
 
 const TO_EMAIL = "info@myinvest-capital.com";
-const FROM_EMAIL = "HSBC BANK <info@myinvest-capital.com>";
+const FROM_EMAIL = "HSBC BANK <onboarding@resend.dev>";
 
 export const submitContactMessage = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => ContactInput.parse(d))
@@ -33,11 +33,10 @@ export const submitContactMessage = createServerFn({ method: "POST" })
 
     if (error) throw new Error(error.message);
 
-    // 2) Try to deliver via Resend (connector or RESEND_API_KEY_2 env). Soft-fail.
+    // 2) Try to deliver via Resend (connector or RESEND_API_KEY_CONTACT env). Soft-fail.
     let emailSent = false;
-    const RESEND_API_KEY_2 = process.env.RESEND_API_KEY_2;
-    const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
-    if (RESEND_API_KEY_2 && LOVABLE_API_KEY) {
+    const RESEND_API_KEY_CONTACT = process.env.RESEND_API_KEY_CONTACT;
+    if (RESEND_API_KEY_CONTACT) {
       try {
         const html = `
           <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto">
@@ -50,21 +49,20 @@ export const submitContactMessage = createServerFn({ method: "POST" })
               data.message,
             )}</pre>
           </div>`;
-        const res = await fetch("https://connector-gateway.lovable.dev/resend/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${LOVABLE_API_KEY}`,
-            "X-Connection-Api-Key": RESEND_API_KEY_2,
-          },
-          body: JSON.stringify({
-            from: FROM_EMAIL,
-            to: [TO_EMAIL],
-            reply_to: data.email,
-            subject: `[Contact] ${data.subject}`,
-            html,
-          }),
-        });
+        const res = await fetch("https://api.resend.com/emails", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${RESEND_API_KEY_CONTACT}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    from: FROM_EMAIL,
+    to: [TO_EMAIL],
+    reply_to: data.email,
+    subject: `[Contact] ${data.subject}`,
+    html,
+  }),
+});
         emailSent = res.ok;
         if (emailSent && row?.id) {
           await supabaseAdmin.from("contact_messages").update({ sent_email: true }).eq("id", row.id);
