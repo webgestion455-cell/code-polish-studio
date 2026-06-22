@@ -366,7 +366,7 @@ function Landing() {
             <ul className="mt-6 space-y-3 text-sm">
               <li className="flex items-center gap-3"><Mail className="h-4 w-4 text-accent" /><a href="mailto:info@myinvest-capital.com" className="hover:text-accent">info@myinvest-capital.com</a></li>
               <li className="flex items-center gap-3"><Phone className="h-4 w-4 text-accent" /><a href="tel:+447529529674" className="hover:text-accent">+44 7529 529674</a></li>
-              <li className="flex items-center gap-3"><MapPin className="h-4 w-4 text-accent" />38 Avenue Kléber, 75116 Paris, France</li>
+              <li className="flex items-center gap-3"><MapPin className="h-4 w-4 text-accent" />1 Centenary Square,Birmingham, B1 1HQ, Royaume-Uni</li>
             </ul>
             <Button asChild className="mt-6 w-full">
               <Link to="/contact">{t("contactSection.cta", "Open contact form")}</Link>
