@@ -24,8 +24,17 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as TransfersTransferIdRouteImport } from './routes/transfers.$transferId'
 import { Route as LoansNewRouteImport } from './routes/loans.new'
 import { Route as LoansLoanIdRouteImport } from './routes/loans.$loanId'
+import { Route as LegalTermsRouteImport } from './routes/legal.terms'
+import { Route as LegalRepaymentRouteImport } from './routes/legal.repayment'
+import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as LegalMentionsRouteImport } from './routes/legal.mentions'
+import { Route as LegalLoanTermsRouteImport } from './routes/legal.loan-terms'
+import { Route as LegalFinancialPrivacyRouteImport } from './routes/legal.financial-privacy'
+import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
+import { Route as LegalAmlKycRouteImport } from './routes/legal.aml-kyc'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AdminVerifyRouteImport } from './routes/admin.verify'
+import { Route as AdminSecurityRouteImport } from './routes/admin.security'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminLoansRouteImport } from './routes/admin.loans'
 import { Route as AdminClientsIndexRouteImport } from './routes/admin.clients.index'
@@ -108,6 +117,46 @@ const LoansLoanIdRoute = LoansLoanIdRouteImport.update({
   path: '/loans/$loanId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalTermsRoute = LegalTermsRouteImport.update({
+  id: '/legal/terms',
+  path: '/legal/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalRepaymentRoute = LegalRepaymentRouteImport.update({
+  id: '/legal/repayment',
+  path: '/legal/repayment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
+  id: '/legal/privacy',
+  path: '/legal/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalMentionsRoute = LegalMentionsRouteImport.update({
+  id: '/legal/mentions',
+  path: '/legal/mentions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalLoanTermsRoute = LegalLoanTermsRouteImport.update({
+  id: '/legal/loan-terms',
+  path: '/legal/loan-terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalFinancialPrivacyRoute = LegalFinancialPrivacyRouteImport.update({
+  id: '/legal/financial-privacy',
+  path: '/legal/financial-privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalCookiesRoute = LegalCookiesRouteImport.update({
+  id: '/legal/cookies',
+  path: '/legal/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalAmlKycRoute = LegalAmlKycRouteImport.update({
+  id: '/legal/aml-kyc',
+  path: '/legal/aml-kyc',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/callback',
   path: '/callback',
@@ -116,6 +165,11 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
 const AdminVerifyRoute = AdminVerifyRouteImport.update({
   id: '/admin/verify',
   path: '/admin/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSecurityRoute = AdminSecurityRouteImport.update({
+  id: '/admin/security',
+  path: '/admin/security',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
@@ -163,8 +217,17 @@ export interface FileRoutesByFullPath {
   '/transfers': typeof TransfersRouteWithChildren
   '/admin/loans': typeof AdminLoansRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/security': typeof AdminSecurityRoute
   '/admin/verify': typeof AdminVerifyRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/legal/aml-kyc': typeof LegalAmlKycRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/financial-privacy': typeof LegalFinancialPrivacyRoute
+  '/legal/loan-terms': typeof LegalLoanTermsRoute
+  '/legal/mentions': typeof LegalMentionsRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/repayment': typeof LegalRepaymentRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
   '/transfers/$transferId': typeof TransfersTransferIdRouteWithChildren
@@ -187,8 +250,17 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/admin/loans': typeof AdminLoansRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/security': typeof AdminSecurityRoute
   '/admin/verify': typeof AdminVerifyRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/legal/aml-kyc': typeof LegalAmlKycRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/financial-privacy': typeof LegalFinancialPrivacyRoute
+  '/legal/loan-terms': typeof LegalLoanTermsRoute
+  '/legal/mentions': typeof LegalMentionsRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/repayment': typeof LegalRepaymentRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
   '/transfers/$transferId': typeof TransfersTransferIdRouteWithChildren
@@ -213,8 +285,17 @@ export interface FileRoutesById {
   '/transfers': typeof TransfersRouteWithChildren
   '/admin/loans': typeof AdminLoansRoute
   '/admin/notifications': typeof AdminNotificationsRoute
+  '/admin/security': typeof AdminSecurityRoute
   '/admin/verify': typeof AdminVerifyRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/legal/aml-kyc': typeof LegalAmlKycRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/financial-privacy': typeof LegalFinancialPrivacyRoute
+  '/legal/loan-terms': typeof LegalLoanTermsRoute
+  '/legal/mentions': typeof LegalMentionsRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/repayment': typeof LegalRepaymentRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/loans/$loanId': typeof LoansLoanIdRoute
   '/loans/new': typeof LoansNewRoute
   '/transfers/$transferId': typeof TransfersTransferIdRouteWithChildren
@@ -240,8 +321,17 @@ export interface FileRouteTypes {
     | '/transfers'
     | '/admin/loans'
     | '/admin/notifications'
+    | '/admin/security'
     | '/admin/verify'
     | '/auth/callback'
+    | '/legal/aml-kyc'
+    | '/legal/cookies'
+    | '/legal/financial-privacy'
+    | '/legal/loan-terms'
+    | '/legal/mentions'
+    | '/legal/privacy'
+    | '/legal/repayment'
+    | '/legal/terms'
     | '/loans/$loanId'
     | '/loans/new'
     | '/transfers/$transferId'
@@ -264,8 +354,17 @@ export interface FileRouteTypes {
     | '/settings'
     | '/admin/loans'
     | '/admin/notifications'
+    | '/admin/security'
     | '/admin/verify'
     | '/auth/callback'
+    | '/legal/aml-kyc'
+    | '/legal/cookies'
+    | '/legal/financial-privacy'
+    | '/legal/loan-terms'
+    | '/legal/mentions'
+    | '/legal/privacy'
+    | '/legal/repayment'
+    | '/legal/terms'
     | '/loans/$loanId'
     | '/loans/new'
     | '/transfers/$transferId'
@@ -289,8 +388,17 @@ export interface FileRouteTypes {
     | '/transfers'
     | '/admin/loans'
     | '/admin/notifications'
+    | '/admin/security'
     | '/admin/verify'
     | '/auth/callback'
+    | '/legal/aml-kyc'
+    | '/legal/cookies'
+    | '/legal/financial-privacy'
+    | '/legal/loan-terms'
+    | '/legal/mentions'
+    | '/legal/privacy'
+    | '/legal/repayment'
+    | '/legal/terms'
     | '/loans/$loanId'
     | '/loans/new'
     | '/transfers/$transferId'
@@ -315,7 +423,16 @@ export interface RootRouteChildren {
   TransfersRoute: typeof TransfersRouteWithChildren
   AdminLoansRoute: typeof AdminLoansRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminSecurityRoute: typeof AdminSecurityRoute
   AdminVerifyRoute: typeof AdminVerifyRoute
+  LegalAmlKycRoute: typeof LegalAmlKycRoute
+  LegalCookiesRoute: typeof LegalCookiesRoute
+  LegalFinancialPrivacyRoute: typeof LegalFinancialPrivacyRoute
+  LegalLoanTermsRoute: typeof LegalLoanTermsRoute
+  LegalMentionsRoute: typeof LegalMentionsRoute
+  LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalRepaymentRoute: typeof LegalRepaymentRoute
+  LegalTermsRoute: typeof LegalTermsRoute
   LoansLoanIdRoute: typeof LoansLoanIdRoute
   LoansNewRoute: typeof LoansNewRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -431,6 +548,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoansLoanIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/terms': {
+      id: '/legal/terms'
+      path: '/legal/terms'
+      fullPath: '/legal/terms'
+      preLoaderRoute: typeof LegalTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/repayment': {
+      id: '/legal/repayment'
+      path: '/legal/repayment'
+      fullPath: '/legal/repayment'
+      preLoaderRoute: typeof LegalRepaymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/privacy': {
+      id: '/legal/privacy'
+      path: '/legal/privacy'
+      fullPath: '/legal/privacy'
+      preLoaderRoute: typeof LegalPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/mentions': {
+      id: '/legal/mentions'
+      path: '/legal/mentions'
+      fullPath: '/legal/mentions'
+      preLoaderRoute: typeof LegalMentionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/loan-terms': {
+      id: '/legal/loan-terms'
+      path: '/legal/loan-terms'
+      fullPath: '/legal/loan-terms'
+      preLoaderRoute: typeof LegalLoanTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/financial-privacy': {
+      id: '/legal/financial-privacy'
+      path: '/legal/financial-privacy'
+      fullPath: '/legal/financial-privacy'
+      preLoaderRoute: typeof LegalFinancialPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/cookies': {
+      id: '/legal/cookies'
+      path: '/legal/cookies'
+      fullPath: '/legal/cookies'
+      preLoaderRoute: typeof LegalCookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/aml-kyc': {
+      id: '/legal/aml-kyc'
+      path: '/legal/aml-kyc'
+      fullPath: '/legal/aml-kyc'
+      preLoaderRoute: typeof LegalAmlKycRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/callback'
@@ -443,6 +616,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/verify'
       fullPath: '/admin/verify'
       preLoaderRoute: typeof AdminVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/security': {
+      id: '/admin/security'
+      path: '/admin/security'
+      fullPath: '/admin/security'
+      preLoaderRoute: typeof AdminSecurityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/notifications': {
@@ -538,7 +718,16 @@ const rootRouteChildren: RootRouteChildren = {
   TransfersRoute: TransfersRouteWithChildren,
   AdminLoansRoute: AdminLoansRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminSecurityRoute: AdminSecurityRoute,
   AdminVerifyRoute: AdminVerifyRoute,
+  LegalAmlKycRoute: LegalAmlKycRoute,
+  LegalCookiesRoute: LegalCookiesRoute,
+  LegalFinancialPrivacyRoute: LegalFinancialPrivacyRoute,
+  LegalLoanTermsRoute: LegalLoanTermsRoute,
+  LegalMentionsRoute: LegalMentionsRoute,
+  LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalRepaymentRoute: LegalRepaymentRoute,
+  LegalTermsRoute: LegalTermsRoute,
   LoansLoanIdRoute: LoansLoanIdRoute,
   LoansNewRoute: LoansNewRoute,
   AdminIndexRoute: AdminIndexRoute,

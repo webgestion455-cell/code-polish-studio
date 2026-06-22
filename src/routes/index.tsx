@@ -364,8 +364,8 @@ function Landing() {
             <h3 className="font-serif text-2xl font-medium text-foreground">{t("contactSection.title", "Get in touch")}</h3>
             <p className="mt-2 text-sm text-muted-foreground">{t("contactSection.desc", "Our advisors answer within one business hour.")}</p>
             <ul className="mt-6 space-y-3 text-sm">
-              <li className="flex items-center gap-3"><Mail className="h-4 w-4 text-accent" /><a href="mailto:no-reply@hsbcloan.zenvoriax.com" className="hover:text-accent">no-reply@hsbcloan.zenvoriax.com</a></li>
-              <li className="flex items-center gap-3"><Phone className="h-4 w-4 text-accent" /><a href="tel:+33180000000" className="hover:text-accent">+33 1 80 00 00 00</a></li>
+              <li className="flex items-center gap-3"><Mail className="h-4 w-4 text-accent" /><a href="mailto:info@myinvest-capital.com" className="hover:text-accent">info@myinvest-capital.com</a></li>
+              <li className="flex items-center gap-3"><Phone className="h-4 w-4 text-accent" /><a href="tel:+447529529674" className="hover:text-accent">+44 7529 529674</a></li>
               <li className="flex items-center gap-3"><MapPin className="h-4 w-4 text-accent" />38 Avenue Kléber, 75116 Paris, France</li>
             </ul>
             <Button asChild className="mt-6 w-full">
@@ -404,8 +404,8 @@ function Landing() {
               <p className="font-semibold text-foreground">{t("footer.contact", "Contact")}</p>
               <ul className="mt-3 space-y-2">
                 <li><a href="#contact" className="hover:text-accent">{t("contactSection.cta", "Contact us")}</a></li>
-                <li><a href="mailto:no-reply@hsbcloan.zenvoriax.com" className="hover:text-accent">no-reply@hsbcloan.zenvoriax.com</a></li>
-                <li><a href="tel:+33180000000" className="hover:text-accent">+33 1 80 00 00 00</a></li>
+                <li><a href="mailto:info@myinvest-capital.com" className="hover:text-accent">info@myinvest-capital.com</a></li>
+                <li><a href="tel:+447529529674" className="hover:text-accent">+44 7529 529674</a></li>
               </ul>
             </div>
           </div>
