@@ -440,6 +440,12 @@ function AdminDashboard() {
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
+                <Button asChild variant="secondary" className="w-full justify-between">
+                  <Link to="/admin/security">
+                    <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> Centre de sécurité</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

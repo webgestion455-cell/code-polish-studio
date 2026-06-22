@@ -63,6 +63,23 @@ export const Route = createRootRoute({
       { name: "twitter:card", content: "summary" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "referrer", content: "strict-origin-when-cross-origin" },
+      // CSP (relaxed enough for Tailwind v4 inline styles, Google Fonts, ipapi geolocation lookup,
+      // Supabase API + realtime, and the theme-init inline script).
+      {
+        httpEquiv: "Content-Security-Policy",
+        content:
+          "default-src 'self'; " +
+          "script-src 'self' 'unsafe-inline'; " +
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+          "font-src 'self' data: https://fonts.gstatic.com; " +
+          "img-src 'self' data: blob: https:; " +
+          "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://ipapi.co; " +
+          "frame-ancestors 'self'; " +
+          "base-uri 'self'; " +
+          "form-action 'self';",
+      },
+      { httpEquiv: "X-Content-Type-Options", content: "nosniff" },
+      { httpEquiv: "Permissions-Policy", content: "geolocation=(), microphone=(), camera=()" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

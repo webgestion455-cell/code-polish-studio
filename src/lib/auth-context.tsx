@@ -151,7 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signUp(email: string, password: string, fullName: string, phone: string, lang: string) {
     const redirectUrl = `${window.location.origin}/dashboard`;
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -159,15 +159,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: { full_name: fullName, phone, lang: lang.substring(0,2).toLowerCase(), },
       },
     });
+    try {
+      const { logSecurityEvent, checkAndRegisterDevice } = await import("@/lib/security");
+      await logSecurityEvent("signup", { userId: data?.user?.id ?? null, success: !error, metadata: { email } });
+      if (data?.user?.id) await checkAndRegisterDevice(data.user.id);
+    } catch {}
     return { error };
   }
 
   async function signIn(email: string, password: string) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const sec = await import("@/lib/security");
+      if (error) {
+        await sec.logSecurityEvent("login_failure", { userId: null, success: false, metadata: { email, reason: error.message } });
+      } else if (data.user) {
+        const dev = await sec.checkAndRegisterDevice(data.user.id);
+        await sec.logSecurityEvent("login_success", { userId: data.user.id, metadata: { newDevice: dev.isNew, newCountry: dev.isNewCountry } });
+        if (dev.isNew || dev.isNewCountry) {
+          await supabase.from("security_alerts").insert({
+            user_id: data.user.id,
+            alert_type: dev.isNew ? "new_device_login" : "new_country_login",
+            severity: dev.isNew && dev.isNewCountry ? "high" : "medium",
+            description: dev.isNew ? `Login from a new device (${dev.device.browser}/${dev.device.os})` : `Login from a new country (${dev.country})`,
+            metadata: { fingerprint: dev.device.fingerprint, country: dev.country } as never,
+          });
+        }
+        await sec.updateRiskScore(data.user.id, { newDevice: dev.isNew, newCountry: dev.isNewCountry });
+        sec.startSessionTimer();
+      }
+    } catch {}
     return { error };
   }
 
   async function signOut() {
+    const uid = user?.id;
+    try {
+      if (uid) {
+        const sec = await import("@/lib/security");
+        await sec.endSessionTimer(uid);
+        await sec.logSecurityEvent("logout", { userId: uid });
+      }
+    } catch {}
     await supabase.auth.signOut();
   }
 
