@@ -147,7 +147,7 @@ function ContactPage() {
               <div>
                 <p className="font-medium">{t("contact.addressLabel")}</p>
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=103+avenue+des+Champs-Élysées+75008+Paris"
+                  href="https://www.google.com/maps/place/1+Centenary+Sq,+Birmingham+B1+1HQ,+UK/@52.478697,-1.9070457,16z/data=!3m1!4b1!4m6!3m5!1s0x4870bcf4a2f5c4e5:0x21e7a6d2f6b90bfd!8m2!3d52.478697!4d-1.9070457!16s%2Fg%2F11gxzkxvj9?entry=ttu&g_ep=EgoyMDI2MDYxNi4wIKXMDSoASAFQAw%3D%3D"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-primary hover:underline transition cursor-pointer">{t("contact.address")}<br />{t("contact.addressCity")}</a>
