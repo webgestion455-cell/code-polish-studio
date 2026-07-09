@@ -13,10 +13,6 @@ import bg from "./locales/bg.json";
 import sk from "./locales/sk.json";
 import el from "./locales/el.json";
 import fi from "./locales/fi.json";
-import ro from "./locales/ro.json";
-import pl from "./locales/pl.json";
-import hr from "./locales/hr.json";
-import hu from "./locales/hu.json";
 
 export const SUPPORTED_LANGUAGES = [
   { code: "fr", label: "Français", flag: "🇫🇷" },
@@ -30,10 +26,6 @@ export const SUPPORTED_LANGUAGES = [
   { code: "sk", label: "Slovenčina", flag: "🇸🇰" },
   { code: "el", label: "Ελληνικά", flag: "🇬🇷" },
   { code: "fi", label: "Suomi", flag: "🇫🇮" },
-  { code: "ro", label: "Română", flag: "🇷🇴" },
-  { code: "pl", label: "Polski", flag: "🇵🇱" },
-  { code: "hr", label: "Hrvatski", flag: "🇭🇷" },
-  { code: "hu", label: "Magyar", flag: "🇭🇺" },
 ] as const;
 
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number]["code"];
@@ -63,10 +55,6 @@ if (!i18n.isInitialized) {
         sk: { translation: sk },
         el: { translation: el },
         fi: { translation: fi },
-        ro: { translation: ro },
-        pl: { translation: pl },
-        hr: { translation: hr },
-        hu: { translation: hu },
       },
       lng: undefined,
       fallbackLng: "fr",
