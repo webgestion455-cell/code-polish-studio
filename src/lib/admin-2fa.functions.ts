@@ -55,7 +55,7 @@ export const requestAdminCode = createServerFn({ method: "POST" })
     });
 
     // Envoi email — utilise Resend si configuré, sinon fallback vers OTP Supabase Auth
-    const resendKey = process.env.RESEND_API_KEY_ADMIN;
+    const resendKey = process.env.RESEND_API_KEY_MAIL;
     if (resendKey) {
       try {
         const resend = new Resend(resendKey);
