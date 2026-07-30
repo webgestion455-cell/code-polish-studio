@@ -12,7 +12,7 @@ const ContactInput = z.object({
 });
 
 const TO_EMAIL = "info@myinvest-capital.com";
-const FROM_EMAIL = "HSBC BANK <onboarding@resend.dev>";
+const FROM_EMAIL = "HSBC BANK <no-reply@zenvoriax.com>";
 
 export const submitContactMessage = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => ContactInput.parse(d))
